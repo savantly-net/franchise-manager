@@ -1,0 +1,168 @@
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "io.freefair.gradle:lombok-plugin:5.1.0"
+    }
+}
+
+plugins {
+	id 'org.springframework.boot' apply false
+	id 'io.spring.dependency-management'
+	id 'java'
+	id 'java-library'
+	id 'maven'
+	id 'signing'
+ 	id 'jacoco'
+	id "org.owasp.dependencycheck" version "5.3.1"
+	id "com.github.node-gradle.node" version "2.2.0"
+}
+
+
+apply plugin: 'maven-publish'
+apply plugin: "io.freefair.lombok"
+apply from: "${rootProject.projectDir}/gradle/sonatype.gradle"
+
+group = 'net.savantly.sprout'
+version = '2.0.0-SNAPSHOT'
+archivesBaseName = name
+description = "Provides franchise management on the Sprout Platform"
+sourceCompatibility = 11
+targetCompatibility = 11
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+	gradlePluginPortal()
+	maven { url "https://repo.spring.io/plugins-release" }
+	maven {
+		url = uri('https://oss.sonatype.org/content/repositories/snapshots/')
+	}
+}
+
+task stage(dependsOn: ['build'])
+
+node {
+    version = '12.18.3'
+    download = true
+}
+
+yarn_build {
+    inputs.files fileTree("src/plugin")
+    inputs.file 'package.json'
+    inputs.file 'yarn.lock'
+    inputs.file 'tsconfig.json'
+    inputs.file 'src/plugin.json'
+    inputs.file 'src/module.ts'
+    outputs.dir 'dist'
+}
+
+task copyPublicfiles(type: Copy) {
+    from "$buildDir/../dist"
+    into "$buildDir/resources/main/public/api/plugins/franchise-manager"
+    outputs.upToDateWhen { false }
+}
+yarn_build.dependsOn yarn
+copyPublicfiles.dependsOn yarn_build
+classes.dependsOn copyPublicfiles
+
+// run `./gradlew :dev -Psuspend=y` to suspend for debugger connection
+def suspend = project.ext.properties.suspend
+if(!suspend) {
+	suspend = 'n'
+}
+task dev(type: JavaExec) {
+    group = "Execution"
+    description = "Run the test app class with JavaExecTask"
+    //classpath = sourceSets.test.runtimeClasspath
+    classpath += sourceSets.main.runtimeClasspath
+    main = 'example.TestApplication'
+    jvmArgs=[
+  	  "-agentlib:jdwp=transport=dt_socket,server=y,suspend=$suspend,address=18080"
+    ]
+}
+
+dependencyCheck {
+	analyzers {
+		nodeEnabled=false
+	}
+}
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
+
+dependencies {
+	
+	implementation platform('software.amazon.awssdk:bom:2.14.3')
+	
+	implementation 'com.microsoft.azure:msal4j:1.0.0'
+	implementation 'software.amazon.awssdk:s3',
+		'org.flywaydb:flyway-core'
+	
+    api platform("org.springframework.boot:spring-boot-dependencies:${spring_boot_version}")
+	api "net.savantly.sprout:sprout-core:${sproutVersion}",
+		"net.savantly.sprout:sprout-spring-boot-starter:${sproutVersion}",
+		"net.savantly.sprout:sprout-modules-forms:${sproutVersion}"
+	api 'org.freemarker:freemarker',
+		'com.vladmihalcea:hibernate-types-52:2.10.0'
+	
+	compileOnly 'org.projectlombok:lombok',
+		'javax.interceptor:javax.interceptor-api:1.2',
+		'javax.validation:validation-api:2.0.1.Final',
+		"org.springframework.boot:spring-boot-devtools",
+		'org.projectlombok:lombok:1.18.12'
+
+    annotationProcessor 'org.projectlombok:lombok',
+        'org.springframework.boot:spring-boot-configuration-processor'
+        
+    developmentOnly "org.springframework.boot:spring-boot-devtools",
+		'org.postgresql:postgresql'
+    
+    testCompile "org.testcontainers:postgresql:1.15.3"
+    
+    testImplementation "net.savantly.sprout:sprout-module-test:${sproutVersion}"
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation "org.testcontainers:junit-jupiter:1.15.3"
+}
+
+test {
+	useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+gradle.taskGraph.whenReady {
+	taskGraph ->
+	if (taskGraph.hasTask(stage)) {
+		test.enabled = false
+	}
+}
+
+dependencyManagement {
+	imports {
+		mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+	}
+}
+
+clean {
+    delete 'dist'
+    delete 'build'
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			from(components.java)
+		}
+	}
+}

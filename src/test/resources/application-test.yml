@@ -1,0 +1,28 @@
+logging:
+  level:
+    org.springframework.security.web: DEBUG
+    org.flywaydb: INFO
+
+sprout:
+  jpa:
+    use-embedded-db: true
+  cors:
+    allowed-methods: GET, OPTIONS, PUT, POST, PATCH, DELETE
+  security:
+    authentication:
+      basic:
+        users:
+        - username: admin
+          password: changeme!
+          email-address: test@savantly.net
+          roles:
+          - ADMIN
+
+spring:
+  data:
+    rest:
+      default-page-size: 200
+management:
+  endpoints:
+    web:
+      exposure.include: "health,mappings,beans"

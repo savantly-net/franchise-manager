@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "build/resources/main/public/api/plugins/franchise-manager",
+    "declarationMap": true,
+    "rootDir": "./src",
+    "baseUrl": "./src",
+    "typeRoots": ["./node_modules/@types"]
+  },
+  "extends": "./node_modules/@savantly/sprout-toolkit/src/config/tsconfig.plugin.json",
+  "include": ["./src/**/*.ts*"],
+  "exclude": ["./src/main", "./src/test", "dist", "node_modules"]
+}

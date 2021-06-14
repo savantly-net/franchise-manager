@@ -1,0 +1,184 @@
+{
+  "type": "app",
+  "name": "Franchise Manager",
+  "id": "franchise-manager",
+  "preload": true,
+  "info": {
+    "description": "Provide Franchise Management APIs and UI components",
+    "author": {
+      "name": "Savantly",
+      "url": "https://savantly.net"
+    },
+    "keywords": [
+      "savantly",
+      "sprout",
+      "franchise"
+    ],
+    "logos": {
+      "small": "./plugin/img/logo.svg",
+      "large": "./plugin/img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Website",
+        "url": "https://github.com/savantly-net/sprout-platform/tree/development/backend/modules/forms"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/savantly-net/sprout-platform/tree/development/backend/modules/forms/LICENSE"
+      }
+    ],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "includes": [
+    {
+      "name": "Franchise Manager",
+      "type": "page",
+      "icon": "store",
+      "addToNav": true,
+      "authority": "FM_ADMIN",
+      "children": [
+        {
+          "name": "Locations",
+          "type": "page",
+          "icon": "store",
+          "addToNav": true,
+          "path": "/a/franchise-manager/locations/stores"
+        },
+        {
+          "name": "Fees",
+          "type": "page",
+          "icon": "file-invoice-dollar",
+          "addToNav": true,
+          "path": "/a/franchise-manager/locations/fees"
+        },
+        {
+          "name": "Groups",
+          "type": "page",
+          "icon": "layer-group",
+          "addToNav": true,
+          "path": "/a/franchise-manager/groups"
+        },
+        {
+          "name": "Markets",
+          "type": "page",
+          "icon": "map-marked-alt",
+          "addToNav": true,
+          "path": "/a/franchise-manager/locations/markets"
+        },
+        {
+          "name": "Report Sources",
+          "type": "page",
+          "icon": "chart-area",
+          "addToNav": true,
+          "path": "/a/franchise-manager/report-manager"
+        }
+      ]
+    },
+    {
+      "name": "Knowledge",
+      "type": "page",
+      "icon": "graduation-cap",
+      "addToNav": true,
+      "children": [
+        {
+          "name": "Browse",
+          "type": "page",
+          "icon": "graduation-cap",
+          "addToNav": true,
+          "path": "/a/franchise-manager/knowledge"
+        }
+      ]
+    },
+    {
+      "name": "Addresses",
+      "type": "page",
+      "icon": "fas address-book",
+      "addToNav": true,
+      "children": [
+        {
+          "name": "Browse",
+          "type": "page",
+          "icon": "fas address-book",
+          "addToNav": true,
+          "path": "/a/franchise-manager/addresses"
+        }
+      ]
+    },
+    {
+      "name": "Calendar",
+      "type": "page",
+      "icon": "calendar-alt",
+      "addToNav": true,
+      "children": [
+        {
+          "name": "Browse",
+          "type": "page",
+          "icon": "calendar-alt",
+          "addToNav": true,
+          "path": "/a/franchise-manager/calendar"
+        }
+      ]
+    },
+    {
+      "name": "Newsletter",
+      "type": "page",
+      "icon": "newspaper",
+      "addToNav": true,
+      "children": [
+        {
+          "name": "Browse",
+          "type": "page",
+          "icon": "newspaper",
+          "addToNav": true,
+          "path": "/a/franchise-manager/newsletter"
+        }
+      ]
+    },
+    {
+      "name": "Quality",
+      "type": "page",
+      "icon": "clipboard-check",
+      "addToNav": true,
+      "authority": "FM_QAI_READ",
+      "children": [
+        {
+          "name": "Manage Sections",
+          "type": "page",
+          "icon": "pen",
+          "addToNav": true,
+          "authority": "FM_QAI_ADMIN",
+          "path": "/a/franchise-manager/qai/manage/sections"
+        },
+        {
+          "name": "Manage Q.Categories",
+          "type": "page",
+          "icon": "pen",
+          "addToNav": true,
+          "authority": "FM_QAI_ADMIN",
+          "path": "/a/franchise-manager/qai/manage/categories"
+        },
+        {
+          "name": "QAI Submissions",
+          "type": "page",
+          "icon": "clipboard-list",
+          "addToNav": true,
+          "path": "/a/franchise-manager/qai/submissions/list"
+        },
+        {
+          "name": "Store Visits",
+          "type": "page",
+          "icon": "clipboard-check",
+          "addToNav": true,
+          "path": "/a/franchise-manager/store-visits"
+        }
+      ]
+    }
+  ],
+  "dependencies": {
+    "sproutVersion": "2.0.x",
+    "plugins": []
+  }
+}

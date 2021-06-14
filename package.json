@@ -1,0 +1,51 @@
+{
+  "name": "franchise-manager",
+  "version": "2.0.0-1",
+  "description": "Franchise Manager for Sprout",
+  "private": true,
+  "scripts": {
+    "build": "sprout-toolkit plugin:build",
+    "test": "sprout-toolkit plugin:test",
+    "dev": "sprout-toolkit plugin:dev",
+    "watch": "sprout-toolkit plugin:dev --watch -o \"$PWD/build/resources/main/public/api/plugins/franchise-manager\"",
+    "pretty": "prettier-eslint \"$PWD/src/**/*{ts,tsx}\" --write"
+  },
+  "repository": "github:savantly-net/franchise-manager",
+  "author": "Jeremy Branham",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/savantly-net/franchise-manager/issues",
+    "email": "bug@savantly.net"
+  },
+  "devDependencies": {
+    "@grafana/eslint-config": "^2.0.1",
+    "@reduxjs/toolkit": "^1.4.0",
+    "@savantly/sprout-api": "2.0.0-37",
+    "@savantly/sprout-runtime": "2.0.0-37",
+    "@savantly/sprout-toolkit": "2.0.0-37",
+    "@sprout-platform/ui": "2.0.0-37",
+    "@types/jest": "^24.0.0",
+    "@types/react": "^16.9.49",
+    "@types/react-bootstrap-table-next": "^4.0.10",
+    "@types/react-redux": "^7.1.9",
+    "@types/react-router-dom": "^5.1.6",
+    "emotion": "^10.0.27",
+    "jest-util": "^26.5.2",
+    "prettier-eslint": "^11.0.0",
+    "prettier-eslint-cli": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=12 <13"
+  },
+  "dependencies": {
+    "formik": "~2.2.0",
+    "history": "^5",
+    "react-bootstrap-table-next": "^4.0.3",
+    "react-bootstrap-table2-editor": "^1.4.0",
+    "react-formio": "^4.3.0",
+    "react-redux": "^7.2.1",
+    "react-router-dom": "6.0.0-beta.0",
+    "reactstrap": "^8.7.1",
+    "redux-dynamic-modules": "~5.2.3"
+  }
+}
