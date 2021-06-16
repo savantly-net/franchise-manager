@@ -7,11 +7,9 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -20,12 +18,14 @@ import org.springframework.test.context.ActiveProfiles;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import example.TestApplication;
 import net.savantly.sprout.franchise.domain.bar.FranchiseBarDto;
 import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationModifierDto;
+import test.AbstractContainerBaseTest;
 
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class LocationApiTest {
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = TestApplication.class)
+public class LocationApiTest extends AbstractContainerBaseTest {
 
 	@Autowired
 	TestRestTemplate rest;
@@ -114,10 +114,5 @@ public class LocationApiTest {
 	}
 	
 	public static class FranchiseLocationDtoList extends ArrayList<FranchiseLocationDto> {}
-	
-	@Configuration
-	@EnableAutoConfiguration
-	static class TestContext{
-		
-	}
+
 }

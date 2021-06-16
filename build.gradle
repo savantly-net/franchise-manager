@@ -8,8 +8,9 @@ buildscript {
 }
 
 plugins {
-	id 'org.springframework.boot' apply false
-	id 'io.spring.dependency-management'
+	id 'io.spring.dependency-management' version "${spring_plugin_version}"
+	id 'org.springframework.boot' version "${spring_boot_version}" apply false
+//    id 'org.sonarqube' version "${sonarqube_plugin_version}"
 	id 'java'
 	id 'java-library'
 	id 'maven'
@@ -90,6 +91,9 @@ dependencyCheck {
 }
 
 configurations {
+	all {
+		exclude group: 'com.h2database'
+	}
     developmentOnly
     runtimeClasspath {
         extendsFrom developmentOnly
@@ -98,23 +102,22 @@ configurations {
 
 dependencies {
 	
-	implementation platform('software.amazon.awssdk:bom:2.14.3')
-	
 	implementation 'com.microsoft.azure:msal4j:1.0.0'
 	implementation 'software.amazon.awssdk:s3',
 		'org.flywaydb:flyway-core'
 	
-    api platform("org.springframework.boot:spring-boot-dependencies:${spring_boot_version}")
+    api "org.springframework:spring-jms"
+    
 	api "net.savantly.sprout:sprout-core:${sproutVersion}",
-		"net.savantly.sprout:sprout-spring-boot-starter:${sproutVersion}",
-		"net.savantly.sprout:sprout-modules-forms:${sproutVersion}"
+	"net.savantly.sprout:sprout-spring-boot-starter:${sproutVersion}",
+		"net.savantly.sprout:sprout-modules-forms:${sproutVersion}" 
+		
 	api 'org.freemarker:freemarker',
 		'com.vladmihalcea:hibernate-types-52:2.10.0'
 	
 	compileOnly 'org.projectlombok:lombok',
 		'javax.interceptor:javax.interceptor-api:1.2',
 		'javax.validation:validation-api:2.0.1.Final',
-		"org.springframework.boot:spring-boot-devtools",
 		'org.projectlombok:lombok:1.18.12'
 
     annotationProcessor 'org.projectlombok:lombok',
@@ -131,6 +134,10 @@ dependencies {
 	}
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation "org.testcontainers:junit-jupiter:1.15.3"
+	
+	testCompile "org.junit.jupiter:junit-jupiter-engine",
+		"org.junit.platform:junit-platform-launcher"
+	
 }
 
 test {
@@ -151,6 +158,7 @@ gradle.taskGraph.whenReady {
 dependencyManagement {
 	imports {
 		mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+		mavenBom 'software.amazon.awssdk:bom:2.14.3'
 	}
 }
 

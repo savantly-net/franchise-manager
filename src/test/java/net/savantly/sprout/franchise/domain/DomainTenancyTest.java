@@ -2,12 +2,15 @@ package net.savantly.sprout.franchise.domain;
 
 import java.io.Serializable;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy;
 
 import net.savantly.sprout.core.domain.tenant.TenantSupport;
 import net.savantly.sprout.core.tenancy.TenantContext;
@@ -44,6 +47,34 @@ import net.savantly.sprout.franchise.domain.pos.FranchisePOSRepository;
 @IntegrationTest
 @ActiveProfiles("test")
 public class DomainTenancyTest {
+
+	protected static String dbName = "bar";
+	protected static String username = "it_user";
+	protected static String password = "it_pass";
+
+	static final PostgreSQLContainer DB_CONTAINER = (PostgreSQLContainer) new PostgreSQLContainer()
+			.withDatabaseName(dbName)
+			.withUsername(username)
+			.withPassword(password)
+			.withReuse(true)
+			.waitingFor(new HostPortWaitStrategy());;
+
+	static {
+		DB_CONTAINER.start();
+	}
+	
+	@AfterAll
+	static void afterAll() {
+		
+	}
+
+	@DynamicPropertySource
+	static void properties(DynamicPropertyRegistry registry) {
+		registry.add("spring.datasource.url", DB_CONTAINER::getJdbcUrl);
+		registry.add("spring.datasource.username", () -> username);
+		registry.add("spring.datasource.password", () -> password);
+		registry.add("spring.jpa.hibernate.ddl-auto", () -> "create-drop");
+	}
 	
 	@Autowired
 	FranchiseBarRepository barRepo;
@@ -152,9 +183,4 @@ public class DomainTenancyTest {
 		
 	}
 	
-	@Configuration
-	@EnableAutoConfiguration
-	static class TestContext{
-		
-	}
 }

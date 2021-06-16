@@ -1,11 +1,11 @@
 logging:
   level:
     org.springframework.security.web: DEBUG
-    org.flywaydb: INFO
+    org.flywaydb: DEBUG
 
 sprout:
   jpa:
-    use-embedded-db: true
+    use-embedded-db: false
   cors:
     allowed-methods: GET, OPTIONS, PUT, POST, PATCH, DELETE
   security:
@@ -17,8 +17,11 @@ sprout:
           email-address: test@savantly.net
           roles:
           - ADMIN
+          - FM_LOCATION_ADMIN
 
 spring:
+  flyway:
+    enabled: true
   data:
     rest:
       default-page-size: 200

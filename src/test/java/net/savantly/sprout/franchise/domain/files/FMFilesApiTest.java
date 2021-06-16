@@ -8,11 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -21,11 +19,13 @@ import org.springframework.test.context.ActiveProfiles;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import example.TestApplication;
 import net.savantly.sprout.franchise.domain.operations.qai.question.category.QAIQuestionCategoryRepository;
+import test.AbstractContainerBaseTest;
 
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class FMFilesApiTest {
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = {TestApplication.class})
+public class FMFilesApiTest extends AbstractContainerBaseTest {
 
 	private final static Logger log = LoggerFactory.getLogger(FMFilesApiTest.class);
 	@Autowired
@@ -48,9 +48,4 @@ public class FMFilesApiTest {
 		Assertions.assertTrue(response.getBody().containsKey("qaiFolder"));
 	}
 
-	@Configuration
-	@EnableAutoConfiguration
-	static class TestContext {
-
-	}
 }

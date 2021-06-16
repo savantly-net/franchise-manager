@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import net.savantly.sprout.core.module.SproutModuleConfiguration;
 import net.savantly.sprout.core.module.SproutWebModule;
+import net.savantly.sprout.franchise.db.FMDBMigration;
 import net.savantly.sprout.franchise.domain.DomainServiceConfiguration;
 import net.savantly.sprout.franchise.domain.kpi.KpiConfiguration;
 import net.savantly.sprout.franchise.domain.operations.qai.QAIConfiguration;
@@ -18,7 +19,13 @@ import net.savantly.sprout.franchise.domain.operations.visits.StoreVisitConfigur
 @Configuration(FranchiseManagerModule.KEY)
 @EnableJpaRepositories
 @SproutModuleConfiguration
-@Import({DomainServiceConfiguration.class, QAIConfiguration.class, StoreVisitConfiguration.class, KpiConfiguration.class})
+@Import({
+	FMDBMigration.class,
+	DomainServiceConfiguration.class, 
+	QAIConfiguration.class, 
+	StoreVisitConfiguration.class, 
+	KpiConfiguration.class
+	})
 public class FranchiseManagerModule implements SproutWebModule {
 
 	public static final String KEY = "franchise-manager";

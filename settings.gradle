@@ -1,8 +1,0 @@
-pluginManagement {
-	plugins {
-		id 'io.spring.dependency-management' version "${spring_plugin_version}"
-		id 'org.springframework.boot' version "${spring_boot_version}"
-        id 'org.sonarqube' version "${sonarqube_plugin_version}"
-	}
-}
-rootProject.name = 'franchise-manager'

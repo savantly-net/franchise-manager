@@ -3,31 +3,39 @@ package net.savantly.sprout.franchise.domain.qai.section;
 import java.net.URI;
 import java.util.ArrayList;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import example.TestApplication;
 import net.savantly.sprout.franchise.domain.operations.qai.guestQuestion.QAIGuestQuestionDto;
+import net.savantly.sprout.franchise.domain.operations.qai.guestQuestion.QAIGuestQuestionRepository;
 import net.savantly.sprout.franchise.domain.operations.qai.question.QAIQuestionDto;
+import net.savantly.sprout.franchise.domain.operations.qai.question.QAIQuestionRepository;
 import net.savantly.sprout.franchise.domain.operations.qai.question.category.QAIQuestionCategory;
 import net.savantly.sprout.franchise.domain.operations.qai.question.category.QAIQuestionCategoryRepository;
 import net.savantly.sprout.franchise.domain.operations.qai.section.QAISectionDto;
+import test.AbstractContainerBaseTest;
 
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class QAISectionApiTest {
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = TestApplication.class)
+public class QAISectionApiTest extends AbstractContainerBaseTest {
 
 	@Autowired
 	TestRestTemplate rest;
@@ -35,8 +43,50 @@ public class QAISectionApiTest {
 	ObjectMapper mapper;
 	@Autowired
 	QAIQuestionCategoryRepository categoryRepo;
+	@Autowired
+	QAIQuestionRepository qrepo;
+	@Autowired
+	QAIGuestQuestionRepository gqrepo;
+	
+	
 	private String user = "admin";
 	private String password = "changeme!";
+	
+	protected static String dbName = "QAISectionApiTest";
+	protected static String dbUsername = "it_user";
+	protected static String dbPassword = "it_pass";
+
+	static final PostgreSQLContainer DB_CONTAINER = (PostgreSQLContainer) new PostgreSQLContainer()
+			.withDatabaseName(dbName)
+			.withUsername(dbUsername)
+			.withPassword(dbPassword)
+			.withReuse(true)
+			.waitingFor(new HostPortWaitStrategy());;
+
+	static {
+		DB_CONTAINER.start();
+	}
+	
+	@AfterAll
+	static void afterAll() {
+		
+	}
+	
+	@BeforeEach
+	public void beforeEach() {
+		this.gqrepo.deleteAll();
+		this.qrepo.deleteAll();
+		this.categoryRepo.deleteAll();
+	}
+
+	@DynamicPropertySource
+	static void properties(DynamicPropertyRegistry registry) {
+		registry.add("spring.datasource.url", DB_CONTAINER::getJdbcUrl);
+		registry.add("spring.datasource.username", () -> dbUsername);
+		registry.add("spring.datasource.password", () -> dbPassword);
+		registry.add("spring.jpa.hibernate.ddl-auto", () -> "create-drop");
+	}
+	
 
 	@Test
 	public void getAll() throws Exception {
@@ -88,9 +138,4 @@ public class QAISectionApiTest {
 	public static class QAISectionDtoList extends ArrayList<QAISectionDto> {
 	}
 
-	@Configuration
-	@EnableAutoConfiguration
-	static class TestContext {
-
-	}
 }

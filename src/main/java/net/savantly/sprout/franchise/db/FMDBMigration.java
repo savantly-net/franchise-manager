@@ -1,17 +1,21 @@
 package net.savantly.sprout.franchise.db;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
+import org.springframework.context.annotation.Configuration;
 
 import lombok.AllArgsConstructor;
 
+@Configuration
 @AllArgsConstructor
 public class FMDBMigration {
 	
 	private static final String SCHEMA_VERSION_TABLE = "fm_schema_version";
 	private final DataSource dataSource;
-	
+
+	@PostConstruct
     public void migrate() {
 		DataSource source = (DataSource) dataSource;
         Flyway flyway = Flyway.configure()

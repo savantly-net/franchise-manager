@@ -7,20 +7,19 @@ import java.util.Objects;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy;
 
+import example.TestApplication;
 import net.savantly.sprout.domain.menu.MenuDto;
 
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = TestApplication.class)
 public class ReportSourceMenuContributorTest  {
 	
 	@Autowired
@@ -28,7 +27,7 @@ public class ReportSourceMenuContributorTest  {
 	@Autowired
 	ReportSourceMenuContributor menuContributor;
 
-	protected static String dbName = "foo";
+	protected static String dbName = "ReportSourceMenuContributorTest";
 	protected static String username = "it_user";
 	protected static String password = "it_pass";
 
@@ -74,9 +73,4 @@ public class ReportSourceMenuContributorTest  {
 		return new ReportSource().setMenuPath(path).setName(name).setUrl(url);
 	}
 
-	@Configuration
-	@EnableAutoConfiguration
-	static class TestContext {
-
-	}
 }

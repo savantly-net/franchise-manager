@@ -119,6 +119,17 @@ public class DomainServiceConfiguration {
 		return new FranchiseLocationService(repo, locationConverter);
 	}
 
+	@Bean
+	public FranchiseFeeService franchiseFeeService(FranchiseFeeRepository repository,
+			FranchiseFeeTypeRepository feeTypes) {
+		return new FranchiseFeeService(repository, feeTypes);
+	}
+
+	@Bean
+	public FranchiseLocationMemberService franchiseLocationMemberService(FranchiseLocationMemberRepository repo) {
+		return new FranchiseLocationMemberService(repo);
+	}
+
 	// Converter
 
 	@Bean
@@ -140,13 +151,6 @@ public class DomainServiceConfiguration {
 				hoursModifierConverter, patioConverter, posConverter);
 
 	}
-
-	@Bean
-	public FranchiseFeeService franchiseFeeService(FranchiseFeeRepository repository,
-			FranchiseFeeTypeRepository feeTypes) {
-		return new FranchiseFeeService(repository, feeTypes);
-	}
-
 	@Bean
 	public FranchiseHoursOfOperationConverter hoursConverter(FranchiseHoursOfOperationRepository repo) {
 		return new FranchiseHoursOfOperationConverter(repo);
@@ -168,9 +172,5 @@ public class DomainServiceConfiguration {
 		return new FranchisePOSConverter(repo);
 	}
 
-	@Bean
-	public FranchiseLocationMemberService franchiseLocationMemberService(FranchiseLocationMemberRepository repo) {
-		return new FranchiseLocationMemberService(repo);
-	}
 
 }
