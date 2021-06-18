@@ -1,0 +1,4 @@
+logging:
+  level:
+    org.springframework.web: DEBUG
+    net.savantly.sprout: DEBUG

@@ -1,0 +1,108 @@
+plugins {
+	id 'org.springframework.boot'
+	id 'io.spring.dependency-management'
+	id 'java'
+	id 'maven'
+ 	id 'jacoco'
+ 	//id 'org.sonarqube'
+	//id "org.owasp.dependencycheck" version "5.3.1"
+}
+
+archivesBaseName = name
+description = "franchise-manager-server"
+sourceCompatibility = '11'
+
+//apply from: "${rootProject.projectDir}/gradle/sonar.gradle"
+
+bootRun {
+	jvmArgs=["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=18080"]
+	sourceResources sourceSets.main
+}
+
+bootBuildImage {
+	imageName = "${container_repo_url}"
+}
+
+bootJar {
+	layered()
+	exclude("**/application-local.properties")
+}
+// run `./gradlew :sprout-modules-forms:dev -Psuspend=y` to suspend for debugger connection
+def suspend = project.ext.properties.suspend
+if(!suspend) {
+	suspend = 'n'
+}
+task dev(type: JavaExec) {
+    group = "Execution"
+    description = "Run the app class with JavaExecTask"
+    //classpath = sourceSets.test.runtimeClasspath
+    classpath += sourceSets.main.runtimeClasspath
+    main = 'net.savantly.franchise.SproutApplication'
+    jvmArgs=[
+  	  "-agentlib:jdwp=transport=dt_socket,server=y,suspend=$suspend,address=18080",
+	  "-Dspring.profiles.active=dev"
+    ]
+}
+task sandbox(type: JavaExec) {
+    group = "Execution"
+    description = "Run the app class with JavaExecTask"
+    //classpath = sourceSets.test.runtimeClasspath
+    classpath += sourceSets.main.runtimeClasspath
+    main = 'net.savantly.franchise.SproutApplication'
+    jvmArgs=[
+  	  "-agentlib:jdwp=transport=dt_socket,server=y,suspend=$suspend,address=18080",
+	  "-Dspring.profiles.active=sandbox"
+    ]
+}
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
+
+dependencies {
+	project(':fm-module')
+	implementation "net.savantly.sprout:sprout-spring-boot-starter:${sproutVersion}"
+	//implementation 'com.h2database:h2'
+	runtimeOnly 'org.postgresql:postgresql'
+	
+	//runtimeOnly 'net.savantly.sprout:sprout-admin'
+	//implementation 'net.savantly.sprout:sprout-modules-content'
+	//runtimeOnly 'net.savantly.sprout:sprout-modules-openTok'
+	
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-hateoas',
+		"io.jsonwebtoken:jjwt-jackson:${json_web_token_version}",
+		"com.fasterxml.jackson.dataformat:jackson-dataformat-csv",
+		"commons-net:commons-net:3.8.0"
+		
+	implementation 'org.springframework.cloud:spring-cloud-aws-messaging:2.2.6.RELEASE'
+	
+	runtimeOnly "io.jsonwebtoken:jjwt-impl:${json_web_token_version}"
+
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly "org.springframework.boot:spring-boot-devtools"
+    annotationProcessor 'org.projectlombok:lombok',
+        'org.springframework.boot:spring-boot-configuration-processor'
+        
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+    testCompile "org.testcontainers:postgresql:1.15.3"
+	testImplementation "org.testcontainers:junit-jupiter:1.15.3",
+		'org.mockftpserver:MockFtpServer:2.8.0'
+
+}
+
+test {
+	useJUnitPlatform()
+}
+
+dependencyManagement {
+	imports {
+		mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+	}
+}

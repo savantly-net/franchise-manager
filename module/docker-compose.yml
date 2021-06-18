@@ -3,7 +3,7 @@ services:
 
 
   sprout-server:
-    image: savantly/sprout-server:latest
+    image: savantly/franchise-manager-demo:latest
     container_name: fmgr-sprout-server
     ports:
       - 8080:8080
@@ -14,8 +14,6 @@ services:
       SPRING_DATASOURCE_DRIVER_CLASS: org.postgresql.Driver
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-    volumes:
-    - ./build/libs/franchise-manager-2.0.0-SNAPSHOT.jar:/sprout/modules/franchise-manager.jar:ro
 
   webapp:
     image: savantly/sprout-webapp

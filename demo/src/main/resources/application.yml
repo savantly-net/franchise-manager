@@ -1,0 +1,62 @@
+#
+# Recommend use for static configuration that does not change between environments.
+#
+sprout:
+  dashboards:
+    enable-menu-items: true
+  proxy:
+    allowed-uris:
+    - .*localhost.*
+  branding:
+    styles: # match ui urls with regex to apply specific css files
+    - matchExpression: .*
+      value: /api/public/another.css
+  jpa:
+    packages-to-scan: # additional package to scan for jpa
+    - net.savantly.franchise
+  #cors:
+  #  allowed-methods: GET, OPTIONS, PUT, POST, PATCH, DELETE
+  security:
+    authentication:
+#      jwt:
+#        groups-claim: resource_access.webapp.roles
+      basic:
+        users:
+        - username: admin
+          password: changeme!
+          email-address: example@savantly.net
+          roles: ADMIN,EVERYONE
+
+spring:
+  flyway:
+    enabled: true
+  banner:
+    location: banner.txt
+  mvc:
+    log-request-details: true
+  datasource:
+    url: jdbc:tc:postgresql:12.6-alpine:///fuzzys-dev
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: true
+    properties:
+      hibernate:
+        format_sql: true
+  profiles:
+    active: local
+  data:
+    rest:
+      default-page-size: 200
+
+management:
+  endpoints:
+    web:
+      exposure.include: "health,mappings,beans"
+
+logging:
+  level:
+    root: WARN
+    org.springframework.web: INFO
+
+springdoc:
+  swagger-ui.path: /swagger

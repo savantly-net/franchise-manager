@@ -1,0 +1,14 @@
+pluginManagement {
+	plugins {
+		id 'io.spring.dependency-management' version "${spring_plugin_version}"
+		id 'org.springframework.boot' version "${spring_boot_version}"
+        id 'org.sonarqube' version "${sonarqube_plugin_version}"
+	}
+}
+rootProject.name = 'franchise-manager'
+
+include(':fm-demo')
+project(':fm-demo').projectDir = file('demo')
+
+include(':fm-module')
+project(':fm-module').projectDir = file('module')
