@@ -7,8 +7,8 @@ pluginManagement {
 }
 rootProject.name = 'franchise-manager'
 
-include(':fm-demo')
-project(':fm-demo').projectDir = file('demo')
+include(':fm-example')
+project(':fm-example').projectDir = file('example')
 
 include(':fm-module')
 project(':fm-module').projectDir = file('module')

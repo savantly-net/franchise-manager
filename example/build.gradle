@@ -63,14 +63,15 @@ configurations {
 }
 
 dependencies {
-	project(':fm-module')
+	
+	// Inlcude the Franchise Manager module
+	implementation project(':fm-module')
+	// If you're including your own project
+	//implementation "net.savantly.sprout:fm-module:2.0.0-SNAPSHOT"
+
 	implementation "net.savantly.sprout:sprout-spring-boot-starter:${sproutVersion}"
 	//implementation 'com.h2database:h2'
 	runtimeOnly 'org.postgresql:postgresql'
-	
-	//runtimeOnly 'net.savantly.sprout:sprout-admin'
-	//implementation 'net.savantly.sprout:sprout-modules-content'
-	//runtimeOnly 'net.savantly.sprout:sprout-modules-openTok'
 	
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
