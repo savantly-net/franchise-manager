@@ -1,4 +1,4 @@
-name: Publish commits to master
+name: Publish commits to main
 
 # Suppress Spinner because it appears as warnings
 env:
@@ -8,7 +8,7 @@ env:
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
     tags:
       - 'v*.*.*'
 
