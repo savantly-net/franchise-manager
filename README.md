@@ -38,6 +38,65 @@ The module is packaged as a jar, and contains backend and frontend code.
 In one terminal start the Java dev continuous build.  
 
 ```
-
+./gradlew :fm-module:compileJava --continuous
 ```
 
+In another terminal, start the required resourses [DB, WebApp]
+
+```
+docker compose -f module/docker-compose.yml up
+```
+
+Finally in another terminal, start the dev app -  
+
+```
+./gradlew :fm-module:bootRun
+```
+
+Sprout UI should be running at [localhost:3000](http://localhost:3000)  
+Sprout API should be running at [localhost:8080](http://localhost:8080)  
+Adminer should be running at [localhost:8081](http://localhost:8081)  
+
+## Features
+
+Home page showing the menu options added by the Franchise Manager module  
+![Home](./docs/home.png)  
+
+## Permissions  
+New permissions available  
+![Permissions](./docs/permissions.png)  
+
+### Location Management
+
+Manage franchise location information -  
+Add attributes such as address, bars, patios, POS terminals, and others ...  
+
+Locations List  
+![location list](./docs/location_list.png)  
+
+Location Edit   
+![location edit](./docs/location_edit.png)  
+
+### Franchise fee management  
+
+Manage the fees associated with a franchise.  
+
+Fee Types   
+![location edit](./docs/fee_types.png)  
+
+Fee Type Edit   
+![location edit](./docs/fee_types_edit.png)  
+
+### QAI 
+
+Manage the QAI surveys and 'store visit' forms.  
+Create multiple sections, question categories, questions, and associated points  
+
+QAI Question Category List
+![qai category](./docs/qai_category_list.png)  
+
+QAI Section Editor  
+![qai section editor](./docs/qai_section_edit.png)  
+
+QAI Section Data Entry  
+![qai section editor](./docs/qai_section_data_entry.png)  
