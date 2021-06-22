@@ -1,7 +1,7 @@
 plugins {
 	id 'io.spring.dependency-management' version "${spring_plugin_version}"
-	id 'org.springframework.boot' version "${spring_boot_version}" apply false
-//    id 'org.sonarqube' version "${sonarqube_plugin_version}"
+	id 'org.springframework.boot' version "${spring_boot_version}"
+    id 'org.sonarqube' version "${sonarqube_plugin_version}"
 	id 'java'
 	id 'java-library'
 	id 'maven'
@@ -11,9 +11,13 @@ plugins {
 	id "com.github.node-gradle.node" version "2.2.0"
 }
 
+ext {
+	sonarProjectKey = "savantly-net_franchise-manager"
+}
 
 apply plugin: 'maven-publish'
 apply plugin: "io.freefair.lombok"
+apply from: "${rootProject.projectDir}/gradle/sonar.gradle"
 apply from: "${rootProject.projectDir}/gradle/sonatype.gradle"
 
 group = 'net.savantly.sprout'
@@ -59,20 +63,35 @@ yarn_build.dependsOn yarn
 copyPublicfiles.dependsOn yarn_build
 classes.dependsOn copyPublicfiles
 
-// run `./gradlew :dev -Psuspend=y` to suspend for debugger connection
+sourceSets {
+    dev {
+        java {
+            compileClasspath += main.compileClasspath
+            runtimeClasspath += main.runtimeClasspath
+            srcDirs += ['src/dev/java', 'src/dev/resources']
+        }
+    }
+}
+
+// run `./gradlew :fm-module:bootRun -Psuspend=y` to suspend for debugger connection
 def suspend = project.ext.properties.suspend
 if(!suspend) {
 	suspend = 'n'
 }
-task dev(type: JavaExec) {
-    group = "Execution"
-    description = "Run the test app class with JavaExecTask"
-    //classpath = sourceSets.test.runtimeClasspath
-    classpath += sourceSets.main.runtimeClasspath
-    main = 'example.TestApplication'
+bootRun {
+	main = 'example.DevApplication'
+    classpath = sourceSets.dev.runtimeClasspath
     jvmArgs=[
   	  "-agentlib:jdwp=transport=dt_socket,server=y,suspend=$suspend,address=18080"
     ]
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
 }
 
 dependencyCheck {

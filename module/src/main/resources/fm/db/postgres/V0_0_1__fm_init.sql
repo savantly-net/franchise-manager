@@ -656,3 +656,24 @@ CREATE TABLE fm_report_source
 
 
 
+CREATE TABLE qaiguestquestionanswergroup_attachments (
+	qaiguestquestionanswergroup_item_id varchar(42) NOT NULL,
+	qaiguestquestionanswergroup_tenant_id varchar(255) NOT NULL,
+	contenttype varchar(255) NULL,
+	downloadurl varchar(255) NULL,
+	id varchar(255) NULL,
+	name varchar(255) NULL
+);
+
+ALTER TABLE qaiguestquestionanswergroup_attachments ADD CONSTRAINT fkf8tpbfsqdau0pdf8vy4yvpyb FOREIGN KEY (qaiguestquestionanswergroup_item_id, qaiguestquestionanswergroup_tenant_id) REFERENCES fm_qai_guest_question_answer_group(item_id, tenant_id);
+
+CREATE TABLE qaiquestionanswer_attachments (
+	qaiquestionanswer_item_id varchar(42) NOT NULL,
+	qaiquestionanswer_tenant_id varchar(255) NOT NULL,
+	contenttype varchar(255) NULL,
+	downloadurl varchar(255) NULL,
+	id varchar(255) NULL,
+	"name" varchar(255) NULL
+);
+
+ALTER TABLE qaiquestionanswer_attachments ADD CONSTRAINT fksf85xmq12gyc5cax6oi3jgi2t FOREIGN KEY (qaiquestionanswer_item_id, qaiquestionanswer_tenant_id) REFERENCES fm_qai_question_answer(item_id, tenant_id);

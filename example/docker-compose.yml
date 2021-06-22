@@ -4,7 +4,7 @@ services:
 
   sprout-server:
     image: savantly/franchise-manager-demo:latest
-    container_name: fmgr-sprout-server
+    container_name: fmgr-example-server
     restart: always
     ports:
       - 8080:8080
@@ -15,29 +15,28 @@ services:
       SPRING_DATASOURCE_DRIVER_CLASS: org.postgresql.Driver
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-      SPRING_FLYWAY_ENABLED: "true"
 
   webapp:
     image: savantly/sprout-webapp
-    container_name: fmgr-sprout-webapp
+    container_name: fmgr-example-webapp
     restart: always
     ports:
       - 3000:3000
     environment: 
-      - SPROUT_API_URL=http://fmgr-sprout-server:8080
+      - SPROUT_API_URL=http://fmgr-example-server:8080
     depends_on: 
       - sprout-server
 
   db:
     image: postgres:12
-    container_name: fmgr-sprout-db
+    container_name: fmgr-example-db
     restart: always
     environment:
       POSTGRES_PASSWORD: postgres
 
   adminer:
     image: adminer
-    container_name: fmgr-sprout-adminer
+    container_name: fmgr-example-adminer
     restart: always
     ports:
       - 8081:8080

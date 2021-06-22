@@ -1,0 +1,44 @@
+jacoco {
+    toolVersion = "0.8.5"
+}
+
+jacocoTestReport {
+    executionData tasks.withType(Test)
+    //classDirectories.from = files(sourceSets.main.output.classesDirs)
+    //sourceDirectories.from = files(sourceSets.main.java.srcDirs)
+
+    reports {
+        xml.enabled = true
+    }
+}
+
+sonarqube {
+    properties {
+      property "sonar.host.url", "https://sonarcloud.io"
+      property "sonar.organization", "savantly-net"
+      property "sonar.projectKey", "$sonarProjectKey"
+      property "sonar.exclusions", "**/*Generated.java"
+      property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
+	  property "sonar.java.codeCoveragePlugin", "jacoco"
+	  property "sonar.junit.reportPaths", "build/test-results/test"
+      property "sonar.dependencyCheck.jsonReportPath", "build/reports/dependency-check-report.json"
+      property "sonar.dependencyCheck.htmlReportPath", "build/reports/dependency-check-report.html"
+      property "sonar.dependencyCheck.summarize", "true"
+      property "sonar.dependencyCheck.jarAnalyzerEnabled", "false"
+      property "sonar.dependencyCheck.assemblyAnalyzerEnabled", "false"
+    }
+}
+
+task testReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/tests")
+    reportOn test
+}
+
+dependencyCheck {
+    formats=['JSON', 'HTML']
+    autoUpdate = true
+}
+
+check.dependsOn dependencyCheckAnalyze
+project.tasks["sonarqube"].dependsOn jacocoTestReport
+project.tasks["sonarqube"].dependsOn check
