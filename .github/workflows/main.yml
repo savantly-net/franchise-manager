@@ -1,4 +1,4 @@
-name: CI
+name: Publish commits to master
 
 # Suppress Spinner because it appears as warnings
 env:
