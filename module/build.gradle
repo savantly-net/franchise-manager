@@ -4,11 +4,11 @@ plugins {
     id 'org.sonarqube' version "${sonarqube_plugin_version}"
 	id 'java'
 	id 'java-library'
-	id 'maven'
 	id 'signing'
  	id 'jacoco'
 	id "org.owasp.dependencycheck" version "5.3.1"
 	id "com.github.node-gradle.node" version "2.2.0"
+    id "com.adarshr.test-logger" version "3.0.0"
 }
 
 ext {
@@ -92,12 +92,28 @@ bootJar {
 
 jar {
     enabled = true
+	exclude("**/application-*.yml")
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
 }
 
 dependencyCheck {
 	analyzers {
 		nodeEnabled=false
 	}
+}
+
+testlogger {
+    showFailedStandardStreams true
 }
 
 configurations {
@@ -136,7 +152,7 @@ dependencies {
     developmentOnly "org.springframework.boot:spring-boot-devtools",
 		'org.postgresql:postgresql'
     
-    testCompile "org.testcontainers:postgresql:1.15.3"
+    testImplementation "org.testcontainers:postgresql:1.15.3"
     
     testImplementation "net.savantly.sprout:sprout-module-test:${sproutVersion}"
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -145,7 +161,7 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation "org.testcontainers:junit-jupiter:1.15.3"
 	
-	testCompile "org.junit.jupiter:junit-jupiter-engine",
+	testImplementation "org.junit.jupiter:junit-jupiter-engine",
 		"org.junit.platform:junit-platform-launcher"
 	
 }
