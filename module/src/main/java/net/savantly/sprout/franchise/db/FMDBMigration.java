@@ -4,6 +4,8 @@ import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
 import lombok.AllArgsConstructor;
@@ -14,6 +16,7 @@ public class FMDBMigration {
 	
 	private static final String SCHEMA_VERSION_TABLE = "fm_schema_version";
 	private final DataSource dataSource;
+	private final Logger log = LoggerFactory.getLogger(FMDBMigration.class);
 
 	@PostConstruct
     public void migrate() {
@@ -27,7 +30,11 @@ public class FMDBMigration {
         		.baselineOnMigrate(true)
         		.baselineVersion("0")
         		.load();
-        flyway.migrate();
+        try {
+            flyway.migrate();
+        } catch (Exception e) {
+        	log.error("failed to migrate frachise manager", e);
+        }
     }
 
 	//TODO: detect correct db type
