@@ -1,4 +1,4 @@
-CREATE TABLE fm_address_book
+CREATE TABLE IF NOT EXISTS fm_address_book
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE fm_address_book
     CONSTRAINT fm_address_book_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_bar
+CREATE TABLE IF NOT EXISTS fm_bar
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE fm_bar
     CONSTRAINT fm_bar_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_building
+CREATE TABLE IF NOT EXISTS fm_building
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE fm_building
     CONSTRAINT fm_building_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_calendar
+CREATE TABLE IF NOT EXISTS fm_calendar
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE fm_calendar
     CONSTRAINT fm_calendar_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_contact_type
+CREATE TABLE IF NOT EXISTS fm_contact_type
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE fm_contact_type
     CONSTRAINT fm_contact_type_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_fee_type
+CREATE TABLE IF NOT EXISTS fm_fee_type
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE fm_fee_type
     CONSTRAINT fm_fee_type_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_fee
+CREATE TABLE IF NOT EXISTS fm_fee
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -119,7 +119,7 @@ CREATE TABLE fm_fee
         ON DELETE NO ACTION
 );
 
-CREATE TABLE fm_group
+CREATE TABLE IF NOT EXISTS fm_group
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -137,7 +137,7 @@ CREATE TABLE fm_group
     CONSTRAINT fm_group_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_group_member
+CREATE TABLE IF NOT EXISTS fm_group_member
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -152,7 +152,7 @@ CREATE TABLE fm_group_member
     CONSTRAINT fm_group_member_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_integration_type
+CREATE TABLE IF NOT EXISTS fm_integration_type
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -167,7 +167,7 @@ CREATE TABLE fm_integration_type
     CONSTRAINT fm_integration_type_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_knowledge
+CREATE TABLE IF NOT EXISTS fm_knowledge
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -181,7 +181,7 @@ CREATE TABLE fm_knowledge
     CONSTRAINT fm_knowledge_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_operating_hours
+CREATE TABLE IF NOT EXISTS fm_operating_hours
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -208,7 +208,7 @@ CREATE TABLE fm_operating_hours
 );
 
 
-CREATE TABLE fm_pos
+CREATE TABLE IF NOT EXISTS fm_pos
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -222,7 +222,7 @@ CREATE TABLE fm_pos
     CONSTRAINT fm_pos_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_location
+CREATE TABLE IF NOT EXISTS fm_location
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -267,7 +267,7 @@ CREATE TABLE fm_location
         ON DELETE NO ACTION
 );
 
-CREATE TABLE fm_location_fm_bar
+CREATE TABLE IF NOT EXISTS fm_location_fm_bar
 (
     franchiselocation_item_id character varying(42) NOT NULL,
     franchiselocation_tenant_id character varying(255) NOT NULL,
@@ -285,7 +285,7 @@ CREATE TABLE fm_location_fm_bar
         ON DELETE NO ACTION
 );
 
-CREATE TABLE fm_operating_hours_modifier
+CREATE TABLE IF NOT EXISTS fm_operating_hours_modifier
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -300,7 +300,7 @@ CREATE TABLE fm_operating_hours_modifier
     CONSTRAINT fm_operating_hours_modifier_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_location_fm_operating_hours_modifier
+CREATE TABLE IF NOT EXISTS fm_location_fm_operating_hours_modifier
 (
     franchiselocation_item_id character varying(42) NOT NULL,
     franchiselocation_tenant_id character varying(255) NOT NULL,
@@ -318,7 +318,7 @@ CREATE TABLE fm_location_fm_operating_hours_modifier
         ON DELETE NO ACTION
 );
 
-CREATE TABLE fm_patio
+CREATE TABLE IF NOT EXISTS fm_patio
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -331,7 +331,7 @@ CREATE TABLE fm_patio
     CONSTRAINT fm_patio_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_location_fm_patio
+CREATE TABLE IF NOT EXISTS fm_location_fm_patio
 (
     franchiselocation_item_id character varying(42) NOT NULL,
     franchiselocation_tenant_id character varying(255) NOT NULL,
@@ -349,7 +349,7 @@ CREATE TABLE fm_location_fm_patio
         ON DELETE NO ACTION
 );
 
-CREATE TABLE fm_location_member
+CREATE TABLE IF NOT EXISTS fm_location_member
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -364,7 +364,7 @@ CREATE TABLE fm_location_member
     CONSTRAINT fm_location_member_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_market
+CREATE TABLE IF NOT EXISTS fm_market
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -377,7 +377,7 @@ CREATE TABLE fm_market
     CONSTRAINT fm_market_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_newsletter
+CREATE TABLE IF NOT EXISTS fm_newsletter
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -391,7 +391,7 @@ CREATE TABLE fm_newsletter
     CONSTRAINT fm_newsletter_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_newsletter_template
+CREATE TABLE IF NOT EXISTS fm_newsletter_template
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -406,7 +406,7 @@ CREATE TABLE fm_newsletter_template
 );
 
 
-CREATE TABLE fm_owner
+CREATE TABLE IF NOT EXISTS fm_owner
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -425,7 +425,7 @@ CREATE TABLE fm_owner
 );
 
 
-CREATE TABLE fm_qai_guest_question
+CREATE TABLE IF NOT EXISTS fm_qai_guest_question
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -442,7 +442,7 @@ CREATE TABLE fm_qai_guest_question
     CONSTRAINT fm_qai_guest_question_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_qai_guest_question_answer
+CREATE TABLE IF NOT EXISTS fm_qai_guest_question_answer
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -456,7 +456,7 @@ CREATE TABLE fm_qai_guest_question_answer
     CONSTRAINT fm_qai_guest_question_answer_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_qai_guest_question_answer_group
+CREATE TABLE IF NOT EXISTS fm_qai_guest_question_answer_group
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -469,7 +469,7 @@ CREATE TABLE fm_qai_guest_question_answer_group
     CONSTRAINT fm_qai_guest_question_answer_group_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_qai_guest_question_answer_group_fm_qai_guest_question_answer
+CREATE TABLE IF NOT EXISTS fm_qai_guest_question_answer_group_fm_qai_guest_question_answer
 (
     qaiguestquestionanswergroup_item_id character varying(42) NOT NULL,
     qaiguestquestionanswergroup_tenant_id character varying(255) NOT NULL,
@@ -486,7 +486,7 @@ CREATE TABLE fm_qai_guest_question_answer_group_fm_qai_guest_question_answer
         ON DELETE NO ACTION
 );
 
-CREATE TABLE fm_qai_question_category
+CREATE TABLE IF NOT EXISTS fm_qai_question_category
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -501,7 +501,7 @@ CREATE TABLE fm_qai_question_category
     CONSTRAINT uk340vue123b2rnq0ffnh7wolk UNIQUE (name, tenant_id)
 );
 
-CREATE TABLE fm_qai_question
+CREATE TABLE IF NOT EXISTS fm_qai_question
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -524,7 +524,7 @@ CREATE TABLE fm_qai_question
         ON DELETE NO ACTION
 );
 
-CREATE TABLE fm_qai_question_answer
+CREATE TABLE IF NOT EXISTS fm_qai_question_answer
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -540,7 +540,7 @@ CREATE TABLE fm_qai_question_answer
 );
 
 
-CREATE TABLE fm_qai_section
+CREATE TABLE IF NOT EXISTS fm_qai_section
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -555,7 +555,7 @@ CREATE TABLE fm_qai_section
     CONSTRAINT fm_qai_section_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_qai_section_submission
+CREATE TABLE IF NOT EXISTS fm_qai_section_submission
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -572,7 +572,7 @@ CREATE TABLE fm_qai_section_submission
     CONSTRAINT fm_qai_section_submission_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_qai_section_submission_fm_qai_guest_question_answer_group
+CREATE TABLE IF NOT EXISTS fm_qai_section_submission_fm_qai_guest_question_answer_group
 (
     qaisectionsubmission_item_id character varying(42) NOT NULL,
     qaisectionsubmission_tenant_id character varying(255) NOT NULL,
@@ -589,7 +589,7 @@ CREATE TABLE fm_qai_section_submission_fm_qai_guest_question_answer_group
         ON DELETE NO ACTION
 );
 
-CREATE TABLE fm_qai_section_submission_fm_qai_question_answer
+CREATE TABLE IF NOT EXISTS fm_qai_section_submission_fm_qai_question_answer
 (
     qaisectionsubmission_item_id character varying(42) NOT NULL,
     qaisectionsubmission_tenant_id character varying(255) NOT NULL,
@@ -606,7 +606,7 @@ CREATE TABLE fm_qai_section_submission_fm_qai_question_answer
         ON DELETE NO ACTION
 );
 
-CREATE TABLE fm_qai_staff_attendance
+CREATE TABLE IF NOT EXISTS fm_qai_staff_attendance
 (
     tenant_id character varying(42) NOT NULL,
     item_id character varying(255) NOT NULL,
@@ -619,7 +619,7 @@ CREATE TABLE fm_qai_staff_attendance
         ON DELETE NO ACTION
 );
 
-CREATE TABLE fm_qai_visit
+CREATE TABLE IF NOT EXISTS fm_qai_visit
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -634,7 +634,7 @@ CREATE TABLE fm_qai_visit
     CONSTRAINT fm_qai_visit_pkey PRIMARY KEY (item_id, tenant_id)
 );
 
-CREATE TABLE fm_report_source
+CREATE TABLE IF NOT EXISTS fm_report_source
 (
     item_id character varying(42) NOT NULL,
     tenant_id character varying(255) NOT NULL,
@@ -656,7 +656,7 @@ CREATE TABLE fm_report_source
 
 
 
-CREATE TABLE qaiguestquestionanswergroup_attachments (
+CREATE TABLE IF NOT EXISTS qaiguestquestionanswergroup_attachments (
 	qaiguestquestionanswergroup_item_id varchar(42) NOT NULL,
 	qaiguestquestionanswergroup_tenant_id varchar(255) NOT NULL,
 	contenttype varchar(255) NULL,
@@ -667,7 +667,7 @@ CREATE TABLE qaiguestquestionanswergroup_attachments (
 
 ALTER TABLE qaiguestquestionanswergroup_attachments ADD CONSTRAINT fkf8tpbfsqdau0pdf8vy4yvpyb FOREIGN KEY (qaiguestquestionanswergroup_item_id, qaiguestquestionanswergroup_tenant_id) REFERENCES fm_qai_guest_question_answer_group(item_id, tenant_id);
 
-CREATE TABLE qaiquestionanswer_attachments (
+CREATE TABLE IF NOT EXISTS qaiquestionanswer_attachments (
 	qaiquestionanswer_item_id varchar(42) NOT NULL,
 	qaiquestionanswer_tenant_id varchar(255) NOT NULL,
 	contenttype varchar(255) NULL,

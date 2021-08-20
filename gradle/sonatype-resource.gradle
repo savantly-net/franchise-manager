@@ -15,6 +15,9 @@ publishing {
     publications {
       mavenJava(MavenPublication) {
           from components.java
+          afterEvaluate {
+              artifactId = 'franchise-manager'
+		  }
           versionMapping {
               usage('java-api') {
                   fromResolutionOf('runtimeClasspath')
@@ -27,31 +30,29 @@ publishing {
             name = 'Franchise Manager Module for Sprout'
             url = 'https://github.com/savantly-net/franchise-manager'
 
-            /**  Why does this fail?
             licenses {
                 license {
-                    name 'The Apache License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    name = 'The Apache License, Version 2.0'
+                    url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                 }
             }
 
             developers {
                 developer {
                     id = 'jb'
-                    name 'Jeremy Branham'
-                    email 'Jeremy@Savantly.net'
+                    name = 'Jeremy Branham'
+                    email = 'Jeremy@Savantly.net'
                     organization {
-                      name 'savantly.net'
-                      url 'http://savantly.net'
+                      name = 'savantly.net'
+                      url = 'http://savantly.net'
                     }
                 }
             }
             scm {
-                connection 'scm:git:ssh://github.com/savantly-net/franchise-manager.git'
-                developerConnection 'scm:git:ssh://github.com/savantly-net/franchise-manager.git'
-                url 'https://github.com/savantly-net/franchise-manager/tree/main'
+                connection = 'scm:git:ssh://github.com/savantly-net/franchise-manager.git'
+                developerConnection = 'scm:git:ssh://github.com/savantly-net/franchise-manager.git'
+                url = 'https://github.com/savantly-net/franchise-manager/tree/main'
             }
-            */
           }
       }
   }
@@ -77,6 +78,3 @@ publishing {
     } */
   }
 }
-
-// Sign POM - how to do?
-// beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
