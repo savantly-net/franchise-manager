@@ -20,7 +20,6 @@ apply plugin: "io.freefair.lombok"
 apply from: "${rootProject.projectDir}/gradle/sonar.gradle"
 apply from: "${rootProject.projectDir}/gradle/sonatype.gradle"
 
-version = '2.0.0-SNAPSHOT'
 archivesBaseName = name
 description = "Provides franchise management on the Sprout Platform"
 sourceCompatibility = 11

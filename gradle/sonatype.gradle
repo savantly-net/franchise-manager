@@ -1,16 +1,86 @@
-apply from: "${rootProject.projectDir}/gradle/sonatype-resource.gradle"
+ext.isReleaseVersion = !version.toString().endsWith("-SNAPSHOT")
+ext.ossrhUsername = System.getenv('OSSRH_USER') ? System.getenv('OSSRH_USER') : (project.hasProperty('ossrhUsername') ? project.ossrhUsername : '')
+ext.ossrhPassword = System.getenv('OSSRH_USER_TOKEN') ? System.getenv('OSSRH_USER_TOKEN') : (project.hasProperty('ossrhPassword') ? project.ossrhPassword : '')
 
-// Add Javadoc JAR and sources JAR to artifact
-/*
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
+
+signing {
+    required {
+        // signing is required if this is a release version and the artifacts are to be published
+        isReleaseVersion && tasks.withType(PublishToMavenRepository).find {
+             gradle.taskGraph.hasTask it
+        }
+    }
+    useGpgCmd()
+    sign publishing.publications
 }
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
+
+// Build, sign, and upload
+publishing {
+    publications {
+      mavenJava(MavenPublication) {
+          from components.java
+          afterEvaluate {
+              artifactId = 'franchise-manager'
+		  }
+          versionMapping {
+              usage('java-api') {
+                  fromResolutionOf('runtimeClasspath')
+              }
+              usage('java-runtime') {
+                  fromResolutionResult()
+              }
+          }
+          pom {
+            name = 'franchise-manager-module'
+            url = 'https://github.com/savantly-net/franchise-manager'
+            
+            description = 'Franchise Manager Module for Sprout'
+
+            licenses {
+                license {
+                    name = 'The Apache License, Version 2.0'
+                    url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                }
+            }
+
+            developers {
+                developer {
+                    id = 'jb'
+                    name = 'Jeremy Branham'
+                    email = 'Jeremy@Savantly.net'
+                    organization {
+                      name = 'savantly.net'
+                      url = 'http://savantly.net'
+                    }
+                }
+            }
+            scm {
+                connection = 'scm:git:ssh://github.com/savantly-net/franchise-manager.git'
+                developerConnection = 'scm:git:ssh://github.com/savantly-net/franchise-manager.git'
+                url = 'https://github.com/savantly-net/franchise-manager/tree/main'
+            }
+          }
+      }
+  }
+  repositories {
+    maven {
+      name = "OSSRH"
+      credentials {
+        username = ossrhUsername
+        password = ossrhPassword
+      }
+      def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+      def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+      url = isReleaseVersion ? releasesRepoUrl: snapshotsRepoUrl 
+    }
+    /*
+    maven {
+      name = "GitHubPackages"
+      url = "https://maven.pkg.github.com/savantly-net/sprout-platform"
+      credentials {
+        username = System.getenv("GITHUB_ACTOR")
+        password = System.getenv("GITHUB_TOKEN")
+      }
+    } */
+  }
 }
-artifacts {
-    archives javadocJar, sourcesJar
-}
-*/
