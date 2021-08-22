@@ -9,7 +9,6 @@ buildscript {
 
 allprojects {
     group = 'net.savantly.franchise'
-    version = '2.0.0-SNAPSHOT'
     
     repositories {
     	mavenLocal()
