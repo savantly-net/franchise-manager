@@ -56,6 +56,14 @@ Finally in another terminal, start the dev app -
 ./gradlew :fm-module:bootRun
 ```
 
+To continuously build the plugin/front-end code, open another terminal - 
+This allows seamless development of the front-end code. Refresh the browser to see updates.  
+
+```
+cd module
+yarn watch
+```
+
 Sprout UI should be running at [localhost:3000](http://localhost:3000)  
 Sprout API should be running at [localhost:8080](http://localhost:8080)  
 Adminer should be running at [localhost:8081](http://localhost:8081)  
