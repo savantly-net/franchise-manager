@@ -10,6 +10,7 @@ import { getAppPluginSettingsService } from 'plugin/services/pluginSettings';
 import React, { Fragment, useMemo, useState } from 'react';
 import { Prompt } from 'react-router-dom';
 import { Alert } from 'reactstrap';
+import { useQAISections } from '../sections/hooks';
 import { QAISectionSubmission, qaiSubmissionService } from '../submissions/entity';
 import {
   StoreVisit as EntityClass,
@@ -105,6 +106,17 @@ export const StoreVisitEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
   const locations = useFMLocations();
   const [sectionSubmissions, setSectionSubmissions] = useState(undefined as QAISectionSubmission[] | undefined);
   const appPluginSettings = getAppPluginSettingsService().getSettings;
+  const qaiSectionList = useQAISections();
+
+  const getSectionNameById = (sectionId: string | undefined): string => {
+    console.log(`matching section id: ${sectionId} in ${qaiSectionList}`);
+    const matches = qaiSectionList.filter(s => s.itemId === sectionId);
+    if (matches.length > 0) {
+      return matches[0].name;
+    } else {
+      return '';
+    }
+  };
 
   const updateSelectedLocation = (locationId?: string, props?: FormikProps<StoreVisit>) => {
     if (locationId && selectedLocationId !== locationId && props) {
@@ -242,7 +254,7 @@ export const StoreVisitEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
                     {sectionSubmissions &&
                       sectionSubmissions.map(s => (
                         <option key={s.itemId} value={s.itemId}>
-                          {s.dateScored}
+                          {getSectionNameById(s.sectionId)} {s.dateScored}
                         </option>
                       ))}
                   </Fragment>
