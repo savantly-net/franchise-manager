@@ -1,8 +1,11 @@
 package net.savantly.sprout.franchise.domain.report;
 
+import java.util.Optional;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.savantly.sprout.core.domain.user.SproutUser;
 import net.savantly.sprout.core.security.SproutSecurityContext;
 import net.savantly.sprout.core.tenancy.TenantKeyedRepository;
 import net.savantly.sprout.franchise.domain.privilege.FMPrivilege;
@@ -34,7 +37,7 @@ public class ReportSourceApi extends TenantedDtoController<ReportSource, ReportS
 	
 	@Override
 	protected boolean canDeleteById(String itemId) {
-		var optUser = SproutSecurityContext.getCurrentUser();
+		Optional<SproutUser> optUser = SproutSecurityContext.getCurrentUser();
 		if (optUser.isPresent() && 
 				(optUser.get().hasAuthority(FMPrivilege.FM_ADMIN) || optUser.get().hasAuthority("ADMIN"))) {
 			return true;
