@@ -1,6 +1,7 @@
 package net.savantly.sprout.franchise.domain.operations.qai;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,7 +16,7 @@ public class QAIPermissionEvaluator implements SproutPermissionEvaluator<Object>
 
 	@Override
 	public List<String> getEvaluationType() {
-		return List.of(
+		return Arrays.asList(
 			"net.savantly.sprout.franchise.domain.operations.qai.section.QAISectionDto"
 		);
 	}

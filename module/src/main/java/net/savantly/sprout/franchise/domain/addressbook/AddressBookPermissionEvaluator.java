@@ -1,6 +1,7 @@
 package net.savantly.sprout.franchise.domain.addressbook;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
@@ -13,7 +14,7 @@ public class AddressBookPermissionEvaluator implements SproutPermissionEvaluator
 
 	@Override
 	public List<String> getEvaluationType() {
-		return List.of(AddressBookEntry.class.getName());
+		return Arrays.asList(AddressBookEntry.class.getName());
 	}
 
 	@Override
