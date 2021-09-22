@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React from 'react';
 import { useField, useFormikContext } from 'formik';
 import { FormControl, FormLabel } from '@chakra-ui/react';
 import { AutoComplete, AutoCompleteInput, AutoCompleteItem, AutoCompleteList } from '@choc-ui/chakra-autocomplete';
@@ -17,9 +17,8 @@ const TypeAheadSelectField = ({ name, label, items }: TypeAheadSelectFieldProps)
   const { setFieldValue } = useFormikContext();
   const [field, { value }] = useField(name);
   return (
-    <Fragment>
+    <>
       <div key={field.name}>
-        {/*<label>{label}</label>*/}
         <FormControl w="60">
           <FormLabel>{label}</FormLabel>
           <AutoComplete
@@ -40,7 +39,7 @@ const TypeAheadSelectField = ({ name, label, items }: TypeAheadSelectFieldProps)
           </AutoComplete>
         </FormControl>
       </div>
-    </Fragment>
+    </>
   );
 };
 

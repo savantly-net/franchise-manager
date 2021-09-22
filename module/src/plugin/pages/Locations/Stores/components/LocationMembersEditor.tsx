@@ -1,4 +1,4 @@
-import { FormField, Icon } from '@sprout-platform/ui';
+import { Icon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import { FieldArray } from 'formik';
 import TypeAheadSelectField from 'plugin/components/TypeAheadSelectField';
