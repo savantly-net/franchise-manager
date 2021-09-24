@@ -38,7 +38,6 @@ public class FranchiseLocationService {
 		
 		// make sure the one-to-one entities' item IDs match the location item id
 		tempEntity.getBuilding().getId().setItemId(itemId);
-		tempEntity.getHours().getId().setItemId(itemId);
 		tempEntity.getPos().getId().setItemId(itemId);
 		
 		FranchiseLocation entity = this.repo.save(tempEntity);

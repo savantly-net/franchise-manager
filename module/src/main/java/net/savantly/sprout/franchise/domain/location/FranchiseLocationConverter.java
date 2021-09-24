@@ -15,11 +15,9 @@ import net.savantly.sprout.franchise.domain.bar.FranchiseBarConverter;
 import net.savantly.sprout.franchise.domain.building.FranchiseBuilding;
 import net.savantly.sprout.franchise.domain.building.FranchiseBuildingConverter;
 import net.savantly.sprout.franchise.domain.building.FranchiseBuildingDto;
-import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperation;
-import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationConverter;
-import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationDto;
 import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationModifier;
 import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationModifierConverter;
+import net.savantly.sprout.franchise.domain.hours.LocationHours;
 import net.savantly.sprout.franchise.domain.patio.FranchisePatio;
 import net.savantly.sprout.franchise.domain.patio.FranchisePatioConverter;
 import net.savantly.sprout.franchise.domain.pos.FranchisePOS;
@@ -33,7 +31,6 @@ public class FranchiseLocationConverter implements DtoConverter<FranchiseLocatio
 	private final FranchiseLocationRepository repo;
 	private final FranchiseBarConverter barConverter;
 	private final FranchiseBuildingConverter buildingConverter;
-	private final FranchiseHoursOfOperationConverter hoursConverter;
 	private final FranchiseHoursOfOperationModifierConverter hoursModifierConverter;
 	private final FranchisePatioConverter patioConverter;
 	private final FranchisePOSConverter posConverter;
@@ -53,7 +50,7 @@ public class FranchiseLocationConverter implements DtoConverter<FranchiseLocatio
 				.setConcept(from.getConcept())
 				.setCountry(from.getCountry())
 				.setGroupId(from.getGroupId())
-				.setHours(hoursConverter.toDto(from.getHours()).orElse(new FranchiseHoursOfOperationDto()))
+				.setHours(from.getHours())
 				.setId(from.getItemId())
 				.setLocationType(from.getLocationType())
 				.setMarketId(from.getMarketId())
@@ -108,11 +105,7 @@ public class FranchiseLocationConverter implements DtoConverter<FranchiseLocatio
 		}
 		building.getId().setItemId(from.getId());
 
-		FranchiseHoursOfOperation hours = hoursConverter.toEntity(from.getHours()).orElse(new FranchiseHoursOfOperation());
-		if (Objects.isNull(hours.getId())) {
-			hours.setId(new TenantedPrimaryKey());
-		}
-		hours.getId().setItemId(from.getId());
+		LocationHours hours = from.getHours();
 
 		FranchisePOS pos = posConverter.toEntity(from.getPos()).orElse(new FranchisePOS());
 		if (Objects.isNull(pos.getId())) {

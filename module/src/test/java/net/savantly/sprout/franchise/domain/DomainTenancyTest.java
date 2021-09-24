@@ -29,8 +29,6 @@ import net.savantly.sprout.franchise.domain.feeType.FranchiseFeeType;
 import net.savantly.sprout.franchise.domain.feeType.FranchiseFeeTypeRepository;
 import net.savantly.sprout.franchise.domain.group.FranchiseGroup;
 import net.savantly.sprout.franchise.domain.group.FranchiseGroupRepository;
-import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperation;
-import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationRepository;
 import net.savantly.sprout.franchise.domain.integration.FranchiseIntegrationType;
 import net.savantly.sprout.franchise.domain.integration.FranchiseIntegrationTypeRepository;
 import net.savantly.sprout.franchise.domain.location.FranchiseLocation;
@@ -89,8 +87,6 @@ public class DomainTenancyTest {
 	@Autowired
 	FranchiseGroupRepository groupRepo;
 	@Autowired
-	FranchiseHoursOfOperationRepository hoursRepo;
-	@Autowired
 	FranchiseIntegrationTypeRepository integrationRepo;
 	@Autowired
 	FranchiseLocationRepository locationRepo;
@@ -129,10 +125,6 @@ public class DomainTenancyTest {
 	@Test
 	public void groupTest() {
 		doAssertions(new FranchiseGroup(), new FranchiseGroup(), (TenantedJpaRepository)this.groupRepo);
-	}
-	@Test
-	public void hoursTest() {
-		doAssertions(new FranchiseHoursOfOperation(), new FranchiseHoursOfOperation(), (TenantedJpaRepository)this.hoursRepo);
 	}
 	@Test
 	public void intTest() {

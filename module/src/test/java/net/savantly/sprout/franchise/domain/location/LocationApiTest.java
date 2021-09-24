@@ -78,7 +78,7 @@ public class LocationApiTest extends AbstractContainerBaseTest {
 		Assertions.assertTrue(response.getBody().getZip().contentEquals(test));
 
 		Assertions.assertTrue(response.getBody().getBuilding().getId().contentEquals(response.getBody().getId()));
-		Assertions.assertTrue(response.getBody().getHours().getId().contentEquals(response.getBody().getId()));
+		Assertions.assertEquals(response.getBody().getHours(), dto.getHours());
 		Assertions.assertTrue(response.getBody().getPos().getId().contentEquals(response.getBody().getId()));
 
 		Assertions.assertEquals(LocationConcept.TRADITIONAL, response.getBody().getConcept());
@@ -104,7 +104,6 @@ public class LocationApiTest extends AbstractContainerBaseTest {
 		Assertions.assertTrue(response2.getBody().getZip().contentEquals(test));
 
 		Assertions.assertTrue(response2.getBody().getBuilding().getId().contentEquals(response2.getBody().getId()));
-		Assertions.assertTrue(response2.getBody().getHours().getId().contentEquals(response2.getBody().getId()));
 		Assertions.assertTrue(response2.getBody().getPos().getId().contentEquals(response2.getBody().getId()));
 
 		Assertions.assertEquals(LocationConcept.TRADITIONAL, response2.getBody().getConcept());

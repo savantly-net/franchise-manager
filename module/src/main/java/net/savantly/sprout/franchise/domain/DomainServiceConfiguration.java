@@ -23,10 +23,8 @@ import net.savantly.sprout.franchise.domain.group.FranchiseGroupRepository;
 import net.savantly.sprout.franchise.domain.group.FranchiseGroupsApi;
 import net.savantly.sprout.franchise.domain.groupMember.FranchiseGroupMemberApi;
 import net.savantly.sprout.franchise.domain.groupMember.FranchiseGroupMemberRepository;
-import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationConverter;
 import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationModifierConverter;
 import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationModifierRepository;
-import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationRepository;
 import net.savantly.sprout.franchise.domain.knowledge.KnowledgeApi;
 import net.savantly.sprout.franchise.domain.knowledge.KnowledgeRepository;
 import net.savantly.sprout.franchise.domain.location.FranchiseLocationConverter;
@@ -144,16 +142,12 @@ public class DomainServiceConfiguration {
 
 	@Bean
 	public FranchiseLocationConverter locationConverter(FranchiseBarConverter barConverter,
-			FranchiseBuildingConverter buildingConverter, FranchiseHoursOfOperationConverter hoursConverter,
+			FranchiseBuildingConverter buildingConverter,
 			FranchiseHoursOfOperationModifierConverter hoursModifierConverter, FranchisePatioConverter patioConverter,
 			FranchisePOSConverter posConverter, FranchiseLocationRepository repo) {
-		return new FranchiseLocationConverter(repo, barConverter, buildingConverter, hoursConverter,
+		return new FranchiseLocationConverter(repo, barConverter, buildingConverter,
 				hoursModifierConverter, patioConverter, posConverter);
 
-	}
-	@Bean
-	public FranchiseHoursOfOperationConverter hoursConverter(FranchiseHoursOfOperationRepository repo) {
-		return new FranchiseHoursOfOperationConverter(repo);
 	}
 
 	@Bean

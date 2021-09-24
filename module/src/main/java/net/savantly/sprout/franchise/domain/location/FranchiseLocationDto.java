@@ -10,8 +10,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.savantly.sprout.franchise.domain.bar.FranchiseBarDto;
 import net.savantly.sprout.franchise.domain.building.FranchiseBuildingDto;
-import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationDto;
 import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationModifierDto;
+import net.savantly.sprout.franchise.domain.hours.LocationHours;
 import net.savantly.sprout.franchise.domain.patio.FranchisePatioDto;
 import net.savantly.sprout.franchise.domain.pos.FranchisePOSDto;
 
@@ -59,7 +59,7 @@ public class FranchiseLocationDto {
 	
 	private FranchiseBuildingDto building;
 
-	private FranchiseHoursOfOperationDto hours;
+	private LocationHours hours;
 
 	private Set<FranchiseHoursOfOperationModifierDto> modifiedHours = new HashSet<>();
 

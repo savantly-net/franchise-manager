@@ -15,14 +15,20 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.savantly.sprout.core.tenancy.TenantKeyedEntity;
 import net.savantly.sprout.franchise.domain.bar.FranchiseBar;
 import net.savantly.sprout.franchise.domain.building.FranchiseBuilding;
-import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperation;
 import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationModifier;
+import net.savantly.sprout.franchise.domain.hours.LocationHours;
 import net.savantly.sprout.franchise.domain.patio.FranchisePatio;
 import net.savantly.sprout.franchise.domain.pos.FranchisePOS;
 
@@ -30,6 +36,9 @@ import net.savantly.sprout.franchise.domain.pos.FranchisePOS;
 @Getter @Setter
 @Accessors(chain = true)
 @Table(name = "fm_location")
+@TypeDefs({
+    @TypeDef(name = "json", typeClass = JsonBinaryType.class)
+})
 public class FranchiseLocation extends TenantKeyedEntity  {
 
 	@Size(max = 100)
@@ -85,6 +94,10 @@ public class FranchiseLocation extends TenantKeyedEntity  {
 	@Size(max = 255)
 	@Column(length = 255)
 	private String notes;
+
+	@Type(type = "json")
+	@Column(columnDefinition = "jsonb")
+	private LocationHours hours;
 	
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<FranchiseBar> bars = new HashSet<>();
@@ -94,9 +107,6 @@ public class FranchiseLocation extends TenantKeyedEntity  {
 	
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private FranchiseBuilding building;
-
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private FranchiseHoursOfOperation hours;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<FranchiseHoursOfOperationModifier> modifiedHours = new HashSet<>();

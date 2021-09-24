@@ -664,8 +664,19 @@ CREATE TABLE IF NOT EXISTS qaiguestquestionanswergroup_attachments (
 	id varchar(255) NULL,
 	name varchar(255) NULL
 );
+DO $$
+BEGIN
 
-ALTER TABLE qaiguestquestionanswergroup_attachments ADD CONSTRAINT fkf8tpbfsqdau0pdf8vy4yvpyb FOREIGN KEY (qaiguestquestionanswergroup_item_id, qaiguestquestionanswergroup_tenant_id) REFERENCES fm_qai_guest_question_answer_group(item_id, tenant_id);
+  BEGIN
+    ALTER TABLE qaiguestquestionanswergroup_attachments 
+    	ADD CONSTRAINT fkf8tpbfsqdau0pdf8vy4yvpyb 
+   		FOREIGN KEY (qaiguestquestionanswergroup_item_id, qaiguestquestionanswergroup_tenant_id) 
+   		REFERENCES fm_qai_guest_question_answer_group(item_id, tenant_id);
+  EXCEPTION
+    WHEN duplicate_object THEN RAISE NOTICE 'Table constraint fkf8tpbfsqdau0pdf8vy4yvpyb already exists';
+  END;
+END $$;
+
 
 CREATE TABLE IF NOT EXISTS qaiquestionanswer_attachments (
 	qaiquestionanswer_item_id varchar(42) NOT NULL,
@@ -675,5 +686,16 @@ CREATE TABLE IF NOT EXISTS qaiquestionanswer_attachments (
 	id varchar(255) NULL,
 	"name" varchar(255) NULL
 );
+DO $$
+BEGIN
 
-ALTER TABLE qaiquestionanswer_attachments ADD CONSTRAINT fksf85xmq12gyc5cax6oi3jgi2t FOREIGN KEY (qaiquestionanswer_item_id, qaiquestionanswer_tenant_id) REFERENCES fm_qai_question_answer(item_id, tenant_id);
+  BEGIN
+    ALTER TABLE qaiquestionanswer_attachments 
+   		ADD CONSTRAINT fksf85xmq12gyc5cax6oi3jgi2t 
+   		FOREIGN KEY (qaiquestionanswer_item_id, qaiquestionanswer_tenant_id) 
+   		REFERENCES fm_qai_question_answer(item_id, tenant_id);
+  EXCEPTION
+    WHEN duplicate_object THEN RAISE NOTICE 'Table constraint fksf85xmq12gyc5cax6oi3jgi2t already exists';
+  END;
+END $$;
+
