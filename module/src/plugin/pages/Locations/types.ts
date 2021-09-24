@@ -23,21 +23,24 @@ export class FranchiseBuilding {
   leaseSignDate = dateTime().format('YYYY-MM-DD');
 }
 
+export class HourInterval {
+  start: string = '07:00';
+  end: string = '23:00'
+}
+
+export class FranchiseDayHours {
+  isClosed: boolean = false;
+  openIntervals: HourInterval[] = []
+}
+
 export class FranchiseHoursOfOperation {
-  sundayOpen = '';
-  sundayClose = '';
-  mondayOpen = '';
-  mondayClose = '';
-  tuesdayOpen = '';
-  tuesdayClose = '';
-  wednesdayOpen = '';
-  wednesdayClose = '';
-  thursdayOpen = '';
-  thursdayClose = '';
-  fridayOpen = '';
-  fridayClose = '';
-  saturdayOpen = '';
-  saturdayClose = '';
+  sunday: FranchiseDayHours = new FranchiseDayHours();
+  monday: FranchiseDayHours = new FranchiseDayHours();
+  tuesday: FranchiseDayHours = new FranchiseDayHours();
+  wednesday: FranchiseDayHours = new FranchiseDayHours();
+  thursday: FranchiseDayHours = new FranchiseDayHours();
+  friday: FranchiseDayHours = new FranchiseDayHours();
+  saturday: FranchiseDayHours = new FranchiseDayHours();
 }
 
 export interface FranchiseHoursOfOperationModifier {

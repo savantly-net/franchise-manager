@@ -4,7 +4,7 @@ import { Field, FieldArray, FormikHelpers } from 'formik';
 import { AppModuleRootState } from 'plugin/types';
 import React, { Fragment, ReactElement, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Col, Nav, NavItem, NavLink, Row, TabContent, TabPane } from 'reactstrap';
+import { Button, Card, Col, Nav, NavItem, NavLink, Row, TabContent, TabPane } from 'reactstrap';
 import { FranchiseGroup, franchiseGroupsStateProvider } from '../Groups/entity';
 import { franchiseMarketStateProvider } from '../Markets/entity';
 import { FranchiseLocation } from '../types';
@@ -96,36 +96,8 @@ const HoursControl = ({ location }: { location: FranchiseLocation }) => {
   return (
     <Fragment>
       <h5>Hours of Operation</h5>
-      <Row>
-        <Col xs={6} sm={4} md={3} lg={2} className="no-gutters">
-          <FormField name="hours.sundayOpen" label="Sunday Open" type="time" />
-          <FormField name="hours.sundayClose" label="Sunday Close" type="time" />
-        </Col>
-        <Col xs={6} sm={4} md={3} lg={2} className="no-gutters">
-          <FormField name="hours.mondayOpen" label="Monday Open" type="time" />
-          <FormField name="hours.mondayClose" label="Monday Close" type="time" />
-        </Col>
-        <Col xs={6} sm={4} md={3} lg={2} className="no-gutters">
-          <FormField name="hours.tuesdayOpen" label="Tuesday Open" type="time" />
-          <FormField name="hours.tuesdayClose" label="Tuesday Close" type="time" />
-        </Col>
-        <Col xs={6} sm={4} md={3} lg={2} className="no-gutters">
-          <FormField name="hours.wednesdayOpen" label="Wednesday Open" type="time" />
-          <FormField name="hours.wednesdayClose" label="Wednesday Close" type="time" />
-        </Col>
-        <Col xs={6} sm={4} md={3} lg={2} className="no-gutters">
-          <FormField name="hours.thursdayOpen" label="Thursday Open" type="time" />
-          <FormField name="hours.thursdayClose" label="Thursday Close" type="time" />
-        </Col>
-        <Col xs={6} sm={4} md={3} lg={2} className="no-gutters">
-          <FormField name="hours.fridayOpen" label="Friday Open" type="time" />
-          <FormField name="hours.fridayClose" label="Friday Close" type="time" />
-        </Col>
-        <Col xs={6} sm={4} md={3} lg={2} className="no-gutters">
-          <FormField name="hours.saturdayOpen" label="Saturday Open" type="time" />
-          <FormField name="hours.saturdayClose" label="Saturday Close" type="time" />
-        </Col>
-      </Row>
+
+      <Card>Create an editor for the hours</Card>
 
       <FieldArrayWrapper header="Modified Hours">
         <FieldArray name="modifiedHours">
