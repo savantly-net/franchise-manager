@@ -29,7 +29,7 @@ export class HourInterval {
 }
 
 export class FranchiseDayHours {
-  isClosed: boolean = false;
+  isClosed = false;
   openIntervals: HourInterval[] = [];
 }
 
