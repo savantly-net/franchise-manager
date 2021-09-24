@@ -24,13 +24,13 @@ export class FranchiseBuilding {
 }
 
 export class HourInterval {
-  start: string = '07:00';
-  end: string = '23:00'
+  start = '07:00';
+  end = '23:00';
 }
 
 export class FranchiseDayHours {
   isClosed: boolean = false;
-  openIntervals: HourInterval[] = []
+  openIntervals: HourInterval[] = [];
 }
 
 export class FranchiseHoursOfOperation {
