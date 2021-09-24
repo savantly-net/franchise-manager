@@ -1,6 +1,7 @@
-import { FormField, Icon } from '@sprout-platform/ui';
+import { Icon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import { FieldArray } from 'formik';
+import TypeAheadSelectField from 'plugin/components/TypeAheadSelectField';
 import { UserPicker } from 'plugin/components/UserPicker';
 import { useAppUsers } from 'plugin/services/userService';
 import React, { Fragment } from 'react';
@@ -63,14 +64,11 @@ export const FranchiseLocationMemberEditor = ({ location }: FranchiseLocationMem
                           <UserPicker name={`members.${index}.userId`} users={users} label="User" />
                         </Col>
                         <Col>
-                          <FormField name={`members.${index}.role`} as="select" label="Role">
-                            <Fragment>
-                              <option></option>
-                              <option>STAFF</option>
-                              <option>COACH</option>
-                              <option>OWNER</option>
-                            </Fragment>
-                          </FormField>
+                          <TypeAheadSelectField
+                            name={`members.${index}.role`}
+                            label="Role"
+                            items={[{ value: 'STAFF' }, { value: 'COACH' }, { value: 'OWNER' }]}
+                          />
                         </Col>
                       </Row>
                     ))}

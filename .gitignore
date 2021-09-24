@@ -4,3 +4,7 @@
 .settings
 example/src/main/resources/META-INF/resources/api/public/.DS_Store
 module/src/dev/resources/application-dev.yml
+
+
+
+node_modules
