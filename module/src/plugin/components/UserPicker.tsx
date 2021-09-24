@@ -1,6 +1,7 @@
-import { FormField, FormFieldProps } from '@sprout-platform/ui';
+import React from 'react';
+import TypeAheadSelectField from './TypeAheadSelectField';
 import { UserSearchItem } from 'plugin/services/userService';
-import React, { Fragment } from 'react';
+import { FormFieldProps } from '@sprout-platform/ui';
 
 export interface UserPickerProps extends FormFieldProps {
   users: UserSearchItem[];
@@ -9,18 +10,6 @@ export interface UserPickerProps extends FormFieldProps {
 export const UserPicker = (props: UserPickerProps) => {
   const { users } = props;
   return (
-    <Fragment>
-      <FormField as="select" {...props}>
-        <option></option>
-        <Fragment>
-          {users &&
-            users.map((t, index) => (
-              <option key={index} value={t.itemId}>
-                {t.displayName}
-              </option>
-            ))}
-        </Fragment>
-      </FormField>
-    </Fragment>
+    <TypeAheadSelectField {...props} label="User" items={users.map(({ displayName }) => ({ value: displayName }))} />
   );
 };
