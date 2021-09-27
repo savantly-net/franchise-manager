@@ -51,6 +51,8 @@ public class FranchiseLocationDto {
 	@Size(max = 100)
 	private String groupId;
 	
+	private String emailAddress;
+	
 	private Long phoneNumber;
 	
 	private Set<FranchiseBarDto> bars = new HashSet<>();

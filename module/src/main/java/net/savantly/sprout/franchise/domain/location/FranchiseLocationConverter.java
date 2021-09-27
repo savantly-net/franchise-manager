@@ -59,6 +59,7 @@ public class FranchiseLocationConverter implements DtoConverter<FranchiseLocatio
 						.collect(Collectors.toSet()))
 				.setName(from.getName())
 				.setPhoneNumber(from.getPhoneNumber())
+				.setEmailAddress(from.getEmailAddress())
 				.setPatios(from.getPatios().parallelStream().map(p -> patioConverter.toDto(p).orElse(null))
 						.filter(b -> Objects.nonNull(b))
 						.collect(Collectors.toSet()))
@@ -83,6 +84,7 @@ public class FranchiseLocationConverter implements DtoConverter<FranchiseLocatio
 				.setMarketId(from.getMarketId())
 				.setName(from.getName())
 				.setPhoneNumber(from.getPhoneNumber())
+				.setEmailAddress(from.getEmailAddress())
 				.setState(from.getState())
 				.setZip(from.getZip());
 
