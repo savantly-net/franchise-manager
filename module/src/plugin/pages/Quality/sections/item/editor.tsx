@@ -1,15 +1,15 @@
 import { IconButton, Text, Box } from '@chakra-ui/react';
 import { Table, TableCaption, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table';
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
-import { confirm, FormField, Icon, ItemEditorProps } from '@sprout-platform/ui';
-import { css, cx } from 'emotion';
+import { confirm, FormField, ItemEditorProps } from '@sprout-platform/ui';
+import { css } from 'emotion';
 import { Field, FieldArray, Form, Formik, FormikProps } from 'formik';
 import FormikTextInput from 'plugin/components/FormikTextInput';
 import { AppModuleRootState } from 'plugin/types';
 import React, { Fragment, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Prompt, useNavigate } from 'react-router-dom';
-import { Alert, Button, Card, CardBody, Row } from 'reactstrap';
+import { Alert, Button } from 'reactstrap';
 import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
 import {
   QAISection as EntityClass,
