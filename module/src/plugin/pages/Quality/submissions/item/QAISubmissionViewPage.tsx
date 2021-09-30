@@ -1,3 +1,4 @@
+import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table';
 import { dateTime } from '@savantly/sprout-api';
 import { css } from 'emotion';
 import { useFMLocation } from 'plugin/pages/Locations/Stores/hooks';
@@ -60,6 +61,8 @@ const QAISubmissionViewPage = () => {
     return 'text unavailable';
   };
 
+  console.log('item.guestAnswers', item);
+
   return (
     <Fragment>
       {error && <Alert color="warning">{error}</Alert>}
@@ -120,28 +123,29 @@ const QAISubmissionViewPage = () => {
             </div>
             <div>
               <label className="mr-2">Guest Questions: </label>
-              <table className="table table-sm">
-                <tbody>
-                  {item.guestAnswers &&
-                    item.guestAnswers.map((c, index) => (
-                      <tr>
-                        <td>Guest {index + 1}</td>
-                        <td>
-                          <table className="table table-sm table-striped">
-                            <tbody>
-                              {c.answers.map(a => (
-                                <tr>
-                                  <td>{getGuestQuestionText(a.guestQuestionId)}</td>
-                                  <td>{a.value}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
+              <Table>
+                <Thead>
+                  <Tr>
+                    <Th>Question</Th>
+                    {item.guestAnswers && item.guestAnswers.map((_, index) => <Th>Guest {index + 1}</Th>)}
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {qaiSection.guestQuestions.map(q => (
+                    <Tr>
+                      <Td>{q.text}</Td>
+                      {item.guestAnswers &&
+                        item.guestAnswers.map(({ answers }) => (
+                          <Td>{answers.find(({ guestQuestionId }) => guestQuestionId === q.itemId)?.value}</Td>
+                        ))}
+                    </Tr>
+                  ))}
+                  <Tr>
+                    <Td>Notes</Td>
+                    {item.guestAnswers && item.guestAnswers.map(({ notes }) => <Td>{notes}</Td>)}
+                  </Tr>
+                </Tbody>
+              </Table>
             </div>
           </div>
         </div>
