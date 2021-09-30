@@ -10,13 +10,15 @@ import React, { Fragment, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Prompt, useNavigate } from 'react-router-dom';
 import { Alert, Button } from 'reactstrap';
-import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
+import { qaiQuestionCategoryStateProvider } from '../../../categories/entity';
 import {
   QAISection as EntityClass,
   QAISection,
   qaiSectionService as service,
   qaiSectionStateProvider as stateProvider,
-} from '../entity';
+} from '../../entity';
+
+import './styles.scss';
 
 const QuestionEditor = (props: FormikProps<QAISection>) => {
   const dispatch = useDispatch();
@@ -53,9 +55,9 @@ const QuestionEditor = (props: FormikProps<QAISection>) => {
               <Thead>
                 <Tr>
                   <Th>Question Text</Th>
-                  <Th>Category</Th>
-                  <Th>Points</Th>
-                  <Th>Actions</Th>
+                  <Th className="QAI__table__col__category">Category</Th>
+                  <Th className="QAI__table__col__points">Points</Th>
+                  <Th className="QAI__table__col__actions">Actions</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -139,8 +141,8 @@ const GuestQuestionEditor = (props: FormikProps<QAISection>) => {
               <Thead>
                 <Tr>
                   <Th>Question Text</Th>
-                  <Th>Points</Th>
-                  <Th>Actions</Th>
+                  <Th className="QAI__table__col__points">Points</Th>
+                  <Th className="QAI__table__col__actions">Actions</Th>
                 </Tr>
               </Thead>
               <Tbody>
