@@ -49,18 +49,6 @@ const QAISubmissionViewPage = () => {
     return 'text unavailable';
   };
 
-  const getGuestQuestionText = (questionId?: string) => {
-    if (qaiSection && questionId) {
-      if (qaiSection) {
-        const list = qaiSection.guestQuestions.filter(q => q.itemId === questionId);
-        if (list && list.length > 0) {
-          return list[0].text;
-        }
-      }
-    }
-    return 'text unavailable';
-  };
-
   console.log('item.guestAnswers', item);
 
   return (
