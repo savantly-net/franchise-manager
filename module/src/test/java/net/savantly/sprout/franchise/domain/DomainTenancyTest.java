@@ -140,7 +140,14 @@ public class DomainTenancyTest {
 	}
 	@Test
 	public void ownershipTest() {
-		doAssertions(new FranchiseOwnership(), new FranchiseOwnership(), (TenantedJpaRepository)this.ownershipRepo);
+		FranchiseOwnership entity1 = new FranchiseOwnership();
+		entity1.setStoreId("123");
+		entity1.setLocationId("123");
+		FranchiseOwnership entity2 = new FranchiseOwnership();
+		entity2.setStoreId("123");
+		entity2.setLocationId("123");
+		
+		doAssertions(entity1, entity2, (TenantedJpaRepository)this.ownershipRepo);
 	}
 	@Test
 	public void patioTest() {

@@ -2,6 +2,7 @@ DO $$
 BEGIN
 	ALTER TABLE fm_location ADD COLUMN dateOpened date;
 	ALTER TABLE fm_location ADD COLUMN dateClosed date;
+	ALTER TABLE fm_location drop COLUMN groupid date;
 
 	ALTER TABLE fm_owner ALTER COLUMN storeid type varchar(100);
 
