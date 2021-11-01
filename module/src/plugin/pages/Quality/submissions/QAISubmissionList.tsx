@@ -26,6 +26,8 @@ const IndexPage = () => {
     }
   }, [submissionState, dispatch]);
 
+  const userIsQAIAdmin = userContext && userContext.user && userContext.user.authorities.includes('QAI_ADMIN');
+
   const getSection = (sectionId?: string) => {
     if (qaiSections && sectionId) {
       const found = qaiSections.filter(s => s.itemId === sectionId);
@@ -97,7 +99,15 @@ const IndexPage = () => {
             >
               <Icon name="pen" />
             </Button>
-            <Button>{userContext && <p>{JSON.stringify(userContext, null, 2)}</p>}</Button>
+            <Button
+              color="danger"
+              onClick={() => {
+                navigate(`../item/${row.itemId}/delete`);
+              }}
+              disabled={!userIsQAIAdmin}
+            >
+              <Icon name="trash" />
+            </Button>
           </ButtonGroup>
         );
       },

@@ -10,6 +10,7 @@ import IntegrationsPage from './pages/Integrations/IntegrationsPage';
 import KnowledgeIndexPage from './pages/Knowledge/KnowledgeIndexPage';
 import GroupsPage from './pages/Locations/Groups/GroupsPage';
 import LocationsIndexPage from './pages/Locations/LocationsIndexPage';
+import OwnersPage from './pages/Locations/Owners/OwnersPage';
 import NewsletterIndexPage from './pages/Newsletter/NewsletterIndexPage';
 import QAIIndexPage from './pages/Quality/QAIIndexPage';
 import QAISubmissionsIndexPage from './pages/Quality/submissions/QAISubmissionsIndexPage';
@@ -44,6 +45,7 @@ export const SubPageContainer = ({ path, onNavChanged, meta }: Props) => {
         <Route path="/locations/*" element={<LocationsIndexPage onNavChanged={onNavChanged} />} />
         <Route path="/groups/*" element={<GroupsPage />} />
         <Route path="/newsletter/*" element={<NewsletterIndexPage />} />
+        <Route path="/owners/*" element={<OwnersPage />} />
         <Route path="/qai/manage/*" element={<QAIIndexPage />} />
         <Route path="/qai/submissions/*" element={<QAISubmissionsIndexPage />} />
         <Route path="/store-visits/*" element={<StoreVisitIndexPage />} />

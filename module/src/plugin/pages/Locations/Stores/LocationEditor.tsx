@@ -5,7 +5,7 @@ import { AppModuleRootState } from 'plugin/types';
 import React, { Fragment, ReactElement, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Card, Col, Nav, NavItem, NavLink, Row, TabContent, TabPane } from 'reactstrap';
-import { FranchiseGroup, franchiseGroupsStateProvider } from '../Groups/entity';
+import { franchiseGroupsStateProvider } from '../Groups/entity';
 import { franchiseMarketStateProvider } from '../Markets/entity';
 import { FranchiseLocation } from '../types';
 import { FranchiseLocationFeeEditor } from './components/FranchiseLocationFeeEditor';
@@ -373,14 +373,6 @@ export const LocationEditor = ({
                     <Row>
                       <FormField name="name" type="text" label="Name" placeholder="Enter the location name" />
                       <FormField name="phoneNumber" label="Phone Number" />
-                      <FormField as="select" name="groupId" label="Group">
-                        {groupState.response &&
-                          (groupState.response.content as FranchiseGroup[]).map((t, index) => (
-                            <option key={index} value={t.id?.itemId}>
-                              {t.name}
-                            </option>
-                          ))}
-                      </FormField>
                     </Row>
                     <Row>
                       <FormField name="address1" label="Address" />

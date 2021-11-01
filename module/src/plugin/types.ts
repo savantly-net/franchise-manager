@@ -7,6 +7,7 @@ import { FranchiseFeeState } from './pages/Locations/Fees/feeEntity';
 import { FranchiseFeeTypeState } from './pages/Locations/Fees/feeTypesEntity';
 import { FranchiseGroupState } from './pages/Locations/Groups/entity';
 import { FranchiseMarketState } from './pages/Locations/Markets/entity';
+import { FranchiseOwnershipState } from './pages/Locations/Owners/entity';
 import { FranchiseLocationState } from './pages/Locations/types';
 import { NewsletterState } from './pages/Newsletter/entityConfig';
 import { QAIQuestionCategoryState } from './pages/Quality/categories/entity';
@@ -37,6 +38,7 @@ export interface AppModuleState {
   newsletter: NewsletterState;
   calendar: CalendarState;
   addresses: AddressBookEntryState;
+  ownershipState: FranchiseOwnershipState;
   qaiSections: QAISectionState;
   qaiQuestionCategories: QAIQuestionCategoryState;
   qaiSubmissions: QAISectionSubmissionState;

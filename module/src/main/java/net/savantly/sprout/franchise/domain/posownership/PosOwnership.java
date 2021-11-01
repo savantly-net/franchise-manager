@@ -1,4 +1,4 @@
-package net.savantly.sprout.franchise.domain.ownership;
+package net.savantly.sprout.franchise.domain.posownership;
 
 import java.time.LocalDate;
 
@@ -11,13 +11,11 @@ import net.savantly.sprout.core.tenancy.TenantKeyedEntity;
 
 @Entity
 @Getter @Setter
-@Table(name = "fm_owner")
-public class FranchiseOwnership extends TenantKeyedEntity {
+@Table(name = "fm_owner_pos")
+public class PosOwnership extends TenantKeyedEntity {
 
-	private String incorporatedName;
 	private String storeId;
-	private String locationId;
-	private String groupId;
+	private String posId;
 	private LocalDate startDate;
 	private LocalDate endDate;
 }

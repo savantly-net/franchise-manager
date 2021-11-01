@@ -37,10 +37,14 @@ import net.savantly.sprout.franchise.domain.market.FranchiseMarketRepository;
 import net.savantly.sprout.franchise.domain.market.FranchiseMarketsApi;
 import net.savantly.sprout.franchise.domain.newsletter.NewsletterApi;
 import net.savantly.sprout.franchise.domain.newsletter.NewsletterRepository;
+import net.savantly.sprout.franchise.domain.ownership.FranchiseOwnershipApi;
+import net.savantly.sprout.franchise.domain.ownership.FranchiseOwnershipRepository;
 import net.savantly.sprout.franchise.domain.patio.FranchisePatioConverter;
 import net.savantly.sprout.franchise.domain.patio.FranchisePatioRepository;
 import net.savantly.sprout.franchise.domain.pos.FranchisePOSConverter;
 import net.savantly.sprout.franchise.domain.pos.FranchisePOSRepository;
+import net.savantly.sprout.franchise.domain.posownership.PosOwnershipApi;
+import net.savantly.sprout.franchise.domain.posownership.PosOwnershipRepository;
 import net.savantly.sprout.franchise.domain.privilege.FMPrivilegeConfiguration;
 import net.savantly.sprout.franchise.domain.report.ReportSourceConfiguration;
 import net.savantly.sprout.franchise.domain.types.FMTypesApi;
@@ -108,6 +112,16 @@ public class DomainServiceConfiguration {
 	@Bean
 	public KnowledgeApi knowledgeApi(KnowledgeRepository repository) {
 		return new KnowledgeApi(repository);
+	}
+	
+	@Bean
+	public FranchiseOwnershipApi franchiseOwnershipApi(FranchiseOwnershipRepository repository) {
+		return new FranchiseOwnershipApi(repository);
+	}
+	
+	@Bean
+	public PosOwnershipApi posOwnershipApi(PosOwnershipRepository repository) {
+		return new PosOwnershipApi(repository);
 	}
 
 	// Services

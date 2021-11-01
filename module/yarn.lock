@@ -1774,6 +1774,8 @@
   version "5.15.1"
   resolved "https://registry.yarnpkg.com/@fortawesome/free-solid-svg-icons/-/free-solid-svg-icons-5.15.1.tgz#e1432676ddd43108b41197fee9f86d910ad458ef"
   integrity sha512-EFMuKtzRMNbvjab/SvJBaOOpaqJfdSap/Nl6hst7CgrJxwfORR1drdTV6q1Ib/JVzq4xObdTDcT6sqTaXMqfdg==
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "^0.2.32"
 
 "@fortawesome/react-fontawesome@~0.1.13":
   version "0.1.13"
@@ -2345,10 +2347,10 @@
     redux-thunk "^2.3.0"
     reselect "^4.0.0"
 
-"@savantly/sprout-api@2.0.0-37":
-  version "2.0.0-37"
-  resolved "https://registry.yarnpkg.com/@savantly/sprout-api/-/sprout-api-2.0.0-37.tgz#64399a7bf79676c0ccc0e7e48511b2e6e67e851a"
-  integrity sha512-S53wbHGryDNWCFOgrwNWcS2UABF4K/pBdPY5YzyY4r4VNKotkZ4WlrWR6jOQpjQwq59RJoG95QY/tpoubuI4iw==
+"@savantly/sprout-api@2.0.0-38":
+  version "2.0.0-38"
+  resolved "https://registry.yarnpkg.com/@savantly/sprout-api/-/sprout-api-2.0.0-38.tgz#d8425fb95bb48a65ce5582349f61cd21e040a32b"
+  integrity sha512-k2X42zd89S2ZKSSylDE/k72a/dUbfZA/VpcdYgYiEq0mhVBAuXXL4eJHAs5aEqpq+P/UNDPJKt0xk5TWEXnJCg==
   dependencies:
     "@braintree/sanitize-url" "4.0.0"
     "@reduxjs/toolkit" "^1.4.0"
@@ -2365,26 +2367,26 @@
     uuid "~8.3.1"
     xss "1.0.6"
 
-"@savantly/sprout-runtime@2.0.0-37":
-  version "2.0.0-37"
-  resolved "https://registry.yarnpkg.com/@savantly/sprout-runtime/-/sprout-runtime-2.0.0-37.tgz#ddc00cc91734c7c92bf864bb9befc909468651b4"
-  integrity sha512-RqhtHBTO1fBuJNO4PklX6TpSh8j9cpYiDsg/OiLcMeDLId+xlhgCkc0t+qbJQ09Gc0O3FxTgXfPSitOSvfSkFQ==
+"@savantly/sprout-runtime@2.0.0-38":
+  version "2.0.0-38"
+  resolved "https://registry.yarnpkg.com/@savantly/sprout-runtime/-/sprout-runtime-2.0.0-38.tgz#0b26f20dedc9d77de30906a0c744bfc0927d4b7d"
+  integrity sha512-LdBbcznLIKDNcTmHkycy5beIi3oYebfYqEeKjV9gOu/pQYCUx4OG/FbzOEJ8DtCj3TBmwO1gmuitc0EncmuY/A==
   dependencies:
-    "@savantly/sprout-api" "2.0.0-37"
-    "@savantly/sprout-ui" "2.0.0-37"
+    "@savantly/sprout-api" "2.0.0-38"
+    "@savantly/sprout-ui" "2.0.0-38"
     axios "~0.21.1"
-    systemjs "0.20.19"
+    systemjs "^0.21.5"
     systemjs-plugin-css "0.1.37"
 
-"@savantly/sprout-toolkit@2.0.0-37":
-  version "2.0.0-37"
-  resolved "https://registry.yarnpkg.com/@savantly/sprout-toolkit/-/sprout-toolkit-2.0.0-37.tgz#739bc4b158e509096c68c3feb589333153ff2327"
-  integrity sha512-u12bOXad8BFDcugtdPFtUgqeVP/pAyg3gWHoFwIbKwmAiWNbWDYMK1ptrPEurJ7nuC8YAxx6PfuDMJao5X5YWQ==
+"@savantly/sprout-toolkit@2.0.0-38":
+  version "2.0.0-38"
+  resolved "https://registry.yarnpkg.com/@savantly/sprout-toolkit/-/sprout-toolkit-2.0.0-38.tgz#20eab72e81e91ca16cab7c67a0b33c71d3130544"
+  integrity sha512-FNThxZbZNNNLiXIMIxBD5Y3R+8Fuw6LZfx6xmtM7V/EJB3KuDOdBemVczyUVegBepFTOouM9NRqShSkdtSIFGQ==
   dependencies:
     "@babel/core" "^7.12.3"
     "@babel/preset-env" "^7.12.1"
     "@jest/core" "~26.5.2"
-    "@savantly/sprout-api" "2.0.0-37"
+    "@savantly/sprout-api" "2.0.0-38"
     "@savantly/sprout-tsconfig" "^1.0.0"
     "@types/command-exists" "^1.2.0"
     "@types/execa" "^0.9.0"
@@ -2469,16 +2471,16 @@
   resolved "https://registry.yarnpkg.com/@savantly/sprout-tsconfig/-/sprout-tsconfig-1.0.0.tgz#e8a95fc980158a58ad41a5d98fd423b90113480a"
   integrity sha512-1PhXb/RcVIi+jZdCrcKsQ2Fhb5EP7EfD6xOjct0VTYwbCvVkU3OmXPAi7dL8NlQtwSbAmmFGpX9/wLNedkGzDQ==
 
-"@savantly/sprout-ui@2.0.0-37":
-  version "2.0.0-37"
-  resolved "https://registry.yarnpkg.com/@savantly/sprout-ui/-/sprout-ui-2.0.0-37.tgz#96f449e21156d066c52ec3dbaf2af4ba9854227f"
-  integrity sha512-EIchh8ELW4vIpyXZVMTpn81sfjL/4VEo/CLKvXoMEKMj5XsgemA+djhZf7ak/f1eq819v9e7fGQspVuSPFdKMQ==
+"@savantly/sprout-ui@2.0.0-38":
+  version "2.0.0-38"
+  resolved "https://registry.yarnpkg.com/@savantly/sprout-ui/-/sprout-ui-2.0.0-38.tgz#d0d0c60bc99da2a8a593f775e99aeec8f1e680ef"
+  integrity sha512-Knd1BYjizAbx8435Ihi3kc57a8IOSkjeMBJY0zeR0lCbB7ntMG19IacjUtNUMH4Xc3HXVvDpY4A+zA1DgifJhQ==
   dependencies:
     "@emotion/core" "^10.0.27"
     "@grafana/e2e-selectors" "^7.2.0"
     "@grafana/slate-react" "0.22.9-grafana"
     "@iconscout/react-unicons" "1.1.4"
-    "@savantly/sprout-api" "2.0.0-37"
+    "@savantly/sprout-api" "2.0.0-38"
     "@savantly/sprout-tsconfig" "^1.0.0"
     "@torkelo/react-select" "3.0.8"
     "@types/clipboard" "^2.0.1"
@@ -2550,10 +2552,10 @@
   resolved "https://registry.yarnpkg.com/@sphinxxxx/color-conversion/-/color-conversion-2.2.2.tgz#03ecc29279e3c0c832f6185a5bfa3497858ac8ca"
   integrity sha512-XExJS3cLqgrmNBIP3bBw6+1oQ1ksGjFh0+oClDKFYpCCqx/hlqwWO5KO/S63fzUo67SxI9dMrF0y5T/Ey7h8Zw==
 
-"@sprout-platform/ui@2.0.0-37":
-  version "2.0.0-37"
-  resolved "https://registry.yarnpkg.com/@sprout-platform/ui/-/ui-2.0.0-37.tgz#a6755f2db6bf385d5e272ce2216598f450ef7890"
-  integrity sha512-Y3X3IWHSMnE/eKYsSqembSqGvEYEUF/ddE4y8JO9pzPPhowGnu48lyk9u1fKDXOeB40rno5zPDZuamisvKnZHQ==
+"@sprout-platform/ui@2.0.0-38":
+  version "2.0.0-38"
+  resolved "https://registry.yarnpkg.com/@sprout-platform/ui/-/ui-2.0.0-38.tgz#71bc8d6fa29e813bf16e7474887b2c6dd28912b7"
+  integrity sha512-cJobHNHowvmcG5R97SKNZ+5UgOrxq0qw7F0RzmAB1ix4dIXqqkgi55FtVxCYouG3RME+xVUSRu49GCa2AHZYFw==
   dependencies:
     "@emotion/core" "^10.0.27"
     "@fortawesome/fontawesome-svg-core" "~1.2.32"
@@ -2562,7 +2564,7 @@
     "@fortawesome/free-solid-svg-icons" "~5.15.1"
     "@fortawesome/react-fontawesome" "~0.1.13"
     "@reduxjs/toolkit" "^1.4.0"
-    "@savantly/sprout-api" "2.0.0-37"
+    "@savantly/sprout-api" "2.0.0-38"
     "@savantly/sprout-tsconfig" "^1.0.0"
     axios "~0.21.1"
     bootstrap "~4.5.3"
@@ -14915,10 +14917,10 @@ systemjs-plugin-css@0.1.37:
   resolved "https://registry.yarnpkg.com/systemjs-plugin-css/-/systemjs-plugin-css-0.1.37.tgz#684847252ca69b7da24a1201094c86274324e82f"
   integrity sha512-wCGG62zYXuOlNji5FlBjeMFAnLeAO/HQmFg+8UBX/mlHoAKLHlGFYRstlhGKibRU2oxk/BH9DaihOuhhNLi7Kg==
 
-systemjs@0.20.19:
-  version "0.20.19"
-  resolved "https://registry.yarnpkg.com/systemjs/-/systemjs-0.20.19.tgz#c2b9e79c19f4bea53a19b1ed3f974ffb463be949"
-  integrity sha512-H/rKwNEEyej/+IhkmFNmKFyJul8tbH/muiPq5TyNoVTwsGhUjRsN3NlFnFQUvFXA3+GQmsXkCNXU6QKPl779aw==
+systemjs@^0.21.5:
+  version "0.21.6"
+  resolved "https://registry.yarnpkg.com/systemjs/-/systemjs-0.21.6.tgz#9d15e79d9f60abbac23f0d179f887ec01f260a1b"
+  integrity sha512-R+5S9eV9vcQgWOoS4D87joZ4xkFJHb19ZsyKY07D1+VBDE9bwYcU+KXE0r5XlDA8mFoJGyuWDbfrNoh90JsA8g==
 
 table-layout@^0.4.3:
   version "0.4.5"

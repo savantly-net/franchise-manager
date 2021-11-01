@@ -58,6 +58,13 @@
           "path": "/a/franchise-manager/groups"
         },
         {
+          "name": "Ownership",
+          "type": "page",
+          "icon": "file-contract",
+          "addToNav": true,
+          "path": "/a/franchise-manager/owners"
+        },
+        {
           "name": "Markets",
           "type": "page",
           "icon": "map-marked-alt",

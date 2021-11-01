@@ -1,5 +1,6 @@
 package net.savantly.sprout.franchise.domain.location;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -79,9 +80,8 @@ public class FranchiseLocation extends TenantKeyedEntity  {
 	@Column(length = 100)
 	private String marketId;
 
-	@Size(max = 100)
-	@Column(length = 100)
-	private String groupId;
+	private LocalDate dateOpened;
+	private LocalDate dateClosed;
 	
 	private Long phoneNumber;
 

@@ -7,6 +7,7 @@ import { franchiseFeesStateProvider } from 'plugin/pages/Locations/Fees/feeEntit
 import { franchiseFeeTypesStateProvider } from 'plugin/pages/Locations/Fees/feeTypesEntity';
 import { franchiseGroupsStateProvider } from 'plugin/pages/Locations/Groups/entity';
 import { franchiseMarketStateProvider } from 'plugin/pages/Locations/Markets/entity';
+import { franchiseOwnershipStateProvider } from 'plugin/pages/Locations/Owners/entity';
 import { FranchiseLocationsReducer } from 'plugin/pages/Locations/state/reducers';
 import { newsletterStateProvider } from 'plugin/pages/Newsletter/entityConfig';
 import { qaiQuestionCategoryStateProvider } from 'plugin/pages/Quality/categories/entity';
@@ -29,6 +30,7 @@ const combinedReducers = combineReducers({
   knowledge: knowledgesStateProvider.slice.reducer,
   marketState: franchiseMarketStateProvider.slice.reducer,
   newsletter: newsletterStateProvider.slice.reducer,
+  ownershipState: franchiseOwnershipStateProvider.slice.reducer,
   qaiQuestionCategories: qaiQuestionCategoryStateProvider.slice.reducer,
   qaiSections: qaiSectionStateProvider.slice.reducer,
   qaiSubmissions: qaiSubmissionStateProvider.slice.reducer,

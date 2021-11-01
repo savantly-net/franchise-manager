@@ -1,5 +1,6 @@
 package net.savantly.sprout.franchise.domain.location;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -48,8 +49,9 @@ public class FranchiseLocationDto {
 	@Size(max = 100)
 	private String marketId;
 
-	@Size(max = 100)
-	private String groupId;
+
+	private LocalDate dateOpened;
+	private LocalDate dateClosed;
 	
 	private String emailAddress;
 	
