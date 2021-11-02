@@ -1,6 +1,7 @@
 package net.savantly.sprout.franchise.domain.location;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -46,6 +47,7 @@ public class LocationApiTest extends AbstractContainerBaseTest {
 	public void createLocation() throws Exception {
 		String test = "test";
 		String url = "/api/fm/locations";
+		LocalDate testDate = LocalDate.now();
 		FranchiseLocationDto dto = new FranchiseLocationDto()
 				.setAddress1(test)
 				.setAddress2(test)
@@ -57,7 +59,9 @@ public class LocationApiTest extends AbstractContainerBaseTest {
 				.setName(test)
 				.setPhoneNumber(123L)
 				.setState(test)
-				.setZip(test);
+				.setZip(test)
+				.setDateOpened(testDate)
+				.setDateClosed(testDate);
 		
 		dto.getBars().add(new FranchiseBarDto().setBeer(true));
 		LocalTime closeTime = LocalTime.now();
@@ -84,6 +88,9 @@ public class LocationApiTest extends AbstractContainerBaseTest {
 		Assertions.assertEquals(LocationConcept.TRADITIONAL, response.getBody().getConcept());
 		Assertions.assertEquals(LocationType.STANDALONE, response.getBody().getLocationType());
 		Assertions.assertEquals(123L, response.getBody().getPhoneNumber());
+		
+		Assertions.assertEquals(testDate, response.getBody().getDateOpened());
+		Assertions.assertEquals(testDate, response.getBody().getDateClosed());
 		
 		// now update it
 		
