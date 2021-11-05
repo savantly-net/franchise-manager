@@ -43,10 +43,10 @@ import net.savantly.sprout.franchise.domain.patio.FranchisePatioConverter;
 import net.savantly.sprout.franchise.domain.patio.FranchisePatioRepository;
 import net.savantly.sprout.franchise.domain.pos.FranchisePOSConverter;
 import net.savantly.sprout.franchise.domain.pos.FranchisePOSRepository;
-import net.savantly.sprout.franchise.domain.posownership.PosOwnershipApi;
-import net.savantly.sprout.franchise.domain.posownership.PosOwnershipRepository;
 import net.savantly.sprout.franchise.domain.privilege.FMPrivilegeConfiguration;
 import net.savantly.sprout.franchise.domain.report.ReportSourceConfiguration;
+import net.savantly.sprout.franchise.domain.storepos.StorePosApi;
+import net.savantly.sprout.franchise.domain.storepos.StorePosRepository;
 import net.savantly.sprout.franchise.domain.types.FMTypesApi;
 
 @Configuration
@@ -120,8 +120,8 @@ public class DomainServiceConfiguration {
 	}
 	
 	@Bean
-	public PosOwnershipApi posOwnershipApi(PosOwnershipRepository repository) {
-		return new PosOwnershipApi(repository);
+	public StorePosApi posOwnershipApi(StorePosRepository repository) {
+		return new StorePosApi(repository);
 	}
 
 	// Services

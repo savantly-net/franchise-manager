@@ -3,6 +3,11 @@ import { API_URL } from 'plugin/config/appModuleConfiguration';
 
 export interface FranchiseGroup extends TenantedEntity {
   name: string;
+  address1: string;
+  address2: string;
+  city: string;
+  state: string;
+  zip: string;
 }
 
 export type FranchiseGroupState = PagedEntityState<FranchiseGroup>;
@@ -24,6 +29,11 @@ export const franchiseGroupsStateProvider = new EntityStateProvider<FranchiseGro
     isFetching: false,
     example: {
       name: 'New Group',
+      address1: '',
+      address2: '',
+      city: '',
+      state: '',
+      zip: '',
     },
   },
   stateKey: 'franchise-groups',

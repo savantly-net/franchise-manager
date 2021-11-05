@@ -1,6 +1,7 @@
 import { DateField, FormField } from '@sprout-platform/ui';
 import { css } from 'emotion';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { sortByKey } from 'plugin/services/arrays';
 import { AppModuleRootState } from 'plugin/types';
 import React, { Fragment, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,14 +32,6 @@ export const FranchiseOwnershipEditor = ({ item, afterSave }: FranchiseOwnership
       dispatch(loadLocations());
     }
   }, [groupState, locationState, dispatch]);
-
-  const sortByKey = (key: string) => {
-    return (a: any, b: any) => {
-      const x = a[key];
-      var y = b[key];
-      return x < y ? -1 : x > y ? 1 : 0;
-    };
-  };
 
   return (
     <Fragment>

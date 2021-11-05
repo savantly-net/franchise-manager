@@ -1,4 +1,5 @@
 import { publishSuccessNotification } from '@savantly/sprout-api';
+import _ from 'lodash';
 import { AppModuleRootState } from 'plugin/types';
 import React, { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,7 +22,7 @@ const EditLocation = ({ location }: { location?: FranchiseLocation }) => {
     if (!locationDto) {
       const found = locationState.locations.filter(l => l.id === locationId);
       if (found.length > 0) {
-        setLocationDto(found[0]);
+        setLocationDto(_.cloneDeep(found[0]));
       }
     }
   }, [params, locationState, locationDto]);

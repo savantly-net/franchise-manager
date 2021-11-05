@@ -91,6 +91,8 @@ export class FranchiseLocation {
   pos: FranchisePOS = new FranchisePOS();
   members: FranchiseLocationMember[] = [];
   fees: FranchiseFee[] = [];
+  dateOpened: string = dateTime().format('YYYY-MM-DD');
+  dateClosed?: string;
 }
 
 export interface FranchiseLocationState {

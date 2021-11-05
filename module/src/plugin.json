@@ -65,6 +65,13 @@
           "path": "/a/franchise-manager/owners"
         },
         {
+          "name": "Store POS",
+          "type": "page",
+          "icon": "file-contract",
+          "addToNav": true,
+          "path": "/a/franchise-manager/storepos"
+        },
+        {
           "name": "Markets",
           "type": "page",
           "icon": "map-marked-alt",

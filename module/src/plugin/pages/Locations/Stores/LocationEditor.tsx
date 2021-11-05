@@ -1,4 +1,4 @@
-import { Form, FormField, Icon } from '@sprout-platform/ui';
+import { DateField, Form, FormField, Icon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import { Field, FieldArray, FormikHelpers } from 'formik';
 import { AppModuleRootState } from 'plugin/types';
@@ -373,6 +373,8 @@ export const LocationEditor = ({
                     <Row>
                       <FormField name="name" type="text" label="Name" placeholder="Enter the location name" />
                       <FormField name="phoneNumber" label="Phone Number" />
+                      <DateField name="dateOpened" label="Open Date" />
+                      <DateField name="dateClosed" label="Close Date" />
                     </Row>
                     <Row>
                       <FormField name="address1" label="Address" />
