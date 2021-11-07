@@ -81,66 +81,6 @@
       ]
     },
     {
-      "name": "Knowledge",
-      "type": "page",
-      "icon": "graduation-cap",
-      "addToNav": true,
-      "children": [
-        {
-          "name": "Browse",
-          "type": "page",
-          "icon": "graduation-cap",
-          "addToNav": true,
-          "path": "/a/franchise-manager/knowledge"
-        }
-      ]
-    },
-    {
-      "name": "Addresses",
-      "type": "page",
-      "icon": "fas address-book",
-      "addToNav": true,
-      "children": [
-        {
-          "name": "Browse",
-          "type": "page",
-          "icon": "fas address-book",
-          "addToNav": true,
-          "path": "/a/franchise-manager/addresses"
-        }
-      ]
-    },
-    {
-      "name": "Calendar",
-      "type": "page",
-      "icon": "calendar-alt",
-      "addToNav": true,
-      "children": [
-        {
-          "name": "Browse",
-          "type": "page",
-          "icon": "calendar-alt",
-          "addToNav": true,
-          "path": "/a/franchise-manager/calendar"
-        }
-      ]
-    },
-    {
-      "name": "Newsletter",
-      "type": "page",
-      "icon": "newspaper",
-      "addToNav": true,
-      "children": [
-        {
-          "name": "Browse",
-          "type": "page",
-          "icon": "newspaper",
-          "addToNav": true,
-          "path": "/a/franchise-manager/newsletter"
-        }
-      ]
-    },
-    {
       "name": "Quality",
       "type": "page",
       "icon": "clipboard-check",
