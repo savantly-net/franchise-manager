@@ -77,13 +77,6 @@
           "icon": "map-marked-alt",
           "addToNav": true,
           "path": "/a/franchise-manager/locations/markets"
-        },
-        {
-          "name": "Report Sources",
-          "type": "page",
-          "icon": "chart-area",
-          "addToNav": true,
-          "path": "/a/franchise-manager/report-manager"
         }
       ]
     },
