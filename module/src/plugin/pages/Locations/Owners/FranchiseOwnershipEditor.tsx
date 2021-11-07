@@ -121,8 +121,8 @@ export const FranchiseOwnershipEditor = ({ item, afterSave }: FranchiseOwnership
               </Fragment>
             </FormField>
             <FormField name="storeId" label="Store ID" />
-            <DateField name="startDate" label="startDate" />
-            <DateField name="endDate" label="endDate" />
+            <DateField name="startDate" label="startDate" utc={true} />
+            <DateField name="endDate" label="endDate" utc={true} />
           </Form>
         )}
       </Formik>
