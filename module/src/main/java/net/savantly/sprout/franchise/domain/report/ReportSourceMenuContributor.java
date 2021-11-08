@@ -36,7 +36,7 @@ public class ReportSourceMenuContributor implements MenuContributor {
 			}
 		});
 
-		dtos.add(rootMenu);
+		//dtos.add(rootMenu);
 	}
 
 	private void insertMenuAtPath(List<String> segments, MenuDto currentMenuItem, ReportSource r) {
