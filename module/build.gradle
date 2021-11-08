@@ -139,12 +139,11 @@ dependencies {
 	api 'org.freemarker:freemarker',
 		'com.vladmihalcea:hibernate-types-52:2.10.0'
 	
-	compileOnly 'org.projectlombok:lombok',
-		'javax.interceptor:javax.interceptor-api:1.2',
+	compileOnly 'javax.interceptor:javax.interceptor-api:1.2',
 		'javax.validation:validation-api:2.0.1.Final',
-		'org.projectlombok:lombok:1.18.12'
+		'org.projectlombok:lombok:1.18.22'
 
-    annotationProcessor 'org.projectlombok:lombok',
+    annotationProcessor 'org.projectlombok:lombok:1.18.22',
         'org.springframework.boot:spring-boot-configuration-processor'
         
     developmentOnly "org.springframework.boot:spring-boot-devtools",
