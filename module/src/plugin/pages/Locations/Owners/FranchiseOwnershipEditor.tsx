@@ -34,7 +34,11 @@ export const FranchiseOwnershipEditor = ({ item, afterSave }: FranchiseOwnership
   }, [groupState, locationState, dispatch]);
 
   return (
-    <Fragment>
+    <div
+      className={css`
+        margin-bottom: 2em;
+      `}
+    >
       {error && <Alert color="danger">{error}</Alert>}
       <Formik
         initialValues={itemState}
@@ -126,6 +130,6 @@ export const FranchiseOwnershipEditor = ({ item, afterSave }: FranchiseOwnership
           </Form>
         )}
       </Formik>
-    </Fragment>
+    </div>
   );
 };
