@@ -42,7 +42,7 @@ const StorePosPage: FC<any> = ({}: AppModuleState) => {
         titleProvider={({ item, pageName }: { item?: StorePos; pageName: EntityPageName }) => {
           switch (pageName) {
             case 'create':
-              return 'Create a Franchise Group';
+              return 'Create a Store to POS relationship';
             case 'edit':
               return `Editing the Store: ${item?.storeId}`;
             case 'list':
