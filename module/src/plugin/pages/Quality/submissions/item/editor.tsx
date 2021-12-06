@@ -306,12 +306,14 @@ export const QAISubmissionEditor = ({ initialValue, onSubmit, onCancel }: QAISub
                 setCreatingAttachmentFolder(false);
               })
               .catch(err => {
-                setError(err.message || 'Could not create attachment folder');
+                console.error(err);
+                setError('Could not create attachment folder');
               });
           }
         })
         .catch(err => {
-          setError(err.message || 'Could not retrieve folders');
+          console.error(err);
+          setError('Could not retrieve attachment folders');
         });
     }
   }, [attachmentFolder, creatingAttachmentFolder, draftSubmission.itemId, fileService, fmConfig]);
@@ -325,7 +327,7 @@ export const QAISubmissionEditor = ({ initialValue, onSubmit, onCancel }: QAISub
         })
         .catch(err => {
           console.error(err);
-          setError(err.message || 'There was a problem retrieving the Section Definition. Check the logs');
+          setError('There was a problem retrieving the Section Definition. Check the logs');
         });
     }
     if (!categoryState.isFetched && !categoryState.isFetching) {
