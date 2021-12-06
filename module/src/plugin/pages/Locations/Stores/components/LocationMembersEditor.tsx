@@ -67,7 +67,16 @@ export const FranchiseLocationMemberEditor = ({ location }: FranchiseLocationMem
                           <TypeAheadSelectField
                             name={`members.${index}.role`}
                             label="Role"
-                            items={[{ value: 'STAFF' }, { value: 'COACH' }, { value: 'OWNER' }]}
+                            items={[
+                              { value: 'PRIMARY_CONTACT' },
+                              { value: 'GNERAL_MANAGER' },
+                              { value: 'FSC' },
+                              { value: 'FAC' },
+                              { value: 'FRANCHISE_OWNER' },
+                              { value: 'FRANCHISE_PARTNER' },
+                              { value: 'DISTRICT_MANAGER' },
+                              { value: 'OTHER' },
+                            ]}
                           />
                         </Col>
                       </Row>
