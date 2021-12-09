@@ -65,6 +65,8 @@ Sprout UI should be running at [localhost:3000](http://localhost:3000)
 Sprout API should be running at [localhost:8080](http://localhost:8080)  
 Adminer should be running at [localhost:8081](http://localhost:8081)  
 
+To modify the UI components, edit the files in [./module/src/plugin](./module/src/plugin)
+
 ## Features
 
 Home page showing the menu options added by the Franchise Manager module  
