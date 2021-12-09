@@ -33,36 +33,33 @@ To build the image -
 ./gradlew :fm-example:bootBuildImage
 ```
 
+## Development 
 ### Module
 The Franchise Manager module for the Sprout Platform.   
 The module is packaged as a jar, and contains backend and frontend code.  
 
-#### Development 
-In one terminal start the Java dev continuous build.  
-
-```
-./gradlew :fm-module:compileJava --continuous
-```
-
-In another terminal, start the required resourses [DB, WebApp]
-
+Start the required service [DB, WebApp]
 ```
 docker compose -f module/docker-compose.yml up
 ```
 
-Finally in another terminal, start the dev app -  
-
+In another terminal, start the dev app -  
 ```
 ./gradlew :fm-module:bootRun
 ```
 
-To continuously build the plugin/front-end code, open another terminal - 
+To continuously build the plugin/front-end code, open another terminal.  
 This allows seamless development of the front-end code. Refresh the browser to see updates.  
-
 ```
 cd module
 yarn watch
 ```
+
+If you're working on the Java code, in one terminal start the Java dev continuous build.  
+```
+./gradlew :fm-module:compileJava --continuous
+```
+
 
 Sprout UI should be running at [localhost:3000](http://localhost:3000)  
 Sprout API should be running at [localhost:8080](http://localhost:8080)  
