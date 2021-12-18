@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.InitializingBean;
 
 import lombok.RequiredArgsConstructor;
-import net.savantly.sprout.core.domain.privilege.Privilege;
+import net.savantly.sprout.core.domain.privilege.PrivilegeEntity;
 import net.savantly.sprout.core.domain.privilege.PrivilegeRepository;
 import net.savantly.sprout.core.domain.tenant.TenantRepository;
 import net.savantly.sprout.core.tenancy.TenantContext;
@@ -34,15 +34,15 @@ public class FMPrivilegeContributor implements InitializingBean {
 	}
 
 	private void addIfNotExist(String p) {
-		List<Privilege> privs = repo.findByNameAndTenantId(p, TenantContext.getCurrentTenant());
+		List<PrivilegeEntity> privs = repo.findByNameAndTenantId(p, TenantContext.getCurrentTenant());
 		if (privs.isEmpty()) {
 			// for default tenant
-			Privilege dpriv = new Privilege().setName(p);
+			PrivilegeEntity dpriv = new PrivilegeEntity().setName(p);
 			repo.save(dpriv);
 			
 			// for other tenants
 			tenants.findAll().forEach(t -> {
-				Privilege priv = new Privilege().setName(p);
+				PrivilegeEntity priv = new PrivilegeEntity().setName(p);
 				priv.setTenantId(t.getId());
 				repo.save(priv);
 			});

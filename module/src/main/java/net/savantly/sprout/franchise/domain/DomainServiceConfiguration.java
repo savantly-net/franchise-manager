@@ -44,7 +44,6 @@ import net.savantly.sprout.franchise.domain.patio.FranchisePatioRepository;
 import net.savantly.sprout.franchise.domain.pos.FranchisePOSConverter;
 import net.savantly.sprout.franchise.domain.pos.FranchisePOSRepository;
 import net.savantly.sprout.franchise.domain.privilege.FMPrivilegeConfiguration;
-import net.savantly.sprout.franchise.domain.report.ReportSourceConfiguration;
 import net.savantly.sprout.franchise.domain.storepos.StorePosApi;
 import net.savantly.sprout.franchise.domain.storepos.StorePosRepository;
 import net.savantly.sprout.franchise.domain.types.FMTypesApi;
@@ -52,8 +51,7 @@ import net.savantly.sprout.franchise.domain.types.FMTypesApi;
 @Configuration
 @Import({ AddressBookConfiguration.class, 
 		FMPrivilegeConfiguration.class, 
-		FranchiseFilesConfiguration.class,
-		ReportSourceConfiguration.class })
+		FranchiseFilesConfiguration.class })
 public class DomainServiceConfiguration {
 
 	// APIs
