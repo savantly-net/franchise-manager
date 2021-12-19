@@ -111,6 +111,7 @@ Fee Type Edit
 
 Manage the QAI surveys and 'store visit' forms.  
 Create multiple sections, question categories, questions, and associated points  
+See the [QA Setup Guide](./docs/qa.md) for more information.  
 
 QAI Question Category List
 ![qai category](./docs/images/qai_category_list.png)  
