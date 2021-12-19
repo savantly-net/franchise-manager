@@ -38,6 +38,16 @@ To build the image -
 The Franchise Manager module for the Sprout Platform.   
 The module is packaged as a jar, and contains backend and frontend code.  
 
+#### Note for WSL2
+If developing in WSL2, you may need to set the SPROUT_API_URL to the WSL2 system IP for the routing between the web app and the backend API.  
+For example, from the Linux shell get the IP address using `ifconfig`  
+And export the variable [using the correct IP for your system] -  
+```
+export SPROUT_API_URL=http://172.23.0.25:8080
+```
+
+#### Start the development processes
+
 Start the required service [DB, WebApp]
 ```
 docker compose -f module/docker-compose.yml up
