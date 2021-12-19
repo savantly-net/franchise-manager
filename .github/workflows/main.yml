@@ -121,7 +121,7 @@ jobs:
       - name: Build Demo
         env:
           IMAGE_NAME: franchise-manager-demo
-        run: ./gradlew :example:build
+        run: ./gradlew :fm-example:build
           
       # Deploy Demo
       - name: Login to Heroku
