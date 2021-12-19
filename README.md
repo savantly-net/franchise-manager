@@ -80,11 +80,11 @@ To modify the UI components, edit the files in [./module/src/plugin](./module/sr
 ## Features
 
 Home page showing the menu options added by the Franchise Manager module  
-![Home](./docs/home.png)  
+![Home](./docs/images/home.png)  
 
 ## Permissions  
 New permissions available  
-![Permissions](./docs/permissions.png)  
+![Permissions](./docs/images/permissions.png)  
 
 ### Location Management
 
@@ -92,20 +92,20 @@ Manage franchise location information -
 Add attributes such as address, bars, patios, POS terminals, and others ...  
 
 Locations List  
-![location list](./docs/location_list.png)  
+![location list](./docs/images/location_list.png)  
 
 Location Edit   
-![location edit](./docs/location_edit.png)  
+![location edit](./docs/images/location_edit.png)  
 
 ### Franchise fee management  
 
 Manage the fees associated with a franchise.  
 
 Fee Types   
-![location edit](./docs/fee_types.png)  
+![location edit](./docs/images/fee_types.png)  
 
 Fee Type Edit   
-![location edit](./docs/fee_types_edit.png)  
+![location edit](./docs/images/fee_type_edit.png)  
 
 ### QAI 
 
@@ -113,10 +113,10 @@ Manage the QAI surveys and 'store visit' forms.
 Create multiple sections, question categories, questions, and associated points  
 
 QAI Question Category List
-![qai category](./docs/qai_category_list.png)  
+![qai category](./docs/images/qai_category_list.png)  
 
 QAI Section Editor  
-![qai section editor](./docs/qai_section_edit.png)  
+![qai section editor](./docs/images/qai_section_edit.png)  
 
 QAI Section Data Entry  
-![qai section editor](./docs/qai_section_data_entry.png)  
+![qai section editor](./docs/images/qai_section_data_entry.png)  
