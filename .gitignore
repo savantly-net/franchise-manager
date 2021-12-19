@@ -8,3 +8,4 @@ module/src/dev/resources/application-dev.yml
 
 
 node_modules
+.idea
