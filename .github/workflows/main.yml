@@ -111,8 +111,25 @@ jobs:
           -Psigning.gnupg.keyName=$(gpg --list-secret-keys --keyid-format LONG | grep "sec" | awk -F'[/ ]' '{print $5}' | head -n 1)
 
       # Analyze
-      - name: Analyze sprout-core
+      - name: Analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ github.token }}
         run: ./gradlew :fm-module:sonarqube --info
+
+      # Build Demo
+      - name: Build Demo
+        env:
+          IMAGE_NAME: franchise-manager-demo
+        run: ./gradlew :example:build
+          
+      # Deploy Demo
+      - name: Login to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ""
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+          justlogin: true
+      - name: Deploy to Heroku
+        run: ./scripts/deployHeroku.sh
