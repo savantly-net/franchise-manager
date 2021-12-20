@@ -9,6 +9,12 @@ Read more about the Sprout Project -
 
 ## Quick start
 
+## Demo 
+Access a running [demo here](https://franhise-manager.herokuapp.com/)  
+Login with -  
+- username: admin
+- password: changeme!
+
 ### Example
 [Example server](./example) using the Franchise Manager module.  
 Run the docker compose to set the example environment.  
