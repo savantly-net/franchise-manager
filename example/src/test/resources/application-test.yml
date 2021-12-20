@@ -11,7 +11,7 @@ spring:
     enabled: false
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-    url: jdbc:tc:postgresql:12.6-alpine:///fuzzys-dev?TC_TMPFS=/testtmpfs:rw
+    url: jdbc:tc:postgresql:12.6-alpine:///dev?TC_TMPFS=/testtmpfs:rw
 #    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'classpath:init.sql';MODE=PostgreSQL
 #    username: sa
 #    password: 

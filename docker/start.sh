@@ -1,8 +1,10 @@
 #!/bin/bash
 
-# start postgres
-su - postgres -c "/usr/lib/postgresql/12/bin/initdb -D $PGDATA"
-su - postgres -c "PGDATA=$PGDATA /usr/lib/postgresql/12/bin/pg_ctl -D /db -l logfile start"
+if [ "true" = "${START_POSTGRES}}" ]; then
+    # start postgres
+    su - postgres -c "/usr/lib/postgresql/12/bin/initdb -D $PGDATA"
+    su - postgres -c "PGDATA=$PGDATA /usr/lib/postgresql/12/bin/pg_ctl -D /db -l logfile start"
+fi
 
 # start nginx in background
 nginx

@@ -35,7 +35,7 @@ spring:
   mvc:
     log-request-details: true
   datasource:
-    url: jdbc:tc:postgresql:12.6-alpine:///fuzzys-dev
+    url: jdbc:tc:postgresql:12.6-alpine:///dev
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: true
