@@ -12,7 +12,7 @@ FROM adoptopenjdk:11-jre-hotspot
 RUN mkdir -p /sprout/other && mkdir -p /sprout/modules
 RUN apt-get update && apt-get -y install nginx postgresql
 COPY --from=webapp /var/www/ /var/www/
-COPY --from=webapp /etc/nginx/templates/default.conf.template /etc/nginx/templates/default.conf.template
+COPY --from=webapp /etc/nginx/templates/default.conf.template /etc/nginx/templates/default.conf
 
 RUN mkdir -p /db && chown postgres:postgres /db
 ENV PGDATA=/db
