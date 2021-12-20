@@ -6,8 +6,6 @@ cd $DIR/..
 
 IMAGE_NAME=franchise-manager-demo
 
-docker build -t savantly/${IMAGE_NAME} .
-
 heroku container:login
 
 docker tag savantly/${IMAGE_NAME}:latest registry.heroku.com/franchise-manager/web
