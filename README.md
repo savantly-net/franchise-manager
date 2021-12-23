@@ -10,7 +10,7 @@ Read more about the Sprout Project -
 ## Quick start
 
 ## Demo 
-Access a running [demo here](https://franhise-manager.herokuapp.com/)  
+Access a running [demo here](https://franchise-manager.herokuapp.com/)  
 Login with -  
 - username: admin
 - password: changeme!
