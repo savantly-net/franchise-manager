@@ -26,6 +26,8 @@ docker compose -f example/docker-compose.yml up
 Access the front-end at [http://localhost:3000](http://localhost:3000) 
 with the default user/pass `admin/changeme!`
 
+To access the franchise-manager menu items, you may need to configure the permissions for the admin user.  
+
 Postgres Adminer is exposed at `localhost:8081`
 
 To remove the containers -  
