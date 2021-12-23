@@ -19,9 +19,9 @@ services:
     ports:
       - 5432:5432
     environment:
-      - POSTGRES_DB=sprout
-      - POSTGRES_PASSWORD=sprout
-      - POSTGRES_USER=sprout
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
 
   adminer:
     image: adminer
