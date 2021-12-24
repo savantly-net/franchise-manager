@@ -5,7 +5,8 @@ services:
   sprout-server:
     image: savantly/franchise-manager-demo:latest
     container_name: fmgr-example-server
-    restart: always
+    restart: on-failure
+    init: true
     ports:
       - 8080:8080
     environment:
@@ -19,7 +20,8 @@ services:
   webapp:
     image: savantly/sprout-webapp
     container_name: fmgr-example-webapp
-    restart: always
+    restart: on-failure
+    init: true
     ports:
       - 3000:3000
     environment: 
@@ -30,13 +32,15 @@ services:
   db:
     image: postgres:12
     container_name: fmgr-example-db
-    restart: always
+    restart: on-failure
+    init: true
     environment:
       POSTGRES_PASSWORD: postgres
 
   adminer:
     image: adminer
     container_name: fmgr-example-adminer
-    restart: always
+    restart: on-failure
+    init: true
     ports:
       - 8081:8080
