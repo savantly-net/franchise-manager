@@ -8,9 +8,7 @@ services:
     ports:
       - 3000:3000
     environment: 
-      - SPROUT_API_URL=${SPROUT_API_URL:-http://host.docker.internal:8080}
-    depends_on: 
-      - sprout-server
+      SPROUT_API_URL: ${SPROUT_API_URL:-http://host.docker.internal:8080}
 
   db:
     image: postgres
