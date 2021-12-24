@@ -16,8 +16,8 @@ Login with -
 - password: changeme!
 
 ### Example
-[Example server](./example) using the Franchise Manager module.  
-Run the docker compose to set the example environment.  
+To run the demo locally, start the [Example server](./example) using the Franchise Manager module.  
+Run the docker compose to setup the example environment.  
 
 ```
 docker compose -f example/docker-compose.yml up
@@ -42,48 +42,9 @@ To build the image -
 ```
 
 ## Development 
-### Module
-The Franchise Manager module for the Sprout Platform.   
-The module is packaged as a jar, and contains backend and frontend code.  
 
-#### Note for WSL2
-If developing in WSL2, you may need to set the SPROUT_API_URL to the WSL2 system IP for the routing between the web app and the backend API.  
-For example, from the Linux shell get the IP address using `ifconfig`  
-And export the variable [using the correct IP for your system] -  
-```
-export SPROUT_API_URL=http://172.23.0.25:8080
-```
-
-#### Start the development processes
-
-Start the required service [DB, WebApp]
-```
-docker compose -f module/docker-compose.yml up
-```
-
-In another terminal, start the dev app -  
-```
-./gradlew :fm-module:bootRun
-```
-
-To continuously build the plugin/front-end code, open another terminal.  
-This allows seamless development of the front-end code. Refresh the browser to see updates.  
-```
-cd module
-yarn watch
-```
-
-If you're working on the Java code, in one terminal start the Java dev continuous build.  
-```
-./gradlew :fm-module:compileJava --continuous
-```
-
-
-Sprout UI should be running at [localhost:3000](http://localhost:3000)  
-Sprout API should be running at [localhost:8080](http://localhost:8080)  
-Adminer should be running at [localhost:8081](http://localhost:8081)  
-
-To modify the UI components, edit the files in [./module/src/plugin](./module/src/plugin)
+See the development guide for more information.  
+[./docs/development.md](./docs/development.md)
 
 ## Features
 
