@@ -18,7 +18,7 @@ Maven -
 <dependency>
   <groupId>net.savantly.franchise</groupId>
   <artifactId>franchise-manager</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
+  <version>2.0.1-SNAPSHOT</version>
 </dependency>
 ```
 
