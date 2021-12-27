@@ -14,10 +14,11 @@ targetCompatibility = '1.8'
 
 //apply from: "${rootProject.projectDir}/gradle/sonar.gradle"
 
-bootRun {
-	jvmArgs=["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=18080"]
-	sourceResources sourceSets.main
-}
+//bootRun {
+//	jvmArgs=["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=18080"]
+//	sourceResources sourceSets.main
+//}
+bootRun.enabled = false
 
 bootBuildImage {
 	imageName = "${container_repo_url}"
