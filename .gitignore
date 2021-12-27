@@ -2,6 +2,7 @@
 .classpath
 .project
 .settings
+.vscode
 example/src/main/resources/META-INF/resources/api/public/.DS_Store
 module/src/dev/resources/application-dev.yml
 
@@ -9,3 +10,4 @@ module/src/dev/resources/application-dev.yml
 
 node_modules
 .idea
+.env
