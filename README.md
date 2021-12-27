@@ -8,6 +8,11 @@ Read more about the Sprout Project -
 
 ## Usage
 To use the Franchise Manager plugin in your own Sprout application, include it as a dependency.  
+For snapshots, be sure to add the OSS Sonatype snapshot repository -  
+
+`maven url('https://oss.sonatype.org/content/repositories/snapshots/')`
+
+
 Maven - 
 ```
 <dependency>
