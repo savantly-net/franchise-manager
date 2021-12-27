@@ -9,7 +9,7 @@ services:
     ports:
       - ${WEB_PORT:-3000}:3000
     environment:
-      SPROUT_API_URL: http://backend:8080
+      SPROUT_API_URL: ${SPROUT_API_URL:-http://host.docker.internal:8080}
 
   db:
     image: postgres
@@ -30,31 +30,4 @@ services:
     init: true
     ports:
       - ${ADMINER_PORT:-8081}:8080
-  
-  backend:
-    image: adoptopenjdk/openjdk11:alpine-slim
-    container_name: fmgr-sprout-backend
-    volumes:
-      - repo:/app
-    working_dir: /app
-    command: ./gradlew bootRun
-    restart: on-failure
-    init: true
-    ports:
-      - ${API_PORT:-8080}:8080
-    depends_on:
-      - db
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
-      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
 
-volumes:
-  repo:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ${REPO_ROOT}
