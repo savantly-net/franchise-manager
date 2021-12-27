@@ -10,16 +10,21 @@ The Franchise-Manager module for the Sprout Platform is packaged as a jar, and c
 - docker-compose
 - yarn [recommended for continuous UI build]
 
-## Quickstart
+## Start the dev environment
 
 A script is provided to build and start the required service [DB, WebApp].  
-Docker compose is leveraged to start the services, and creates a container that mounts the project files at `/app` in the running container.  
-This allows us to develop while the container is running, and see the changes without manually restarting the server.  
+Docker compose is leveraged to start the services.
+Spring Boot dev tools allows us to develop while the app is running, and see the changes without manually restarting the server.  
 
 Postgres Adminer is also included, should you want to inspect the DB.  
 
 ```
 ./scripts/dev.sh
+```
+
+In another terminal, start the backend server -  
+```
+./gradlew bootRun
 ```
 
 It make several minutes to build and run the project the first time.  
@@ -31,12 +36,12 @@ Adminer should be running at [localhost:8081](http://localhost:8081)
 ### Config
 If you need to expose the services on different ports on your host system, you may export some variables before running `./scripts/dev.sh`  
 Available env vars and their defaults -  
-```
-WEB_PORT=3000
-DB_PORT=5432
-ADMINER_PORT=8081
-API_PORT=8080
-```
+|Env Var|Default|Description|
+|--|--|--|
+|WEB_PORT|3000|The port to expose the website on|
+|DB_PORT|5432|The port to expose the DB on|
+|ADMINER_PORT|8081|The port to expose DB Adminer on|
+|SPROUT_API_URL|http://docker.host.internal:8080|The url the backend server is exposed on.|
 
 Example -  
 ```
@@ -47,9 +52,14 @@ export WEB_PORT=3001
 The UI will now be exposed on port 3001 on the host system. This does not effect the port that the container is exposing inside the docker network.  
 [http://localhost:3001](http://localhost:3001)  
 
+You may also create a `.env` file in the root of the project, to have the script automatically source the variables.  
+
+On some systems, you may need to modify the `SPROUT_API_URL` to use the docker host IP.  
+You may find this using `ifconfig` or similar tool.
+
 
 ## Continuous UI development
-When working on the UI, first start the dev environment using `./scripts/dev.sh`  
+When working on the UI, first start the dev environment using the previous instruction  
 To modify the UI components, edit the files in [./module/src/plugin](../module/src/plugin)  
 You may want to continuously build the plugin/front-end code.  
 Open another terminal and run these commands while the development environment is running.  
@@ -62,3 +72,16 @@ yarn watch
 This allows seamless development of the front-end code.  
 When changes to the UI are saved, `yarn` automatically rebuilds them.  
 Refresh the browser to see updates.  
+
+## Testing
+Execute the test script to perform all the tests -  
+```
+./scripts/test.sh
+```
+
+## Building
+To build the module as a jar, execute the build script -  
+```
+./scripts/build.sh
+```
+
