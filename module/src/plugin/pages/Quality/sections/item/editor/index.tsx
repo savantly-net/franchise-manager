@@ -2,7 +2,7 @@ import { IconButton, Text, Box } from '@chakra-ui/react';
 import { Table, TableCaption, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table';
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 import { confirm, FormField, ItemEditorProps } from '@sprout-platform/ui';
-import { css } from 'emotion';
+import { css, cx } from 'emotion';
 import { Field, FieldArray, Form, Formik, FormikProps } from 'formik';
 import FormikTextInput from 'plugin/components/FormikTextInput';
 import { AppModuleRootState } from 'plugin/types';
@@ -67,9 +67,15 @@ const QuestionEditor = (props: FormikProps<QAISection>) => {
                     <Tr key={`questions.${index}.text`}>
                       <Td>
                         <Field
+                          className={cx(
+                            'form-control',
+                            css`
+                              width: 100%;
+                            `
+                          )}
                           name={`questions.${index}.text`}
-                          component={FormikTextInput}
-                          placeholder="Enter Question"
+                          as="textarea"
+                          rows="2"
                         />
                       </Td>
                       <Td>
@@ -152,9 +158,15 @@ const GuestQuestionEditor = (props: FormikProps<QAISection>) => {
                     <Tr key={`guestQuestions.${index}.text`}>
                       <Td>
                         <Field
+                          className={cx(
+                            'form-control',
+                            css`
+                              width: 100%;
+                            `
+                          )}
                           name={`guestQuestions.${index}.text`}
-                          component={FormikTextInput}
-                          placeholder="Enter Question"
+                          as="textarea"
+                          rows="2"
                         />
                       </Td>
                       <Td>
