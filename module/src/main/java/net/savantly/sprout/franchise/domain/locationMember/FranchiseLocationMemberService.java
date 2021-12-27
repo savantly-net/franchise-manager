@@ -17,6 +17,10 @@ public class FranchiseLocationMemberService {
 	public List<FranchiseLocationMemberDto> getMembers(String locationId) {
 		return convert(repo.findByLocationId(locationId));
 	}
+
+	public List<FranchiseLocationMemberDto> getByMemberUserId(String userId) {
+		return convert(repo.findByUserId(userId));
+	}
 	
 
 	public void updateMembers(String locationId, List<FranchiseLocationMemberDto> members) {
