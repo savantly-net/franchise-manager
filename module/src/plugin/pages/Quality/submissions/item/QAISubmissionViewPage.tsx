@@ -7,14 +7,19 @@ import { useParams } from 'react-router-dom';
 import { Alert } from 'reactstrap';
 import { useQAISection } from '../../sections/hooks';
 import { QAISectionSubmission, qaiSubmissionService } from '../entity';
+import '../styles.css';
 
 type InternalState = QAISectionSubmission | undefined;
 const QAISubmissionViewPage = () => {
   const itemId = useParams().itemId;
   const [item, setItem] = useState(undefined as InternalState);
   const [error, setError] = useState('');
-  const fmLocation = useFMLocation(item?.locationId);
+  let [yesCount, setYesCount] = useState(0);
+  let [noCount, setNoCount] = useState(0);
+  let [questionYesCount, setQuestionYesCount] = useState(0);
+  let [questionNoCount, setQuestionNoCount] = useState(0);
 
+  const fmLocation = useFMLocation(item?.locationId);
   const qaiSection = useQAISection(item?.sectionId);
 
   if (!itemId) {
@@ -34,6 +39,39 @@ const QAISubmissionViewPage = () => {
           console.error(err);
           setError(err.message || 'There was a problem retrieving the submission');
         });
+    } else {
+      if (Object.keys(item?.guestAnswers).length > 0) {
+        let gqNo = 0;
+        let gqYes = 0;
+        for (const guestMainAns of item?.guestAnswers) {
+          for (const subAnswer of guestMainAns.answers) {
+            if (subAnswer.value === 'YES') {
+              gqYes = gqYes + 1;
+            } else {
+              gqNo = gqNo + 1;
+            }
+          }
+        }
+        setYesCount(gqYes);
+        setNoCount(gqNo);
+      }
+      if (Object.keys(item?.answers).length > 0) {
+        let answersValue: any = item?.answers.map(x => x.value);
+        if (answersValue !== undefined) {
+          let staticNo = 0;
+          let statcYes = 0;
+          for (const guestAns of answersValue) {
+            if (guestAns === 'YES') {
+              statcYes = statcYes + 1;
+            } else {
+              staticNo = staticNo + 1;
+            }
+          }
+          setQuestionYesCount(statcYes);
+          setQuestionNoCount(staticNo);
+        }
+      }
+      console.log('item.guestAnswers', item);
     }
   }, [itemId, item]);
 
@@ -48,9 +86,6 @@ const QAISubmissionViewPage = () => {
     }
     return 'text unavailable';
   };
-
-  console.log('item.guestAnswers', item);
-
   return (
     <Fragment>
       {error && <Alert color="warning">{error}</Alert>}
@@ -131,6 +166,33 @@ const QAISubmissionViewPage = () => {
                   <Tr>
                     <Td>Notes</Td>
                     {item.guestAnswers && item.guestAnswers.map(({ notes }) => <Td>{notes}</Td>)}
+                  </Tr>
+                </Tbody>
+              </Table>
+            </div>
+            <div className="mt-1">
+              <Table style={{ marginTop: '50px', border: '1px solid #D0D7DE;' }} mt="4" className="table-count">
+                <Thead>
+                  <Tr className="Tr-cusTom">
+                    <Th>QuesTion</Th>
+                    <Th>Yes</Th>
+                    <Th>No</Th>
+                  </Tr>
+                </Thead>
+                <Tbody
+                  className={css`
+                    border: 1px solid #d0d7de;
+                  `}
+                >
+                  <Tr>
+                    <Td>Questions</Td>
+                    <Td>{questionYesCount}</Td>
+                    <Td>{questionNoCount}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Guest Questions</Td>
+                    <Td>{yesCount}</Td>
+                    <Td>{noCount}</Td>
                   </Tr>
                 </Tbody>
               </Table>

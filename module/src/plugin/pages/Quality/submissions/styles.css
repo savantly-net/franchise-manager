@@ -1,0 +1,9 @@
+.table-count th,
+.table-count td {
+  border: 1px solid #D0D7DE;
+}
+
+.table-count {
+  width: 30% !important;
+  border: 1px solid #D0D7DE;
+}
