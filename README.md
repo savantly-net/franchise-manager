@@ -6,6 +6,21 @@ Both Sprout and Franchise Module are dependencies that can be added to a Java Sp
 Read more about the Sprout Project -  
 [https://github.com/savantly-net/sprout-platform](https://github.com/savantly-net/sprout-platform)
 
+## Usage
+To use the Franchise Manager plugin in your own Sprout application, include it as a dependency.  
+Maven - 
+```
+<dependency>
+  <groupId>net.savantly.franchise</groupId>
+  <artifactId>franchise-manager</artifactId>
+  <version>2.0.0-SNAPSHOT</version>
+</dependency>
+```
+
+Gradle - 
+```
+implementation 'net.savantly.franchise:franchise-manager:2.0.0-SNAPSHOT'
+```
 
 ## Quick start
 
