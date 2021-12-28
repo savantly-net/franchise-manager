@@ -1,10 +1,12 @@
+import { dateTime } from '@savantly/sprout-api';
 import { useFMLocation } from 'plugin/pages/Locations/Stores/hooks';
 import React, { Fragment } from 'react';
-import { NavLink } from 'react-router-dom';
+
 import { useQAISection } from '../sections/hooks';
 import { useQAISectionSubmission } from '../submissions/hooks';
 import { StoreVisit as EntityClass } from './entity';
 import { StoreVisitFormEdit } from './storeVisitForms/StoreVisitFormEdit';
+import StoreVisitTabs from './StoreVisitTabs';
 
 export const StoreVisitViewer = ({ item }: { item: EntityClass }) => {
   const location = useFMLocation(item.locationId);
@@ -13,6 +15,11 @@ export const StoreVisitViewer = ({ item }: { item: EntityClass }) => {
 
   return (
     <Fragment>
+      <StoreVisitTabs
+        item={item}
+        isVisit={true}
+        isTitle={`${location?.name} / ${section?.name} / ${dateTime(item.createdDate).format('YYYY-MM-DD')}`}
+      />
       <div className="mb-2">
         <h5>{item.createdDate}</h5>
         <div>
@@ -22,9 +29,7 @@ export const StoreVisitViewer = ({ item }: { item: EntityClass }) => {
         <div>
           <label className="mr-2">Section: </label>
           <span>
-            <NavLink to={`/a/franchise-manager/qai/submissions/item/${sectionSubmission?.itemId}`}>
-              {section?.name} ({sectionSubmission?.dateScored})
-            </NavLink>
+            {section?.name} ({dateTime(item.createdDate).format('dd YYYY-MM-DD hh:mm A')})
           </span>
         </div>
       </div>

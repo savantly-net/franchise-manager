@@ -54,7 +54,7 @@ const IndexPage: FC<any> = ({ meta }: { meta: AppPluginMeta<AppPluginSettings> }
       entityStateSelector={stateSelector}
       entityViewer={Viewer}
       iconProvider={({ item, pageName }: { item?: EntityClass; pageName: EntityPageName }) => {
-        return 'clipboard-check';
+        return '';
       }}
       subTitleProvider={({ item, pageName }: { item?: EntityClass; pageName: EntityPageName }) => {
         switch (pageName) {
@@ -79,7 +79,7 @@ const IndexPage: FC<any> = ({ meta }: { meta: AppPluginMeta<AppPluginSettings> }
           case 'list':
             return 'All Store Visits';
           case 'view':
-            return item?.itemId || '';
+            return '';
           default:
             return '';
         }

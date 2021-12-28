@@ -15,6 +15,7 @@ import StorePosPage from './pages/Locations/StorePos/StorePosPage';
 import NewsletterIndexPage from './pages/Newsletter/NewsletterIndexPage';
 import QAIIndexPage from './pages/Quality/QAIIndexPage';
 import QAISubmissionsIndexPage from './pages/Quality/submissions/QAISubmissionsIndexPage';
+import { QAISubmissionView } from './pages/Quality/visits/QAISubmissionView';
 import StoreVisitIndexPage from './pages/Quality/visits/StoreVisitIndexPage';
 import ReportManagerIndexPage from './pages/ReportManager/ReportManagerIndexPage';
 import ReportsIndexPage from './pages/Reports/ReportsIndexPage';
@@ -51,6 +52,7 @@ export const SubPageContainer = ({ path, onNavChanged, meta }: Props) => {
         <Route path="/qai/manage/*" element={<QAIIndexPage />} />
         <Route path="/qai/submissions/*" element={<QAISubmissionsIndexPage />} />
         <Route path="/store-visits/*" element={<StoreVisitIndexPage />} />
+        <Route path="/store-visits/qui/:storeId/:itemId" element={<QAISubmissionView />} />
         <Route path="/reports/:id" element={<ReportsIndexPage />} />
         <Route path="/report-manager/*" element={<ReportManagerIndexPage />} />
       </Routes>
