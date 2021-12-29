@@ -115,7 +115,12 @@ const IndexPage = () => {
   ];
 
   return (
-    <BootstrapTable columns={columns} data={submissionState.response?.content || []} keyField="itemId" striped={true} />
+    <BootstrapTable
+      columns={columns}
+      data={qaiSections.length && fmLocations.length ? submissionState.response?.content || [] : []}
+      keyField="itemId"
+      striped={true}
+    />
   );
 };
 
