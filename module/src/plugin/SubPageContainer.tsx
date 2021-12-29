@@ -52,7 +52,7 @@ export const SubPageContainer = ({ path, onNavChanged, meta }: Props) => {
         <Route path="/qai/manage/*" element={<QAIIndexPage />} />
         <Route path="/qai/submissions/*" element={<QAISubmissionsIndexPage />} />
         <Route path="/store-visits/*" element={<StoreVisitIndexPage />} />
-        <Route path="/store-visits/qui/:storeId/:itemId" element={<QAISubmissionView />} />
+        <Route path="/store-visits/qai/:storeId/:itemId" element={<QAISubmissionView />} />
         <Route path="/reports/:id" element={<ReportsIndexPage />} />
         <Route path="/report-manager/*" element={<ReportManagerIndexPage />} />
       </Routes>
