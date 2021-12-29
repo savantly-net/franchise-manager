@@ -7,11 +7,10 @@ import { useFMLocations } from 'plugin/pages/Locations/Stores/hooks';
 import { AppFormSubmissionDto } from 'plugin/services/forms';
 import { useKpisByLocationId } from 'plugin/services/kpiService';
 import { getAppPluginSettingsService } from 'plugin/services/pluginSettings';
-import React, { Fragment, useMemo, useState } from 'react';
+import React, { Fragment, useMemo, useState, useEffect } from 'react';
 import { Prompt } from 'react-router-dom';
 import { Alert } from 'reactstrap';
-import { useQAISection, useQAISections } from '../sections/hooks';
-import { useQAISectionSubmission } from '../submissions/hooks';
+import { useQAISections } from '../sections/hooks';
 import { QAISectionSubmission, qaiSubmissionService } from '../submissions/entity';
 import {
   StoreVisit as EntityClass,
@@ -107,13 +106,11 @@ export const StoreVisitEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
   const locations = useFMLocations();
   const [sectionSubmissions, setSectionSubmissions] = useState(undefined as QAISectionSubmission[] | undefined);
   const appPluginSettings = getAppPluginSettingsService().getSettings;
-  const sectionSubmission = useQAISectionSubmission(item?.sectionSubmissionId);
-  const qaiSectionLists = useQAISections();
-  const qaiSectionList = useQAISection(sectionSubmission?.sectionId);
+  const qaiSectionList = useQAISections();
 
   const getSectionNameById = (sectionId: string | undefined): string => {
-    console.log(`matching section id: ${sectionId} in ${qaiSectionLists}`);
-    const matches = qaiSectionLists.filter(s => s.itemId === sectionId);
+    // console.log(`matching section id: ${sectionId} in ${qaiSectionList}`);
+    const matches = qaiSectionList.filter(s => s.itemId === sectionId);
     if (matches.length > 0) {
       return matches[0].name;
     } else {
@@ -133,9 +130,17 @@ export const StoreVisitEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
       qaiSubmissionService.findByLocation(locationId).then(response => {
         setSectionSubmissions(response.data);
       });
+    } else if (item?.locationId) {
+      qaiSubmissionService.findByLocation(item?.locationId).then(response => {
+        setSectionSubmissions(response.data);
+      });
     }
   };
-  updateSelectedLocation(item?.locationId);
+
+  useEffect(() => {
+    updateSelectedLocation(item?.locationId, item?.formData?.data);
+  }, [item?.locationId, item?.formData?.data]);
+  // updateSelectedLocation(item?.locationId);
 
   // When the section submission changes, we'll update specific form values with data from the section submission, or calculated data
   const updatedSelectedSection = (sectionSubmissionId?: string, formikProps?: FormikProps<StoreVisit>) => {
@@ -252,7 +257,7 @@ export const StoreVisitEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
                     updatedSelectedSection(target.value, props);
                   }}
                 >
-                  <option value={item?.itemId}>{qaiSectionList?.name}</option>
+                  <option></option>
                   <Fragment>
                     {sectionSubmissions &&
                       sectionSubmissions.map(s => (
