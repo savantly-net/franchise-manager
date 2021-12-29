@@ -18,8 +18,8 @@ const IndexPage = ({ item, isVisit, isTitle }: { item: EntityClass; isVisit: any
       {
         text: 'QA Details',
         url: isVisit
-          ? `../../qui/${item.itemId}/${item.sectionSubmissionId}`
-          : `../../../qui/${item.itemId}/${item.sectionSubmissionId}`,
+          ? `../../qai/${item.itemId}/${item.sectionSubmissionId}`
+          : `../../../qai/${item.itemId}/${item.sectionSubmissionId}`,
         icon: 'plus',
         active: isVisit ? false : true,
       },
