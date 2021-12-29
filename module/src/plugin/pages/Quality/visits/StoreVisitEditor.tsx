@@ -10,7 +10,8 @@ import { getAppPluginSettingsService } from 'plugin/services/pluginSettings';
 import React, { Fragment, useMemo, useState } from 'react';
 import { Prompt } from 'react-router-dom';
 import { Alert } from 'reactstrap';
-import { useQAISections } from '../sections/hooks';
+import { useQAISection, useQAISections } from '../sections/hooks';
+import { useQAISectionSubmission } from '../submissions/hooks';
 import { QAISectionSubmission, qaiSubmissionService } from '../submissions/entity';
 import {
   StoreVisit as EntityClass,
@@ -106,11 +107,13 @@ export const StoreVisitEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
   const locations = useFMLocations();
   const [sectionSubmissions, setSectionSubmissions] = useState(undefined as QAISectionSubmission[] | undefined);
   const appPluginSettings = getAppPluginSettingsService().getSettings;
-  const qaiSectionList = useQAISections();
+  const sectionSubmission = useQAISectionSubmission(item?.sectionSubmissionId);
+  const qaiSectionLists = useQAISections();
+  const qaiSectionList = useQAISection(sectionSubmission?.sectionId);
 
   const getSectionNameById = (sectionId: string | undefined): string => {
-    console.log(`matching section id: ${sectionId} in ${qaiSectionList}`);
-    const matches = qaiSectionList.filter(s => s.itemId === sectionId);
+    console.log(`matching section id: ${sectionId} in ${qaiSectionLists}`);
+    const matches = qaiSectionLists.filter(s => s.itemId === sectionId);
     if (matches.length > 0) {
       return matches[0].name;
     } else {
@@ -249,7 +252,7 @@ export const StoreVisitEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
                     updatedSelectedSection(target.value, props);
                   }}
                 >
-                  <option></option>
+                  <option value={item?.itemId}>{qaiSectionList?.name}</option>
                   <Fragment>
                     {sectionSubmissions &&
                       sectionSubmissions.map(s => (
