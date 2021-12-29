@@ -7,7 +7,7 @@ import { useFMLocations } from 'plugin/pages/Locations/Stores/hooks';
 import { AppFormSubmissionDto } from 'plugin/services/forms';
 import { useKpisByLocationId } from 'plugin/services/kpiService';
 import { getAppPluginSettingsService } from 'plugin/services/pluginSettings';
-import React, { Fragment, useMemo, useState, useEffect } from 'react';
+import React, { Fragment, useMemo, useState } from 'react';
 import { Prompt } from 'react-router-dom';
 import { Alert } from 'reactstrap';
 import { useQAISections } from '../sections/hooks';
@@ -137,9 +137,9 @@ export const StoreVisitEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
     }
   };
 
-  useEffect(() => {
-    updateSelectedLocation(item?.locationId, item?.formData?.data);
-  }, [item?.locationId, item?.formData?.data]);
+  // useEffect(() => {
+  updateSelectedLocation(item?.locationId, item?.formData?.data);
+  // }, [item?.locationId, item?.formData?.data]);
   // updateSelectedLocation(item?.locationId);
 
   // When the section submission changes, we'll update specific form values with data from the section submission, or calculated data
