@@ -1,0 +1,24 @@
+.storeVisitTabs {
+    min-height: 200px;
+}
+.storeVisitTabs .page-header-canvas {
+    height: 154px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    left: 0;
+}
+.css-1uhcek8{
+    z-index: 1;
+    position: relative;
+}
+.questionAnswerpadding{
+    padding:0 42px;
+    padding-top:100px;
+}
+.buttonPostion{
+    position:absolute;
+    right:32px;
+    top:95px;
+    z-index: 1;
+}
