@@ -109,7 +109,7 @@ export const StoreVisitEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
   const qaiSectionList = useQAISections();
 
   const getSectionNameById = (sectionId: string | undefined): string => {
-    // console.log(`matching section id: ${sectionId} in ${qaiSectionList}`);
+    console.log(`matching section id: ${sectionId} in ${qaiSectionList}`);
     const matches = qaiSectionList.filter(s => s.itemId === sectionId);
     if (matches.length > 0) {
       return matches[0].name;
@@ -136,11 +136,7 @@ export const StoreVisitEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
       });
     }
   };
-
-  // useEffect(() => {
   updateSelectedLocation(item?.locationId, item?.formData?.data);
-  // }, [item?.locationId, item?.formData?.data]);
-  // updateSelectedLocation(item?.locationId);
 
   // When the section submission changes, we'll update specific form values with data from the section submission, or calculated data
   const updatedSelectedSection = (sectionSubmissionId?: string, formikProps?: FormikProps<StoreVisit>) => {
