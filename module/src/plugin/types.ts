@@ -6,7 +6,7 @@ import { KnowledgeState } from './pages/Knowledge/entity';
 import { FranchiseFeeState } from './pages/Locations/Fees/feeEntity';
 import { FranchiseFeeTypeState } from './pages/Locations/Fees/feeTypesEntity';
 import { FranchiseGroupState } from './pages/Locations/Groups/entity';
-import { FranchiseMarketState } from './pages/Locations/Markets/entity';
+import { FranchiseMarketState } from './pages/Locations/Market/entity';
 import { FranchiseOwnershipState } from './pages/Locations/Owners/entity';
 import { StorePosState } from './pages/Locations/StorePos/entity';
 import { FranchiseLocationState } from './pages/Locations/types';
@@ -14,7 +14,7 @@ import { NewsletterState } from './pages/Newsletter/entityConfig';
 import { QAIQuestionCategoryState } from './pages/Quality/categories/entity';
 import { QAISectionState } from './pages/Quality/sections/entity';
 import { QAISectionSubmissionState } from './pages/Quality/submissions/entity';
-import { StoreVisitState } from './pages/Quality/visits/entity';
+import { StoreVisitState } from './pages/Quality/visit/entity';
 import { ReportSourceState } from './pages/ReportManager/entityConfig';
 
 export interface AppPluginSettings {

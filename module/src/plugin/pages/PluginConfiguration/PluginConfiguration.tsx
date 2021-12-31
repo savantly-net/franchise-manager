@@ -1,5 +1,5 @@
 import { NavModel, NavModelItem } from '@savantly/sprout-api';
-import { FMPage } from 'plugin/components/FMPage';
+import { FMPage } from 'plugin/component/FMPage';
 import { ConfigPageProps } from 'plugin/types';
 import React, { Component, FC } from 'react';
 import { Outlet, Route, Routes } from 'react-router-dom';

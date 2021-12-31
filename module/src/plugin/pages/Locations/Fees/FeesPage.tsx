@@ -1,5 +1,5 @@
 import { EntityPage } from '@sprout-platform/ui';
-import { LoadingIcon } from 'plugin/components/LoadingIcon';
+import { LoadingIcon } from 'plugin/component/LoadingIcon';
 import React, { FC, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppModuleRootState, AppModuleState } from '../../../types';

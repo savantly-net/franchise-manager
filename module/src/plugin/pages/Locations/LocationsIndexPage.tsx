@@ -1,9 +1,9 @@
 import { NavModel, NavModelItem } from '@savantly/sprout-api';
-import { FMPage } from 'plugin/components/FMPage';
+import { FMPage } from 'plugin/component/FMPage';
 import React, { FC } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import FeesPage from './Fees/FeesPage';
-import MarketsPage from './Markets/MarketsPage';
+import MarketsPage from './Market/MarketsPage';
 import OwnersPage from './Owners/OwnersPage';
 import LocationsListPage from './Stores/LocationsListPage';
 

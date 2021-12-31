@@ -1,5 +1,5 @@
 import { NavModel, NavModelItem } from '@savantly/sprout-api';
-import { FMPage } from 'plugin/components/FMPage';
+import { FMPage } from 'plugin/component/FMPage';
 import React from 'react';
 import { Outlet, Route, Routes } from 'react-router-dom';
 import QAISubmissionCreate from './item/QAISubmissionCreate';
