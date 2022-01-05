@@ -16,6 +16,5 @@ public class FranchiseGroupMember extends TenantKeyedEntity {
 
 	private String franchiseGroupId;
 	private String userId;
-	@Enumerated(EnumType.STRING)
-	private FranchiseGroupMemberRole role;
+	private String role;
 }
