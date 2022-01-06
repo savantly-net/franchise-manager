@@ -1,6 +1,13 @@
 import { BaseEntityService, EntityStateProvider, PagedEntityState, TenantedEntity } from '@savantly/sprout-api';
 import { API_URL } from 'plugin/config/appModuleConfiguration';
 
+export interface FranchiseGroupMember {
+  itemId?: string;
+  userId?: string;
+  locationId?: string;
+  role: 'COACH' | 'STAFF' | 'OWNER';
+}
+
 export interface FranchiseGroup extends TenantedEntity {
   name: string;
   address1: string;
@@ -8,6 +15,7 @@ export interface FranchiseGroup extends TenantedEntity {
   city: string;
   state: string;
   zip: string;
+  members: FranchiseGroupMember[];
 }
 
 export type FranchiseGroupState = PagedEntityState<FranchiseGroup>;
@@ -34,6 +42,7 @@ export const franchiseGroupsStateProvider = new EntityStateProvider<FranchiseGro
       city: '',
       state: '',
       zip: '',
+      members: [],
     },
   },
   stateKey: 'franchise-groups',
