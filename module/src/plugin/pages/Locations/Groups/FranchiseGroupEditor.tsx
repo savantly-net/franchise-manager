@@ -32,7 +32,7 @@ export const FranchiseGroupEditor = ({ item, afterSave }: FranchiseGroupEditorPr
         setError(err.message || err.detail || 'An error occurred while saving.');
       });
   }, []);
-
+  console.log(members);
   const RemoveItemButton = ({ remove, index }: { remove: (index: number) => void; index: number }) => {
     return (
       <Icon
