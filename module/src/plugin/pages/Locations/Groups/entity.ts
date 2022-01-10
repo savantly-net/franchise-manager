@@ -4,7 +4,7 @@ import { API_URL } from 'plugin/config/appModuleConfiguration';
 export interface FranchiseGroupMember {
   itemId?: string;
   userId?: string;
-  locationId?: string;
+  franchiseGroupId?: string;
   role: 'COACH' | 'STAFF' | 'OWNER';
 }
 
@@ -29,6 +29,16 @@ class GroupService extends BaseEntityService<FranchiseGroup> {
 }
 const groupService = new GroupService();
 export { groupService };
+
+class GroupMemberService extends BaseEntityService<FranchiseGroupMember> {
+  constructor() {
+    super({
+      baseUrl: `${API_URL}/group-members`,
+    });
+  }
+}
+const groupMemberService = new GroupMemberService();
+export { groupMemberService };
 
 export const franchiseGroupsStateProvider = new EntityStateProvider<FranchiseGroup>({
   entityService: groupService,

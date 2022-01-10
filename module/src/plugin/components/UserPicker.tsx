@@ -13,7 +13,7 @@ export const UserPicker = (props: UserPickerProps) => {
     <TypeAheadSelectField
       {...props}
       label={props.label}
-      items={users.map(({ displayName }) => ({ value: displayName }))}
+      items={users.map(({ displayName }) => ({ value: displayName, displayText: displayName }))}
     />
   );
 };
