@@ -12,8 +12,8 @@ export const UserPicker = (props: UserPickerProps) => {
   return (
     <TypeAheadSelectField
       {...props}
-      label="User"
-      items={users.map(({ displayName, itemId }) => ({ value: itemId, displayText: displayName }))}
+      label={props.label}
+      items={users.map(({ displayName }) => ({ value: displayName, displayText: displayName }))}
     />
   );
 };

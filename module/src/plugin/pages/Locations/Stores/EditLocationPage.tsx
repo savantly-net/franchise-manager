@@ -40,6 +40,9 @@ const EditLocation = ({ location }: { location?: FranchiseLocation }) => {
                 .createLocation(values)
                 .then(response => {
                   helpers.setSubmitting(false);
+                  for (const key in values.members) {
+                    values.members[key].locationId = response?.data.id;
+                  }
                   locationService.updateLocationMembers(response.data.id, values.members).then(membersSaveResponse => {
                     publishSuccessNotification('Saved', 'Location updated');
                     dispatch(loadLocations());
