@@ -6,6 +6,7 @@ import { KnowledgeState } from './pages/Knowledge/entity';
 import { FranchiseFeeState } from './pages/Locations/Fees/feeEntity';
 import { FranchiseFeeTypeState } from './pages/Locations/Fees/feeTypesEntity';
 import { FranchiseGroupState } from './pages/Locations/Groups/entity';
+import { FranchiseVendorState } from './pages/Vendors/entity';
 import { FranchiseMarketState } from './pages/Locations/Markets/entity';
 import { FranchiseOwnershipState } from './pages/Locations/Owners/entity';
 import { StorePosState } from './pages/Locations/StorePos/entity';
@@ -33,6 +34,7 @@ export interface AppModuleState {
   fmSelectOptions: FMSelectOptions;
   marketState: FranchiseMarketState;
   groupState: FranchiseGroupState;
+  vendorState: FranchiseVendorState;
   feeTypeState: FranchiseFeeTypeState;
   feeState: FranchiseFeeState;
   knowledge: KnowledgeState;
