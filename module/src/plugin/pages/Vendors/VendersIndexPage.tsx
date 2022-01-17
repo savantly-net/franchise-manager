@@ -56,7 +56,6 @@ const VendersIndexPage: FC<any> = ({}: AppModuleState) => {
           }
         }}
       />
-      
     </div>
   );
 };
