@@ -1,6 +1,5 @@
 import { BaseEntityService, EntityStateProvider, PagedEntityState, TenantedEntity } from '@savantly/sprout-api';
 import { API_URL } from 'plugin/config/appModuleConfiguration';
-import { VendorType } from './type/entity';
 
 export interface FranchiseVendor extends TenantedEntity {
   name: string;
@@ -9,7 +8,6 @@ export interface FranchiseVendor extends TenantedEntity {
   mailingAddress: string;
   notes: string;
   typeId: string;
-  type: VendorType[];
 }
 
 export type FranchiseVendorState = PagedEntityState<FranchiseVendor>;
@@ -36,7 +34,6 @@ export const franchiseVendorStateProvider = new EntityStateProvider<FranchiseVen
       mailingAddress: '',
       notes: '',
       typeId: '',
-      type: [],
     },
   },
   stateKey: 'franchise-vendors',
@@ -49,25 +46,25 @@ export const franchiseVendorColumns = [
     sort: true,
   },
   {
-    dataField: 'address1',
+    dataField: 'phoneNumber',
     text: 'Phone Number',
   },
   {
-    dataField: 'address2',
+    dataField: 'emailAddress',
     text: 'Email',
   },
   {
-    dataField: 'city',
+    dataField: 'mailingAddress',
     text: 'Mail Address',
     sort: true,
   },
   {
-    dataField: 'state',
+    dataField: 'notes',
     text: 'Notes',
     sort: true,
   },
   {
-    dataField: 'zip',
+    dataField: 'typeId',
     text: 'Type',
     sort: true,
   },
