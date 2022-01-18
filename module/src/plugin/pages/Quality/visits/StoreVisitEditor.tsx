@@ -130,9 +130,13 @@ export const StoreVisitEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
       qaiSubmissionService.findByLocation(locationId).then(response => {
         setSectionSubmissions(response.data);
       });
+    } else if (item?.locationId) {
+      qaiSubmissionService.findByLocation(item?.locationId).then(response => {
+        setSectionSubmissions(response.data);
+      });
     }
   };
-  updateSelectedLocation(item?.locationId);
+  updateSelectedLocation(item?.locationId, item?.formData?.data);
 
   // When the section submission changes, we'll update specific form values with data from the section submission, or calculated data
   const updatedSelectedSection = (sectionSubmissionId?: string, formikProps?: FormikProps<StoreVisit>) => {
