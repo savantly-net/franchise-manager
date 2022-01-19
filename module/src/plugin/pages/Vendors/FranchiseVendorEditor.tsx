@@ -65,11 +65,11 @@ export const FranchiseVendorEditor = ({ item, afterSave }: FranchiseVendorEditor
               <Col>
                 <FormField name="name" label="Name" />
                 <FormField name="phoneNumber" label="Phone Number" />
-                <FormField name="notes" label="Notes" as="textArea" rows="1" />
+                <FormField name="notes" label="Notes" />
               </Col>
               <Col>
                 <FormField name="emailAddress" label="Email Address" />
-                <FormField name="mailingAddress" label="Mailing Address" as="textArea" rows="1" />
+                <FormField name="mailingAddress" label="Mailing Address" />
                 <Col>
                   <TypeAheadSelectField
                     name={`typeId`}

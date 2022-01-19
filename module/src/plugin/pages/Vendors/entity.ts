@@ -15,7 +15,7 @@ export type FranchiseVendorState = PagedEntityState<FranchiseVendor>;
 class VendorService extends BaseEntityService<FranchiseVendor> {
   constructor() {
     super({
-      baseUrl: `${API_URL}/groups`,
+      baseUrl: `${API_URL}/vendor`,
     });
   }
 }
