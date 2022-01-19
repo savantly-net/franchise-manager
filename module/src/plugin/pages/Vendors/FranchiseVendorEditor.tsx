@@ -28,12 +28,12 @@ export const FranchiseVendorEditor = ({ item, afterSave }: FranchiseVendorEditor
   );
   useMemo(() => {
     if (!vendorType) {
-      vendorTypeService.load().then(result=>{
+      vendorTypeService.load().then(result => {
         setVendorType(result?.data);
-      })
+      });
     } else {
       setVendorTypeOptions(
-        vendorType['content'].map((o:any) => {
+        vendorType['content'].map((o: any) => {
           return {
             value: o.name,
             displayText: o.name,
@@ -100,7 +100,7 @@ export const FranchiseVendorEditor = ({ item, afterSave }: FranchiseVendorEditor
                   <TypeAheadSelectField
                     name={`typeId`}
                     label="Type"
-                    items={vendorTypeOptions?vendorTypeOptions:[]}
+                    items={vendorTypeOptions ? vendorTypeOptions : []}
                   />
                 </Col>
               </Col>
