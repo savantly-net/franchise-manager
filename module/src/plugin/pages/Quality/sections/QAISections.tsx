@@ -6,28 +6,39 @@ import {
   qaiSectionService as service,
   qaiSectionStateProvider as stateProvider,
 } from './entity';
+import { useQAISections } from './hooks';
 import { QAISectionEditor as Editor } from './item/editor';
 import { QAISectionViewer as Viewer } from './item/viewer';
 
 const stateSelector = (state: AppModuleRootState) => state.franchiseManagerState.qaiSections;
 
-const columns: Array<ColumnDescription<EntityClass>> = [
-  {
-    dataField: 'name',
-    text: 'Name',
-    sort: true,
-  },
-  {
-    isDummyField: true,
-    dataField: 'questionCount',
-    text: 'Questions',
-    formatter: (cell, row) => {
-      return row.guestQuestions.length + row.questions.length;
-    },
-  },
-];
-
 const IndexPage = () => {
+  const qaiSections = useQAISections();
+  const getSection = (sectionId?: string) => {
+    if (qaiSections && sectionId) {
+      const found = qaiSections.filter(s => s.itemId === sectionId);
+      if (found) {
+        return found[0];
+      }
+    }
+    return undefined;
+  };
+  const columns: Array<ColumnDescription<EntityClass>> = [
+    {
+      dataField: 'name',
+      text: 'Name',
+      sort: true,
+    },
+    {
+      isDummyField: true,
+      dataField: 'questionCount',
+      text: 'Questions',
+      formatter: (cell, row) => {
+        const section = getSection(row.itemId);
+        return <span>{section ? section?.guestQuestions.length + section?.questions.length : ''}</span>;
+      },
+    },
+  ];
   return (
     <EntityManager
       entityEditor={Editor}

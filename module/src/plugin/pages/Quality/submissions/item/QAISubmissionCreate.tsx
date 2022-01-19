@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Alert } from 'reactstrap';
 import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
 import { QAISection, qaiSectionStateProvider } from '../../sections/entity';
-import { QAISectionSubmissionEditModel, qaiSubmissionService } from '../entity';
+import { QAISectionSubmissionEditModel, qaiSubmissionService, qaiSubmissionStateProvider } from '../entity';
 import { QAISubmissionEditor } from './editor';
 import { convertQAISubmissionEditModel, createQaiSubmissionEditModel } from './qaiSubmissionEditModelUtil';
 
@@ -107,6 +107,7 @@ const QAISubmissionCreate = () => {
                 .then(response => {
                   helpers.resetForm();
                   dispatch(qaiSectionStateProvider.loadState());
+                  dispatch(qaiSubmissionStateProvider.loadState());
                   navigate(`../item/${response.data.itemId}`);
                 })
                 .catch(err => {

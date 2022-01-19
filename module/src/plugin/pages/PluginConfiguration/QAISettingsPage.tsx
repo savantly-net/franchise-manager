@@ -13,6 +13,7 @@ const QAISettingsPage = ({ plugin }: ConfigPageProps) => {
   const data = plugin.meta.jsonData || {};
   const [availableForms, setAvailableForms] = useState(undefined as AppFormSelection[] | undefined);
   const [fetching, setFetching] = useState(false);
+  const [formData, setFormData] = useState<any>();
 
   useMemo(() => {
     if (!fetching && !availableForms) {
@@ -36,6 +37,7 @@ const QAISettingsPage = ({ plugin }: ConfigPageProps) => {
         showCancelButton={false}
         onSubmit={(values, helpers) => {
           plugin.meta.updateJsonData(values);
+          setFormData(values);
         }}
       >
         <FormField name="storeVisitFormId" as="select" label="Store Visit Form">
@@ -50,7 +52,8 @@ const QAISettingsPage = ({ plugin }: ConfigPageProps) => {
           </Fragment>
         </FormField>
       </Form>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      {!formData && <pre>{JSON.stringify(data, null, 2)}</pre>}
+      {formData && <pre>{JSON.stringify(formData, null, 2)}</pre>}
     </div>
   );
 };

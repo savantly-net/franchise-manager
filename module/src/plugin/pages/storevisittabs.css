@@ -19,6 +19,9 @@
 .buttonPostion{
     position:absolute;
     right:32px;
-    top:95px;
+    top:97px;
     z-index: 1;
+}
+.buttonPostion .btn {
+    border-radius: 3px !important;
 }
