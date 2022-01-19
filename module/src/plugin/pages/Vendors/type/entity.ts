@@ -10,7 +10,7 @@ export type VendorTypeState = PagedEntityState<VendorType>;
 class VendorTypeService extends BaseEntityService<VendorType> {
   constructor() {
     super({
-      baseUrl: `${API_URL}/qai/question/category`,
+      baseUrl: `${API_URL}/vendor-type`,
     });
   }
 }
@@ -26,5 +26,5 @@ export const vendorTypeStateProvider = new EntityStateProvider<VendorType>({
       name: 'New Vendor Type',
     },
   },
-  stateKey: 'franchise-question-category',
+  stateKey: 'franchise-vendor-type',
 });

@@ -20,6 +20,7 @@ import StoreVisitIndexPage from './pages/Quality/visits/StoreVisitIndexPage';
 import ReportManagerIndexPage from './pages/ReportManager/ReportManagerIndexPage';
 import ReportsIndexPage from './pages/Reports/ReportsIndexPage';
 import { AppModuleRootState, AppPluginSettings } from './types';
+import VendersPage from './pages/Vendors/VendersIndexPage';
 
 interface Props {
   path: string;
@@ -55,6 +56,7 @@ export const SubPageContainer = ({ path, onNavChanged, meta }: Props) => {
         <Route path="/store-visits/qai/:storeId/:itemId" element={<QAISubmissionView />} />
         <Route path="/reports/:id" element={<ReportsIndexPage />} />
         <Route path="/report-manager/*" element={<ReportManagerIndexPage />} />
+        <Route path="/vendors/*" element={<VendersPage />} />
       </Routes>
       <Outlet />
     </div>
