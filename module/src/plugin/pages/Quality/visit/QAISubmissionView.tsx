@@ -65,6 +65,7 @@ export const QAISubmissionView = () => {
           onClick={() => {
             navigate(`../../../item/${storeId}/edit`);
           }}
+          className="ml-1"
         >
           <span style={{ marginRight: '4px' }}>
             <Icon name="pen" />
@@ -77,9 +78,9 @@ export const QAISubmissionView = () => {
           onClick={() => {
             navigate(`../../../`);
           }}
-          className="active"
+          className="active ml-1"
         >
-          Back to List
+          Back to list
         </Button>
       </ButtonGroup>
       <StoreVisitTabs

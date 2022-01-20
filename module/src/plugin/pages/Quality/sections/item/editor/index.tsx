@@ -47,6 +47,7 @@ const QuestionEditor = (props: FormikProps<QAISection>) => {
                   onClick={() => {
                     push({
                       text: '',
+                      categoryId: '',
                       points: 2,
                     });
                   }}
@@ -79,7 +80,12 @@ const QuestionEditor = (props: FormikProps<QAISection>) => {
                         />
                       </Td>
                       <Td>
-                        <FormField className="form-group col-9" as="select" name={`questions.${index}.categoryId`}>
+                        <FormField
+                          className="form-group col-9"
+                          as="select"
+                          required
+                          name={`questions.${index}.categoryId`}
+                        >
                           <Fragment>
                             <option></option>
                             {categoryState.response?.content &&

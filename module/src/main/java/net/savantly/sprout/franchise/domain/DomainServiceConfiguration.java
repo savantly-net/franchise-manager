@@ -47,11 +47,15 @@ import net.savantly.sprout.franchise.domain.privilege.FMPrivilegeConfiguration;
 import net.savantly.sprout.franchise.domain.storepos.StorePosApi;
 import net.savantly.sprout.franchise.domain.storepos.StorePosRepository;
 import net.savantly.sprout.franchise.domain.types.FMTypesApi;
+import net.savantly.sprout.franchise.domain.vendor.VendorConfiguration;
+import net.savantly.sprout.franchise.domain.vendorType.VendorTypeConfiguration;
 
 @Configuration
 @Import({ AddressBookConfiguration.class, 
 		FMPrivilegeConfiguration.class, 
-		FranchiseFilesConfiguration.class })
+		FranchiseFilesConfiguration.class,
+		VendorConfiguration.class,
+		VendorTypeConfiguration.class })
 public class DomainServiceConfiguration {
 
 	// APIs

@@ -5,6 +5,7 @@ import { AutoComplete, AutoCompleteInput, AutoCompleteItem, AutoCompleteList } f
 
 interface AutoCompleteItemProps {
   value: string;
+  displayText: string;
 }
 
 export interface TypeAheadSelectFieldProps {
@@ -30,9 +31,9 @@ const TypeAheadSelectField = ({ name, label, items }: TypeAheadSelectFieldProps)
           >
             <AutoCompleteInput variant="filled" placeholder="Search..."></AutoCompleteInput>
             <AutoCompleteList>
-              {items.map(({ value }) => (
+              {items.map(({ value, displayText }) => (
                 <AutoCompleteItem key={value} value={value}>
-                  {value}
+                  {displayText || value}
                 </AutoCompleteItem>
               ))}
             </AutoCompleteList>

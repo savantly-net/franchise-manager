@@ -68,14 +68,14 @@ export const FranchiseLocationMemberEditor = ({ location }: FranchiseLocationMem
                             name={`members.${index}.role`}
                             label="Role"
                             items={[
-                              { value: 'PRIMARY_CONTACT' },
-                              { value: 'GNERAL_MANAGER' },
-                              { value: 'FSC' },
-                              { value: 'FAC' },
-                              { value: 'FRANCHISE_OWNER' },
-                              { value: 'FRANCHISE_PARTNER' },
-                              { value: 'DISTRICT_MANAGER' },
-                              { value: 'OTHER' },
+                              { value: 'PRIMARY_CONTACT', displayText: 'PRIMARY CONTACT' },
+                              { value: 'GNERAL_MANAGER', displayText: 'GNERAL MANAGER' },
+                              { value: 'FSC', displayText: 'FSC' },
+                              { value: 'FAC', displayText: 'FAC' },
+                              { value: 'FRANCHISE_OWNER', displayText: 'FRANCHISE OWNER' },
+                              { value: 'FRANCHISE_PARTNER', displayText: 'FRANCHISE PARTNER' },
+                              { value: 'DISTRICT_MANAGER', displayText: 'DISTRICT MANAGER' },
+                              { value: 'OTHER', displayText: 'OTHER' },
                             ]}
                           />
                         </Col>

@@ -10,6 +10,10 @@ export interface UserPickerProps extends FormFieldProps {
 export const UserPicker = (props: UserPickerProps) => {
   const { users } = props;
   return (
-    <TypeAheadSelectField {...props} label="User" items={users.map(({ displayName }) => ({ value: displayName }))} />
+    <TypeAheadSelectField
+      {...props}
+      label={props.label}
+      items={users.map(({ displayName }) => ({ value: displayName, displayText: displayName }))}
+    />
   );
 };

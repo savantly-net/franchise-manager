@@ -24,7 +24,7 @@ Maven -
 
 Gradle - 
 ```
-implementation 'net.savantly.franchise:franchise-manager:2.0.0-SNAPSHOT'
+implementation 'net.savantly.franchise:franchise-manager:2.0.1-SNAPSHOT'
 ```
 
 ## Quick start
