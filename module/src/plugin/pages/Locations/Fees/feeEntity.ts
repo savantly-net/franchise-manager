@@ -1,25 +1,42 @@
 import { BaseEntityService, dateTime, EntityState, EntityStateProvider, TenantedEntity } from '@savantly/sprout-api';
+import { getApiService } from '@savantly/sprout-runtime';
+
 import { API_URL } from 'plugin/config/appModuleConfiguration';
-import { ColumnDescription } from 'react-bootstrap-table-next';
+// import { ColumnDescription } from 'react-bootstrap-table-next';
 
 export interface FranchiseFee extends TenantedEntity {
   locationId: string;
   feeTypeId: string;
   startDate: string;
   endDate?: string;
+  itemId?: string;
   overrideAmount?: number;
+  amount?: number;
 }
 
 export type FranchiseFeeState = EntityState<FranchiseFee>;
 
-class FeeService extends BaseEntityService<FranchiseFee> {
+class FeeServiceService extends BaseEntityService<FranchiseFee> {
   constructor() {
     super({
       baseUrl: `${API_URL}/fees`,
     });
   }
 }
-const franchiseFeeService = new FeeService();
+
+export const locationFeeService = {
+  getLocations: () => {
+    return getApiService().get<FranchiseFee[]>(`${API_URL}/locations`);
+  },
+  createLocationFees: (location: FranchiseFee) => {
+    return getApiService().post(`${API_URL}/fees/`, location);
+  },
+  updateLocationFees: (location: FranchiseFee, itemId: string) => {
+    return getApiService().put(`${API_URL}/fees/${itemId}`, location);
+  },
+};
+
+const franchiseFeeService = new FeeServiceService();
 export { franchiseFeeService };
 
 export const franchiseFeesStateProvider = new EntityStateProvider<FranchiseFee>({
@@ -35,35 +52,3 @@ export const franchiseFeesStateProvider = new EntityStateProvider<FranchiseFee>(
   },
   stateKey: 'franchise-fees',
 });
-
-export const franchiseFeeColumns: ColumnDescription[] = [
-  {
-    dataField: 'locationId',
-    text: 'location',
-    sort: true,
-  },
-  {
-    dataField: 'feeTypeId',
-    text: 'Fee Type',
-    sort: true,
-  },
-  {
-    dataField: 'startDate',
-    text: 'Start Date',
-    sort: true,
-  },
-  {
-    dataField: 'endDate',
-    text: 'End Date',
-    sort: true,
-  },
-  {
-    dataField: 'amount',
-    text: 'Amount',
-    sort: true,
-  },
-  {
-    dataField: 'hasCustomAmount',
-    text: 'Custom',
-  },
-];
