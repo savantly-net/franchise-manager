@@ -2,10 +2,11 @@ import { FormField } from '@sprout-platform/ui';
 import { css } from 'emotion';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import TypeAheadSelectField from 'plugin/components/TypeAheadSelectField';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useMemo, useState } from 'react';
 import { Prompt, useNavigate } from 'react-router-dom';
 import { Alert, Button, Col, Row } from 'reactstrap';
 import { FranchiseVendor, franchiseVendorStateProvider, vendorService } from './entity';
+import { vendorTypeService } from './type/entity';
 
 export interface FranchiseVendorEditorProps {
   item: FranchiseVendor;
@@ -16,6 +17,31 @@ export const FranchiseVendorEditor = ({ item, afterSave }: FranchiseVendorEditor
   const navigate = useNavigate();
   const [itemState] = useState(item || franchiseVendorStateProvider.props.initialState.example);
   const [error, setError] = useState('');
+  const [vendorType, setVendorType] = useState<any>();
+  const [vendorTypeOptions, setVendorTypeOptions] = useState(
+    undefined as
+      | Array<{
+          value: any;
+          displayText: string;
+        }>
+      | undefined
+  );
+  useMemo(() => {
+    if (!vendorType) {
+      vendorTypeService.load().then(result => {
+        setVendorType(result?.data);
+      });
+    } else {
+      setVendorTypeOptions(
+        vendorType['content'].map((o: any) => {
+          return {
+            value: o.name,
+            displayText: o.name,
+          };
+        })
+      );
+    }
+  }, [vendorType]);
 
   return (
     <Fragment>
@@ -74,16 +100,7 @@ export const FranchiseVendorEditor = ({ item, afterSave }: FranchiseVendorEditor
                   <TypeAheadSelectField
                     name={`typeId`}
                     label="Type"
-                    items={[
-                      { value: 'PRIMARY_CONTACT', displayText: 'PRIMARY CONTACT' },
-                      { value: 'GNERAL_MANAGER', displayText: 'GNERAL MANAGER' },
-                      { value: 'FSC', displayText: 'FSC' },
-                      { value: 'FAC', displayText: 'FAC' },
-                      { value: 'FRANCHISE_OWNER', displayText: 'FRANCHISE OWNER' },
-                      { value: 'FRANCHISE_PARTNER', displayText: 'FRANCHISE PARTNER' },
-                      { value: 'DISTRICT_MANAGER', displayText: 'DISTRICT MANAGER' },
-                      { value: 'OTHER', displayText: 'OTHER' },
-                    ]}
+                    items={vendorTypeOptions ? vendorTypeOptions : []}
                   />
                 </Col>
               </Col>

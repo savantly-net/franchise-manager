@@ -132,6 +132,13 @@
           "icon": "clipboard-list",
           "addToNav": true,
           "path": "/a/franchise-manager/vendors"
+        },
+        {
+          "name": "Vendor Type",
+          "type": "page",
+          "icon": "industry",
+          "addToNav": true,
+          "path": "/a/franchise-manager/vendors/vendor-type"
         }
       ]
     }

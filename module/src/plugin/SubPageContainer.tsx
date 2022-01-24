@@ -19,8 +19,8 @@ import { QAISubmissionView } from './pages/Quality/visits/QAISubmissionView';
 import StoreVisitIndexPage from './pages/Quality/visits/StoreVisitIndexPage';
 import ReportManagerIndexPage from './pages/ReportManager/ReportManagerIndexPage';
 import ReportsIndexPage from './pages/Reports/ReportsIndexPage';
-import VendersPage from './pages/Vendors/VendersIndexPage';
 import { AppModuleRootState, AppPluginSettings } from './types';
+import VendersPage from './pages/Vendors/VendersIndexPage';
 
 interface Props {
   path: string;

@@ -1,11 +1,12 @@
 import { EntityManager, EntityPageName } from '@sprout-platform/ui';
 import React, { FC, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-
+import { Route, Routes } from 'react-router-dom';
 import { AppModuleRootState, AppModuleState } from '../../types';
 import { FranchiseVendor, franchiseVendorColumns, franchiseVendorStateProvider, vendorService } from './entity';
 import { FranchiseVendorEditor } from './FranchiseVendorEditor';
 import FranchiseVendorsViewer from './FranchiseVendorsViewer';
+import VendorTypeIndexPage from './type/VendorTypeIndexPage';
 
 const VendersIndexPage: FC<any> = ({}: AppModuleState) => {
   //const state = useSelector((state: AppModuleRootState) => state.franchiseManagerState.groupState);
@@ -56,6 +57,9 @@ const VendersIndexPage: FC<any> = ({}: AppModuleState) => {
           }
         }}
       />
+      <Routes>
+        <Route path="/vendor-type/*" element={<VendorTypeIndexPage />} />
+      </Routes>
     </div>
   );
 };
