@@ -6,6 +6,8 @@ import { knowledgesStateProvider } from 'plugin/pages/Knowledge/entity';
 import { franchiseFeesStateProvider } from 'plugin/pages/Locations/Fees/feeEntity';
 import { franchiseFeeTypesStateProvider } from 'plugin/pages/Locations/Fees/feeTypesEntity';
 import { franchiseGroupsStateProvider } from 'plugin/pages/Locations/Groups/entity';
+import { franchiseVendorStateProvider } from 'plugin/pages/Vendors/entity';
+import { vendorTypeStateProvider } from 'plugin/pages/Vendors/type/entity';
 import { franchiseMarketStateProvider } from 'plugin/pages/Locations/Market/entity';
 import { franchiseOwnershipStateProvider } from 'plugin/pages/Locations/Owners/entity';
 import { FranchiseLocationsReducer } from 'plugin/pages/Locations/state/reducers';
@@ -28,6 +30,8 @@ const combinedReducers = combineReducers({
   franchiseLocationState: FranchiseLocationsReducer,
   fmSelectOptions: FMOptionsReducer,
   groupState: franchiseGroupsStateProvider.slice.reducer,
+  vendorState: franchiseVendorStateProvider.slice.reducer,
+  vendorTypeState: vendorTypeStateProvider.slice.reducer,
   knowledge: knowledgesStateProvider.slice.reducer,
   marketState: franchiseMarketStateProvider.slice.reducer,
   newsletter: newsletterStateProvider.slice.reducer,
