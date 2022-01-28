@@ -1,6 +1,7 @@
 import { DateField, Form, FormField, Icon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import { Field, FieldArray, FormikHelpers } from 'formik';
+import { useAppUsers } from 'plugin/services/userService';
 import { AppModuleRootState } from 'plugin/types';
 import React, { Fragment, ReactElement, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -309,6 +310,7 @@ export const LocationEditor = ({
   const groupState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.groupState);
   const [activeTab, setActiveTab] = useState('details');
   const dispatch = useDispatch();
+  const users = useAppUsers();
   const fmLocationMembers = useFMLocationMembers(location.id);
   const fmLocationFees = useFMLocationFees(location.id);
 
@@ -329,9 +331,14 @@ export const LocationEditor = ({
 
   useMemo(() => {
     if (fmLocationMembers) {
-      location.members = fmLocationMembers;
+      if (users) {
+        fmLocationMembers.map((bar: any, index: any) => {
+          fmLocationMembers[index]['userId'] = users.filter(user => user.itemId === bar?.userId)?.[0]?.displayName;
+        });
+        location.members = fmLocationMembers;
+      }
     }
-  }, [fmLocationMembers, location]);
+  }, [fmLocationMembers, users, location]);
 
   useMemo(() => {
     if (fmLocationFees) {
@@ -427,7 +434,7 @@ export const LocationEditor = ({
                   <FranchiseLocationMemberEditor location={values} />
                 </TabPane>
                 <TabPane tabId="fees">
-                  <FranchiseLocationFeeEditor location={values} name="fees" />
+                  <FranchiseLocationFeeEditor location={values} locationId={location.id} name="fees" />
                 </TabPane>
               </TabContent>
             </div>

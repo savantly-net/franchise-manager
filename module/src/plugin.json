@@ -118,6 +118,29 @@
           "path": "/a/franchise-manager/store-visits"
         }
       ]
+    },
+    {
+      "name": "Vendor",
+      "type": "page",
+      "icon": "industry",
+      "addToNav": true,
+      "authority": "FM_QAI_READ",
+      "children": [
+        {
+          "name": "Vendors",
+          "type": "page",
+          "icon": "clipboard-list",
+          "addToNav": true,
+          "path": "/a/franchise-manager/vendors"
+        },
+        {
+          "name": "Vendor Type",
+          "type": "page",
+          "icon": "industry",
+          "addToNav": true,
+          "path": "/a/franchise-manager/vendors/vendor-type"
+        }
+      ]
     }
   ],
   "dependencies": {
