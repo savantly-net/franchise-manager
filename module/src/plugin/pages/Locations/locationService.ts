@@ -22,6 +22,9 @@ export const locationService = {
   updateLocationMembers: (itemId: string, members: FranchiseLocationMember[]) => {
     return getApiService().put<FranchiseLocationMember[]>(`${API_URL}/locations/${itemId}/members`, members);
   },
+  addLocationFees: (fees: FranchiseFee[]) => {
+    return getApiService().post<FranchiseFee[]>(`${API_URL}/fees/import`, fees);
+  },
   getLocationFees: (itemId: string) => {
     return getApiService().get<FranchiseFee[]>(`${API_URL}/locations/${itemId}/fees`);
   },

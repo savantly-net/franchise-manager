@@ -1,35 +1,22 @@
-import { ColumnDescription } from '@sprout-platform/ui';
 import { FieldConfig, useField } from 'formik';
 import React, { Fragment, useMemo, useState } from 'react';
+// import React, { Fragment,FC, useMemo, useState } from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
+import { dateTime } from '@savantly/sprout-api';
 // @ts-ignore
 import cellEditFactory from 'react-bootstrap-table2-editor';
-import { Button } from 'reactstrap';
-import { FranchiseFee, franchiseFeesStateProvider } from '../../Fees/feeEntity';
-import { FeeTypeSelector } from '../../Fees/FeeTypeSelector';
+import { FranchiseFee, franchiseFeesStateProvider, locationFeeService } from '../../Fees/feeEntity';
 import { useFranchisFeeTypes } from '../../Fees/hooks';
 import { FranchiseLocation } from '../../types';
-
-const BTDateEditor = ({ value, onUpdate }: { value: any; onUpdate: (value: any) => void }) => {
-  return (
-    <Fragment>
-      <input className="form-control" key="v" type="date" value={value} onChange={e => onUpdate(e.target.value)} />
-    </Fragment>
-  );
-};
-
-const BTNumberEditor = ({ value, onUpdate }: { value: any; onUpdate: (value: any) => void }) => {
-  return (
-    <Fragment>
-      <input className="form-control" key="v" type="number" value={value} onBlur={e => onUpdate(e.target.value)} />
-    </Fragment>
-  );
-};
+import { Form, Icon, FormField, DateField } from '@sprout-platform/ui';
+import { Modal, ModalBody, ModalHeader, Button, Nav, Navbar, NavItem } from 'reactstrap';
+import { useDispatch } from 'react-redux';
 
 export interface FranchiseLocationFeeEditorProps extends FieldConfig {
   location: FranchiseLocation;
+  locationId: string;
 }
-export const FranchiseLocationFeeEditor = ({ location, ...props }: FranchiseLocationFeeEditorProps) => {
+export const FranchiseLocationFeeEditor = ({ location, locationId, ...props }: FranchiseLocationFeeEditorProps) => {
   //@ts-ignore
   const [field, meta, helpers] = useField(props);
   //const value = _.clone(meta.value) as FranchiseFee[];
@@ -42,6 +29,10 @@ export const FranchiseLocationFeeEditor = ({ location, ...props }: FranchiseLoca
         }>
       | undefined
   );
+  const [feeTypeOption, setFeeTypeOption] = useState<any>([]);
+  const [editData, setEditData] = useState<any>([]);
+  const [rowIndex, setRowIndex] = useState('');
+  const dispatch = useDispatch();
 
   useMemo(() => {
     if (feeTypes) {
@@ -53,124 +44,169 @@ export const FranchiseLocationFeeEditor = ({ location, ...props }: FranchiseLoca
           };
         })
       );
+      setFeeTypeOption(
+        feeTypes.map(o => {
+          return {
+            label: o.name,
+            value: o.itemId,
+          };
+        })
+      );
     }
   }, [feeTypes]);
 
-  const getColumns = () => {
-    const columns: Array<ColumnDescription<FranchiseFee>> = [
-      {
-        dataField: 'feeTypeId',
-        text: 'Fee Type',
-        sort: false, // can't sort until we work out a good way to update the correct rows
-        editable: (cell, row) => {
-          return row.itemId ? false : true;
-        },
-        //@ts-ignore
-        editorRenderer: (editorProps, _val, row, column, rowIndex, columnIndex) => {
-          return (
-            <FeeTypeSelector
-              value={_val}
-              onChange={val => {
-                meta.value[rowIndex].feeTypeId = val;
-                helpers.setValue(meta.value);
-              }}
-            />
-          );
-        },
-        formatter: (cell: string) => {
-          const found = feeTypeOptions?.filter(i => i.value === cell);
-          return found && found.length > 0 ? found[0].label : '';
-        },
-      },
-      {
-        dataField: 'defaultAmount',
-        text: 'Default Amount',
-        editable: false,
-      },
-      {
-        dataField: 'startDate',
-        text: 'Start Date',
-        sort: false, // can't sort until we work out a good way to update the correct rows
-        //@ts-ignore
-        editorRenderer: (editorProps, _val, row, column, rowIndex, columnIndex) => {
-          return (
-            <BTDateEditor
-              value={_val}
-              onUpdate={val => {
-                console.log(val);
-                meta.value[rowIndex].startDate = val;
-                helpers.setValue(meta.value);
-              }}
-            />
-          );
-        },
-      },
-      {
-        dataField: 'endDate',
-        text: 'End Date',
-        sort: false, // can't sort until we work out a good way to update the correct rows
-        //@ts-ignore
-        editorRenderer: (editorProps, _val, row, column, rowIndex, columnIndex) => {
-          return (
-            <BTDateEditor
-              value={_val}
-              onUpdate={val => {
-                console.log(val);
-                meta.value[rowIndex].endDate = val;
-                helpers.setValue(meta.value);
-              }}
-            />
-          );
-        },
-      },
-      {
-        dataField: 'overrideAmount',
-        text: 'Override Amount',
-        sort: false, // can't sort until we work out a good way to update the correct rows
-        //@ts-ignore
-        editorRenderer: (editorProps, _val, row, column, rowIndex, columnIndex) => {
-          return (
-            <BTNumberEditor
-              value={_val}
-              onUpdate={val => {
-                console.log(val);
-                meta.value[rowIndex].overrideAmount = val;
-                helpers.setValue(meta.value);
-              }}
-            />
-          );
-        },
-      },
-    ];
-    return columns;
+  const FeesType = ({ feeTypeId }: { feeTypeId?: string }) => {
+    let obj = feeTypeOption.find((option: any) => option.value === feeTypeId);
+    return <span className="mr-1">{obj?.label}</span>;
   };
+
+  const [modal, setModal] = React.useState(false);
+
+  // Toggle for Modal
+  const toggle = () => setModal(!modal);
+
+  const franchiseFeeColumnss = [
+    {
+      dataField: 'feeTypeId',
+      text: 'Fees Type Name',
+      sort: true,
+      isDummyField: true,
+      formatter: (cell: any, row: any) => {
+        return (
+          <span>
+            <FeesType key={cell} feeTypeId={row.feeTypeId} />
+          </span>
+        );
+      },
+    },
+    {
+      dataField: 'startDate',
+      text: 'Start Date',
+      sort: true,
+    },
+    {
+      dataField: 'endDate',
+      text: 'End Date',
+      sort: true,
+    },
+    {
+      dataField: 'overrideAmount',
+      text: 'Override Amount',
+      sort: true,
+    },
+    {
+      dataField: 'actions',
+      isDummyField: true,
+      text: 'Actions',
+      formatter: (cellContent: any, row: FranchiseFee, rowIndex: any) => {
+        return (
+          <>
+            <div>
+              <Icon
+                name="pen"
+                size="sm"
+                onClick={() => {
+                  toggle();
+                  setEditData(row);
+                  setRowIndex(rowIndex);
+                }}
+              />
+            </div>
+          </>
+        );
+      },
+    },
+  ];
 
   return (
     <div>
       {location && location.fees && feeTypeOptions && (
         <Fragment>
-          <Button
-            color="info"
-            onClick={() => {
-              meta.value.push({
-                ...franchiseFeesStateProvider.props.initialState.example,
-                locationId: location.id,
-              });
-              helpers.setValue(meta.value);
-            }}
-          >
-            Add Fee
-          </Button>
+          <Modal isOpen={modal} toggle={toggle}>
+            <ModalHeader>{Object.keys(editData).length === 0 ? 'Create One' : 'Edit One'}</ModalHeader>
+            <ModalBody>
+              <Form
+                initialValues={{
+                  itemId: editData?.itemId ? editData?.itemId : null,
+                  locationId: editData?.locationId,
+                  feeTypeId: editData?.feeTypeId,
+                  startDate: editData?.startDate ? editData?.startDate : dateTime().format('YYYY-MM-DD'),
+                  endDate: editData?.endDate,
+                  overrideAmount: editData?.overrideAmount,
+                  amount: editData?.amount,
+                }}
+                onSubmit={async (values: FranchiseFee, { resetForm }) => {
+                  values.locationId = values.locationId ? values.locationId : String(locationId);
+                  resetForm();
+                  toggle();
+                  setModal(false);
+                  // cancel();
+                  if (locationId) {
+                    if (values?.itemId && rowIndex !== null) {
+                      meta.value[rowIndex] = values;
+                      setEditData([]);
+                      setRowIndex('');
+                      locationFeeService.updateLocationFees(values, values?.itemId);
+                    } else {
+                      meta.value.push(values);
+                      locationFeeService.createLocationFees(values);
+                    }
+                    helpers.setValue(meta.value);
+                    dispatch(franchiseFeesStateProvider.loadState());
+                  } else {
+                    rowIndex !== '' ? (meta.value[rowIndex] = values) : meta.value.push(values);
+                    setRowIndex('');
+                    setEditData([]);
+                    helpers.setValue(meta.value);
+                  }
+                }}
+                onCancel={toggle}
+              >
+                {({ values: FranchiseFee }) => (
+                  <>
+                    <FormField name="feeTypeId" label="fee Type" as="select">
+                      <option>Select Fees Type</option>
+                      {feeTypeOption &&
+                        feeTypeOption.map((ft: any) => (
+                          <option value={ft.value} key={ft.label}>
+                            {ft.label}
+                          </option>
+                        ))}
+                    </FormField>
+                    <DateField name="startDate" label="StartDate" />
+                    <DateField name="endDate" label="EndDate" />
+                    <FormField name="amount" type="number" label="Amount" />
+                    <FormField name="overrideAmount" type="number" label="Override Amount" />
+                  </>
+                )}
+              </Form>
+            </ModalBody>
+          </Modal>
+          <Navbar color="light" light>
+            <Nav className="ml-auto">
+              <NavItem>
+                <Button
+                  color="secondary"
+                  onClick={() => {
+                    toggle();
+                    setRowIndex('');
+                    setEditData([]);
+                  }}
+                >
+                  Create Fees
+                </Button>
+              </NavItem>
+            </Nav>
+          </Navbar>
 
           <BootstrapTable
-            keyField="itemId"
+            keyField="id"
             data={meta.value as FranchiseFee[]}
-            columns={getColumns()}
-            cellEdit={cellEditFactory({ mode: 'click' })}
-            onTableChange={(type, newState) => {
-              console.log(type);
-              helpers.setValue(newState.data);
+            columns={franchiseFeeColumnss}
+            remote={{
+              pagination: true,
             }}
+            noDataIndication={<div style={{ textAlign: 'center' }}>Sorry, no fees record available.</div>}
             striped
             hover
             condensed

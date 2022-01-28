@@ -427,7 +427,7 @@ export const LocationEditor = ({
                   <FranchiseLocationMemberEditor location={values} />
                 </TabPane>
                 <TabPane tabId="fees">
-                  <FranchiseLocationFeeEditor location={values} name="fees" />
+                  <FranchiseLocationFeeEditor location={values} locationId={location.id} name="fees" />
                 </TabPane>
               </TabContent>
             </div>
