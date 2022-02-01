@@ -46,6 +46,13 @@ public class FranchiseLocationDto {
 	
 	private LocationType locationType;
 
+	private String smallWare;
+	private String kes;
+	private String realEstateType;
+	private String stage;
+	private String distributionCenter;
+	private String training;
+
 	@Size(max = 100)
 	private String marketId;
 
