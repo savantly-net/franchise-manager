@@ -4,7 +4,7 @@ import { Field, FieldArray, FormikHelpers } from 'formik';
 import { AppModuleRootState } from 'plugin/types';
 import React, { Fragment, ReactElement, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Card, Col, Nav, NavItem, NavLink, Row, TabContent, Navbar, TabPane } from 'reactstrap';
+import { Button, Col, Nav, NavItem, NavLink, Row, TabContent, Navbar, TabPane } from 'reactstrap';
 import { franchiseGroupsStateProvider } from '../Groups/entity';
 import { franchiseMarketStateProvider } from '../Markets/entity';
 import { FranchiseLocation } from '../types';
@@ -96,10 +96,8 @@ const BuildingEditControl = () => {
 const HoursControl = ({ location }: { location: FranchiseLocation }) => {
   return (
     <Fragment>
-      <h3 className={cx('mb-2 ml-4')}>Hours of Operation</h3>
-      <h4 className={cx('mb-2 ml-4')}>Create or Modified an editor for the hours</h4>
-      <FieldArrayWrapper header="">
-        {/* <FieldArrayWrapper header="Modified Hours"> */}
+      <h3 className={cx('mb-2 ')}>Hours of Operation</h3>
+      <FieldArrayWrapper header="Create or Modified an editor for the hours">
         <FieldArray name="modifiedHours">
           {({ insert, remove, push }) => (
             <Fragment>
