@@ -408,8 +408,29 @@ export const LocationEditor = ({
                             </option>
                           ))}
                       </FormField>
-                      <FormField as="input" name="pos.virtualTerminals" label="Virtual Terminals" />
-                      <FormField as="input" name="pos.physicalTerminals" label="Physical Terminals" />
+                      <FormField as="input" name="smallWare" label="Small Ware" />
+                      <FormField as="input" name="kes" label="KES" />
+                    </Row>
+                    <Row>
+                      <FormField as="select" name="realEstateType" label="Real Estate Type">
+                        <option value="Downtown">Downtown</option>
+                        <option value="Residential">Residential</option>
+                        <option value="University">University</option>
+                        <option value="Retail Center">Retail Center</option>
+                      </FormField>
+                      <FormField as="select" name="stage" label="Stage">
+                        <option value="Franchise Aggreement">Franchise Aggreement</option>
+                        <option value="Site Approval">Site Approval</option>
+                        <option value="LOI Submitted">LOI Submitted</option>
+                        <option value="Lease Sign">Lease Sign</option>
+                        <option value="Design / Permitting">Design / Permitting</option>
+                        <option value="Under Construction">Under Construction</option>
+                      </FormField>
+                      <FormField name="distributionCenter" label="Distribution Center" />
+                      <FormField as="select" name="training" label="Training">
+                        <option value="Self">Self</option>
+                        <option value="Corporate">Corporate</option>
+                      </FormField>
                     </Row>
                     <hr />
                     <BuildingEditControl />

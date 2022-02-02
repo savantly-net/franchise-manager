@@ -50,11 +50,6 @@ export interface FranchiseHoursOfOperationModifier {
   closeTime: Date;
 }
 
-export class FranchisePOS {
-  physicalTerminals: Number = 0;
-  virtualTerminals: Number = 0;
-}
-
 export interface FranchiseLocationMember {
   itemId?: string;
   userId?: string;
@@ -81,6 +76,12 @@ export class FranchiseLocation {
   concept = 'TRADITIONAL';
   locationType = 'STANDALONE';
   // @Size(max = 100)
+  smallWare = '';
+  kes = '';
+  realEstateType = '';
+  stage = '';
+  distributionCenter = '';
+  training = '';
   marketId = '';
   phoneNumber: Number = 0;
   bars: FranchiseBar[] = [];
@@ -88,7 +89,6 @@ export class FranchiseLocation {
   building: FranchiseBuilding = new FranchiseBuilding();
   hours: FranchiseHoursOfOperation = new FranchiseHoursOfOperation();
   modifiedHours: FranchiseHoursOfOperationModifier[] = [];
-  pos: FranchisePOS = new FranchisePOS();
   members: FranchiseLocationMember[] = [];
   fees: FranchiseFee[] = [];
   dateOpened: string = dateTime().format('YYYY-MM-DD');
