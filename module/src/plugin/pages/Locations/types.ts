@@ -50,11 +50,6 @@ export interface FranchiseHoursOfOperationModifier {
   closeTime: Date;
 }
 
-export class FranchisePOS {
-  physicalTerminals: Number = 0;
-  virtualTerminals: Number = 0;
-}
-
 export interface FranchiseLocationMember {
   itemId?: string;
   userId?: string;
@@ -88,7 +83,6 @@ export class FranchiseLocation {
   building: FranchiseBuilding = new FranchiseBuilding();
   hours: FranchiseHoursOfOperation = new FranchiseHoursOfOperation();
   modifiedHours: FranchiseHoursOfOperationModifier[] = [];
-  pos: FranchisePOS = new FranchisePOS();
   members: FranchiseLocationMember[] = [];
   fees: FranchiseFee[] = [];
   dateOpened: string = dateTime().format('YYYY-MM-DD');
