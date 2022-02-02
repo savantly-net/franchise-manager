@@ -234,7 +234,7 @@ export const StoreVisitEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
                 <option></option>
                 <Fragment>
                   {locations &&
-                    locations.map(l => (
+                    locations.sort((a, b) => a.name > b.name ? 1:-1).map(l => (
                       <option key={l.id} value={l.id}>
                         {l.name}
                       </option>
