@@ -98,8 +98,8 @@ const HoursControl = ({ location }: { location: FranchiseLocation }) => {
     <Fragment>
       <h3 className={cx('mb-2 ml-4')}>Hours of Operation</h3>
       <h4 className={cx('mb-2 ml-4')}>Create or Modified an editor for the hours</h4>
-      <FieldArrayWrapper header=''>
-      {/* <FieldArrayWrapper header="Modified Hours"> */}
+      <FieldArrayWrapper header="">
+        {/* <FieldArrayWrapper header="Modified Hours"> */}
         <FieldArray name="modifiedHours">
           {({ insert, remove, push }) => (
             <Fragment>
