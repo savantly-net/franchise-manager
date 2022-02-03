@@ -408,8 +408,6 @@ export const LocationEditor = ({
                             </option>
                           ))}
                       </FormField>
-                      <FormField as="input" name="pos.virtualTerminals" label="Virtual Terminals" />
-                      <FormField as="input" name="pos.physicalTerminals" label="Physical Terminals" />
                     </Row>
                     <hr />
                     <BuildingEditControl />
