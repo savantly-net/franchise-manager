@@ -3,24 +3,26 @@ import { Box, IconButton } from '@chakra-ui/react';
 import { DateField, Form, FormField, Icon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import { Field, FieldArray, FormikHelpers } from 'formik';
+import { useAppUsers } from 'plugin/services/userService';
 import { AppModuleRootState } from 'plugin/types';
 import React, { Fragment, ReactElement, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Button, Col, Nav, NavItem, NavLink, Row, TabContent, Navbar, TabPane } from 'reactstrap';
 import { franchiseGroupsStateProvider } from '../Groups/entity';
 import { franchiseMarketStateProvider } from '../Markets/entity';
 import { FranchiseLocation } from '../types';
 import { FranchiseLocationFeeEditor } from './components/FranchiseLocationFeeEditor';
 import { FranchiseLocationMemberEditor } from './components/LocationMembersEditor';
 import { useFMLocationFees, useFMLocationMembers } from './hooks';
-import { Button, Col, Nav, NavItem, NavLink, Row, TabContent, TabPane } from 'reactstrap';
 import { Table, TableCaption, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table';
 
 const RemoveItemButton = ({ remove, index }: { remove: (index: number) => void; index: number }) => {
   return (
     <Icon
+      style={{ margin: '2px 0px 0px 10px' }}
       name="trash-alt"
       size={'2x'}
-      className={cx('text-danger', 'mb-2')}
+      className={cx('text-danger', 'mb-2 mr-4')}
       color="danger"
       onClick={() => {
         remove(index);
@@ -199,23 +201,37 @@ const HoursControl = ({ location }: { location: FranchiseLocation }) => {
         <FieldArray name="modifiedHours">
           {({ insert, remove, push }) => (
             <Fragment>
-              <Button
-                color="info"
-                onClick={() => {
-                  push({
-                    totalSquareFeet: 0,
-                  });
-                }}
-              >
-                Add Modified Hours
-              </Button>
+              <Navbar color="light" light>
+                <Nav className="ml-auto">
+                  <NavItem>
+                    <Button
+                      color="secondary"
+                      onClick={() => {
+                        push({
+                          totalSquareFeet: 0,
+                        });
+                      }}
+                    >
+                      Add Modified Hours
+                    </Button>
+                  </NavItem>
+                </Nav>
+              </Navbar>
+
               <div className="form-inline ml-1">
                 {location.modifiedHours &&
                   location.modifiedHours.length > 0 &&
                   location.modifiedHours.map((bar, index) => (
-                    <div key={`modifiedHours-${index}`} className="form-row mt-2">
+                    <div
+                      key={`modifiedHours-${index}`}
+                      className={css`
+                        display: flex;
+                        width: 100%;
+                        margin: 10px;
+                      `}
+                    >
                       <RemoveItemButton index={index} remove={remove} />
-                      <div className="input-group mr-2">
+                      <div className="input-group  mr-4">
                         <label htmlFor={`modifiedHours.${index}.dateToModify`} className="mr-2 sr-only">
                           Date
                         </label>
@@ -224,7 +240,7 @@ const HoursControl = ({ location }: { location: FranchiseLocation }) => {
                         </div>
                         <Field name={`modifiedHours.${index}.dateToModify`} type="date" className="form-control" />
                       </div>
-                      <div className="input-group mr-2">
+                      <div className="input-group mr-4">
                         <label htmlFor={`modifiedHours.${index}.openTime`} className="mr-2 sr-only">
                           Open Time
                         </label>
@@ -405,6 +421,7 @@ export const LocationEditor = ({
   const groupState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.groupState);
   const [activeTab, setActiveTab] = useState('details');
   const dispatch = useDispatch();
+  const users = useAppUsers();
   const fmLocationMembers = useFMLocationMembers(location.id);
   const fmLocationFees = useFMLocationFees(location.id);
 
@@ -425,9 +442,14 @@ export const LocationEditor = ({
 
   useMemo(() => {
     if (fmLocationMembers) {
-      location.members = fmLocationMembers;
+      if (users) {
+        fmLocationMembers.map((bar: any, index: any) => {
+          fmLocationMembers[index]['userId'] = users.filter(user => user.itemId === bar?.userId)?.[0]?.displayName;
+        });
+        location.members = fmLocationMembers;
+      }
     }
-  }, [fmLocationMembers, location]);
+  }, [fmLocationMembers, users, location]);
 
   useMemo(() => {
     if (fmLocationFees) {
@@ -503,6 +525,29 @@ export const LocationEditor = ({
                               {t.name}
                             </option>
                           ))}
+                      </FormField>
+                      <FormField as="input" name="smallWare" label="Small Ware" />
+                      <FormField as="input" name="kes" label="KES" />
+                    </Row>
+                    <Row>
+                      <FormField as="select" name="realEstateType" label="Real Estate Type">
+                        <option value="Downtown">Downtown</option>
+                        <option value="Residential">Residential</option>
+                        <option value="University">University</option>
+                        <option value="Retail Center">Retail Center</option>
+                      </FormField>
+                      <FormField as="select" name="stage" label="Stage">
+                        <option value="Franchise Aggreement">Franchise Aggreement</option>
+                        <option value="Site Approval">Site Approval</option>
+                        <option value="LOI Submitted">LOI Submitted</option>
+                        <option value="Lease Sign">Lease Sign</option>
+                        <option value="Design / Permitting">Design / Permitting</option>
+                        <option value="Under Construction">Under Construction</option>
+                      </FormField>
+                      <FormField name="distributionCenter" label="Distribution Center" />
+                      <FormField as="select" name="training" label="Training">
+                        <option value="Self">Self</option>
+                        <option value="Corporate">Corporate</option>
                       </FormField>
                     </Row>
                     <hr />
