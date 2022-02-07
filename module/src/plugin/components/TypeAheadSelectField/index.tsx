@@ -20,7 +20,7 @@ const TypeAheadSelectField = ({ name, label, items }: TypeAheadSelectFieldProps)
   return (
     <>
       <div key={field.name}>
-        <FormControl w="60">
+        <FormControl>
           <FormLabel>{label}</FormLabel>
           <AutoComplete
             openOnFocus
