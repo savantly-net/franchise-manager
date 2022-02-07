@@ -4,7 +4,7 @@ import { Field, FieldArray, FormikHelpers } from 'formik';
 import { AppModuleRootState } from 'plugin/types';
 import React, { Fragment, ReactElement, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Card, Col, Nav, NavItem, NavLink, Row, TabContent, TabPane } from 'reactstrap';
+import { Button, Col, Nav, NavItem, NavLink, Row, TabContent, Navbar, TabPane } from 'reactstrap';
 import { franchiseGroupsStateProvider } from '../Groups/entity';
 import { franchiseMarketStateProvider } from '../Markets/entity';
 import { FranchiseLocation } from '../types';
@@ -15,9 +15,10 @@ import { useFMLocationFees, useFMLocationMembers } from './hooks';
 const RemoveItemButton = ({ remove, index }: { remove: (index: number) => void; index: number }) => {
   return (
     <Icon
+      style={{ margin: '2px 0px 0px 10px' }}
       name="trash-alt"
       size={'2x'}
-      className={cx('text-danger', 'mb-2')}
+      className={cx('text-danger', 'mb-2 mr-4')}
       color="danger"
       onClick={() => {
         remove(index);
@@ -95,31 +96,42 @@ const BuildingEditControl = () => {
 const HoursControl = ({ location }: { location: FranchiseLocation }) => {
   return (
     <Fragment>
-      <h5>Hours of Operation</h5>
-
-      <Card>Create an editor for the hours</Card>
-
-      <FieldArrayWrapper header="Modified Hours">
+      <h3 className={cx('mb-2 ')}>Hours of Operation</h3>
+      <FieldArrayWrapper header="Create or Modified an editor for the hours">
         <FieldArray name="modifiedHours">
           {({ insert, remove, push }) => (
             <Fragment>
-              <Button
-                color="info"
-                onClick={() => {
-                  push({
-                    totalSquareFeet: 0,
-                  });
-                }}
-              >
-                Add Modified Hours
-              </Button>
+              <Navbar color="light" light>
+                <Nav className="ml-auto">
+                  <NavItem>
+                    <Button
+                      color="secondary"
+                      onClick={() => {
+                        push({
+                          totalSquareFeet: 0,
+                        });
+                      }}
+                    >
+                      Add Modified Hours
+                    </Button>
+                  </NavItem>
+                </Nav>
+              </Navbar>
+
               <div className="form-inline ml-1">
                 {location.modifiedHours &&
                   location.modifiedHours.length > 0 &&
                   location.modifiedHours.map((bar, index) => (
-                    <div key={`modifiedHours-${index}`} className="form-row mt-2">
+                    <div
+                      key={`modifiedHours-${index}`}
+                      className={css`
+                        display: flex;
+                        width: 100%;
+                        margin: 10px;
+                      `}
+                    >
                       <RemoveItemButton index={index} remove={remove} />
-                      <div className="input-group mr-2">
+                      <div className="input-group  mr-4">
                         <label htmlFor={`modifiedHours.${index}.dateToModify`} className="mr-2 sr-only">
                           Date
                         </label>
@@ -128,7 +140,7 @@ const HoursControl = ({ location }: { location: FranchiseLocation }) => {
                         </div>
                         <Field name={`modifiedHours.${index}.dateToModify`} type="date" className="form-control" />
                       </div>
-                      <div className="input-group mr-2">
+                      <div className="input-group mr-4">
                         <label htmlFor={`modifiedHours.${index}.openTime`} className="mr-2 sr-only">
                           Open Time
                         </label>
