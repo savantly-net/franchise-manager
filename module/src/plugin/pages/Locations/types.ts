@@ -76,6 +76,12 @@ export class FranchiseLocation {
   concept = 'TRADITIONAL';
   locationType = 'STANDALONE';
   // @Size(max = 100)
+  smallWare = '';
+  kes = '';
+  realEstateType = '';
+  stage = '';
+  distributionCenter = '';
+  training = '';
   marketId = '';
   phoneNumber: Number = 0;
   bars: FranchiseBar[] = [];
