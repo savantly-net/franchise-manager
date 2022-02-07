@@ -32,7 +32,7 @@ const TypeAheadSelectField = ({ name, label, items }: TypeAheadSelectFieldProps)
             <AutoCompleteInput variant="filled" placeholder="Search..."></AutoCompleteInput>
             <AutoCompleteList>
               {items.map(({ value, displayText }) => (
-                <AutoCompleteItem key={value} value={value}>
+                <AutoCompleteItem key={value} value={value} label={displayText}>
                   {displayText || value}
                 </AutoCompleteItem>
               ))}
