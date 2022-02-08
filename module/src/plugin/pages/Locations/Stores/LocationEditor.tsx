@@ -1,3 +1,5 @@
+import { AddIcon } from '@chakra-ui/icons';
+import { Box, IconButton } from '@chakra-ui/react';
 import { DateField, Form, FormField, Icon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import { Field, FieldArray, FormikHelpers } from 'formik';
@@ -12,6 +14,7 @@ import { FranchiseLocation } from '../types';
 import { FranchiseLocationFeeEditor } from './components/FranchiseLocationFeeEditor';
 import { FranchiseLocationMemberEditor } from './components/LocationMembersEditor';
 import { useFMLocationFees, useFMLocationMembers } from './hooks';
+import { Table, TableCaption, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table';
 
 const RemoveItemButton = ({ remove, index }: { remove: (index: number) => void; index: number }) => {
   return (
@@ -94,11 +97,107 @@ const BuildingEditControl = () => {
   );
 };
 
+const FranchiseDayHoursEditor = ({ openInterval, dayName }: { openInterval: any; dayName: any }) => {
+  return (
+    <FieldArray name={`hours.${dayName}.openIntervals`}>
+      {({ insert, remove, push }) => (
+        <Box>
+          <div>
+            <Table
+              className={cx(
+                css`
+                  width: 20% !important;
+                `
+              )}
+            >
+              <TableCaption
+                className={cx(
+                  css`
+                    caption-side: top !important;
+                  `
+                )}
+              >
+                {dayName}{' '}
+                <IconButton
+                  aria-label={`Hours-${dayName}-OpenIntervals`}
+                  icon={<AddIcon />}
+                  onClick={() => {
+                    push({
+                      start: '',
+                      end: '',
+                    });
+                  }}
+                />
+              </TableCaption>
+              <Thead>
+                <Tr>
+                  <Th>Start</Th>
+                  <Th>End</Th>
+                  <Th></Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {openInterval &&
+                  openInterval.openIntervals.map((hour: any, index: any) => (
+                    <Tr key={`hours.${dayName}.openIntervals.${index}.start`}>
+                      <Td>
+                        <Field
+                          name={`hours.${dayName}.openIntervals.${index}.start`}
+                          label="Start"
+                          type="time"
+                          className=""
+                        />
+                      </Td>{' '}
+                      <Td>
+                        <Field
+                          name={`hours.${dayName}.openIntervals.${index}.end`}
+                          label="End"
+                          type="time"
+                          className=""
+                        />
+                      </Td>
+                      <Td>
+                        <RemoveItemButton index={index} remove={remove} />
+                      </Td>
+                    </Tr>
+                  ))}
+              </Tbody>
+            </Table>
+          </div>
+        </Box>
+      )}
+    </FieldArray>
+  );
+};
+
 const HoursControl = ({ location }: { location: FranchiseLocation }) => {
   return (
     <Fragment>
-      <h3 className={cx('mb-2 ')}>Hours of Operation</h3>
-      <FieldArrayWrapper header="Create or Modified an editor for the hours">
+      <h5>Hours of Operation</h5>
+      <Row>
+        <Col>
+          <FranchiseDayHoursEditor openInterval={location.hours.sunday} dayName="sunday" />
+        </Col>
+        <Col>
+          <FranchiseDayHoursEditor openInterval={location.hours.monday} dayName="monday" />
+        </Col>
+        <Col>
+          <FranchiseDayHoursEditor openInterval={location.hours.tuesday} dayName="tuesday" />
+        </Col>
+        <Col>
+          <FranchiseDayHoursEditor openInterval={location.hours.wednesday} dayName="wednesday" />
+        </Col>
+        <Col>
+          <FranchiseDayHoursEditor openInterval={location.hours.thursday} dayName="thursday" />
+        </Col>
+        <Col>
+          <FranchiseDayHoursEditor openInterval={location.hours.friday} dayName="friday" />
+        </Col>
+        <Col>
+          <FranchiseDayHoursEditor openInterval={location.hours.saturday} dayName="saturday" />
+        </Col>
+      </Row>
+      <FieldArrayWrapper header="Modified Hours">
         <FieldArray name="modifiedHours">
           {({ insert, remove, push }) => (
             <Fragment>
