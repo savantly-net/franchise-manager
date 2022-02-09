@@ -97,7 +97,7 @@ public class LocationApiTest extends AbstractContainerBaseTest {
 		
 		Assertions.assertEquals(testDate, response.getBody().getDateOpened());
 		Assertions.assertEquals(testDate, response.getBody().getDateClosed());
-		Assertions.assertEquals(testDate, response.getBody().getOpenDateIntervals().stream().findFirst().orElseThrow(() -> new RuntimeException("missing openDateIntervals")));
+		Assertions.assertEquals(testDate, response.getBody().getOpenDateIntervals().stream().findFirst().orElseThrow(() -> new RuntimeException("missing openDateIntervals")).getStart());
 		
 		// now update it
 		
