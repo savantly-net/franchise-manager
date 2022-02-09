@@ -16,11 +16,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +30,7 @@ import net.savantly.sprout.franchise.domain.bar.FranchiseBar;
 import net.savantly.sprout.franchise.domain.building.FranchiseBuilding;
 import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationModifier;
 import net.savantly.sprout.franchise.domain.hours.LocationHours;
+import net.savantly.sprout.franchise.domain.locationOpenDateInterval.LocationOpenDateInterval;
 import net.savantly.sprout.franchise.domain.patio.FranchisePatio;
 import net.savantly.sprout.franchise.domain.pos.FranchisePOS;
 
@@ -89,6 +90,9 @@ public class FranchiseLocation extends TenantKeyedEntity  {
 
 	private LocalDate dateOpened;
 	private LocalDate dateClosed;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<LocationOpenDateInterval> openDateIntervals = new HashSet<>();
 	
 	private Long phoneNumber;
 

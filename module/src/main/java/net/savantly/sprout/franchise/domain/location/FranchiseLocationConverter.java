@@ -18,6 +18,8 @@ import net.savantly.sprout.franchise.domain.building.FranchiseBuildingDto;
 import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationModifier;
 import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationModifierConverter;
 import net.savantly.sprout.franchise.domain.hours.LocationHours;
+import net.savantly.sprout.franchise.domain.locationOpenDateInterval.LocationOpenDateInterval;
+import net.savantly.sprout.franchise.domain.locationOpenDateInterval.LocationOpenDateIntervalConverter;
 import net.savantly.sprout.franchise.domain.patio.FranchisePatio;
 import net.savantly.sprout.franchise.domain.patio.FranchisePatioConverter;
 import net.savantly.sprout.franchise.domain.pos.FranchisePOS;
@@ -34,6 +36,7 @@ public class FranchiseLocationConverter implements DtoConverter<FranchiseLocatio
 	private final FranchiseHoursOfOperationModifierConverter hoursModifierConverter;
 	private final FranchisePatioConverter patioConverter;
 	private final FranchisePOSConverter posConverter;
+	private final LocationOpenDateIntervalConverter openDateIntervalConverter;
 
 	public Optional<FranchiseLocationDto> toDto(FranchiseLocation from) {
 		if(Objects.isNull(from)) {
@@ -51,6 +54,9 @@ public class FranchiseLocationConverter implements DtoConverter<FranchiseLocatio
 				.setCountry(from.getCountry())
 				.setDateOpened(from.getDateOpened())
 				.setDateClosed(from.getDateClosed())
+				.setOpenDateIntervals(from.getOpenDateIntervals().parallelStream().map(p -> openDateIntervalConverter.toDto(p).orElse(null))
+						.filter(b -> Objects.nonNull(b))
+						.collect(Collectors.toSet()))
 				.setHours(from.getHours())
 				.setId(from.getItemId())
 				.setLocationType(from.getLocationType())
@@ -137,9 +143,20 @@ public class FranchiseLocationConverter implements DtoConverter<FranchiseLocatio
 				.map(p -> patioConverter.toEntity(p).orElse(null))
 				.filter(p -> Objects.nonNull(p))
 				.collect(Collectors.toSet());
+				
+		Set<LocationOpenDateInterval> openDateIntervals = from.getOpenDateIntervals().parallelStream()
+			.map(p -> openDateIntervalConverter.toEntity(p).orElse(null))
+			.filter(p -> Objects.nonNull(p))
+			.collect(Collectors.toSet());
 		
-		to.setBars(bars).setBuilding(building).setHours(hours)
-				.setModifiedHours(modifiedHours).setPatios(patios).setPos(pos);
+		to	
+			.setBars(bars)
+			.setBuilding(building)
+			.setHours(hours)
+			.setOpenDateIntervals(openDateIntervals)
+			.setModifiedHours(modifiedHours)
+			.setPatios(patios)
+			.setPos(pos);
 		return Optional.of(to);
 	}
 }

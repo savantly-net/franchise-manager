@@ -13,6 +13,7 @@ import net.savantly.sprout.franchise.domain.bar.FranchiseBarDto;
 import net.savantly.sprout.franchise.domain.building.FranchiseBuildingDto;
 import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationModifierDto;
 import net.savantly.sprout.franchise.domain.hours.LocationHours;
+import net.savantly.sprout.franchise.domain.locationOpenDateInterval.LocationOpenDateIntervalDto;
 import net.savantly.sprout.franchise.domain.patio.FranchisePatioDto;
 import net.savantly.sprout.franchise.domain.pos.FranchisePOSDto;
 
@@ -59,6 +60,7 @@ public class FranchiseLocationDto {
 
 	private LocalDate dateOpened;
 	private LocalDate dateClosed;
+	private Set<LocationOpenDateIntervalDto> openDateIntervals = new HashSet<>();
 	
 	private String emailAddress;
 	

@@ -4,6 +4,10 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,11 +21,10 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import example.TestApplication;
 import net.savantly.sprout.franchise.domain.bar.FranchiseBarDto;
 import net.savantly.sprout.franchise.domain.hours.FranchiseHoursOfOperationModifierDto;
+import net.savantly.sprout.franchise.domain.locationOpenDateInterval.LocationOpenDateIntervalDto;
 import test.AbstractContainerBaseTest;
 
 @ActiveProfiles("test")
@@ -48,6 +51,8 @@ public class LocationApiTest extends AbstractContainerBaseTest {
 		String test = "test";
 		String url = "/api/fm/locations";
 		LocalDate testDate = LocalDate.now();
+		Set<LocationOpenDateIntervalDto> openDateIntervals = new HashSet<>();
+		openDateIntervals.add(new LocationOpenDateIntervalDto().setStart(testDate).setEnd(testDate));
 		FranchiseLocationDto dto = new FranchiseLocationDto()
 				.setAddress1(test)
 				.setAddress2(test)
@@ -61,7 +66,8 @@ public class LocationApiTest extends AbstractContainerBaseTest {
 				.setState(test)
 				.setZip(test)
 				.setDateOpened(testDate)
-				.setDateClosed(testDate);
+				.setDateClosed(testDate)
+				.setOpenDateIntervals(openDateIntervals);
 		
 		dto.getBars().add(new FranchiseBarDto().setBeer(true));
 		LocalTime closeTime = LocalTime.now();
@@ -91,6 +97,7 @@ public class LocationApiTest extends AbstractContainerBaseTest {
 		
 		Assertions.assertEquals(testDate, response.getBody().getDateOpened());
 		Assertions.assertEquals(testDate, response.getBody().getDateClosed());
+		Assertions.assertEquals(testDate, response.getBody().getOpenDateIntervals().stream().findFirst().orElseThrow(() -> new RuntimeException("missing openDateIntervals")));
 		
 		// now update it
 		

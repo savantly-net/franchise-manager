@@ -33,6 +33,8 @@ import net.savantly.sprout.franchise.domain.location.FranchiseLocationService;
 import net.savantly.sprout.franchise.domain.location.LocationApi;
 import net.savantly.sprout.franchise.domain.locationMember.FranchiseLocationMemberRepository;
 import net.savantly.sprout.franchise.domain.locationMember.FranchiseLocationMemberService;
+import net.savantly.sprout.franchise.domain.locationOpenDateInterval.LocationOpenDateIntervalConverter;
+import net.savantly.sprout.franchise.domain.locationOpenDateInterval.LocationOpenDateIntervalRepository;
 import net.savantly.sprout.franchise.domain.market.FranchiseMarketRepository;
 import net.savantly.sprout.franchise.domain.market.FranchiseMarketsApi;
 import net.savantly.sprout.franchise.domain.newsletter.NewsletterApi;
@@ -157,12 +159,20 @@ public class DomainServiceConfiguration {
 	}
 
 	@Bean
-	public FranchiseLocationConverter locationConverter(FranchiseBarConverter barConverter,
+	public LocationOpenDateIntervalConverter openDateIntervalConverter(LocationOpenDateIntervalRepository repo) {
+		return new LocationOpenDateIntervalConverter(repo);
+	}
+
+	@Bean
+	public FranchiseLocationConverter locationConverter(
+			LocationOpenDateIntervalConverter openDateIntervalConverter,
+			FranchiseBarConverter barConverter,
 			FranchiseBuildingConverter buildingConverter,
-			FranchiseHoursOfOperationModifierConverter hoursModifierConverter, FranchisePatioConverter patioConverter,
+			FranchiseHoursOfOperationModifierConverter hoursModifierConverter, 
+			FranchisePatioConverter patioConverter,
 			FranchisePOSConverter posConverter, FranchiseLocationRepository repo) {
 		return new FranchiseLocationConverter(repo, barConverter, buildingConverter,
-				hoursModifierConverter, patioConverter, posConverter);
+				hoursModifierConverter, patioConverter, posConverter, openDateIntervalConverter);
 
 	}
 
