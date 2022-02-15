@@ -1,3 +1,5 @@
+import { AddIcon } from '@chakra-ui/icons';
+import { Box, IconButton } from '@chakra-ui/react';
 import { DateField, Form, FormField, Icon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import { Field, FieldArray, FormikHelpers } from 'formik';
@@ -5,20 +7,22 @@ import { useAppUsers } from 'plugin/services/userService';
 import { AppModuleRootState } from 'plugin/types';
 import React, { Fragment, ReactElement, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Card, Col, Nav, NavItem, NavLink, Row, TabContent, TabPane } from 'reactstrap';
+import { Button, Col, Nav, NavItem, NavLink, Row, TabContent, Navbar, TabPane } from 'reactstrap';
 import { franchiseGroupsStateProvider } from '../Groups/entity';
 import { franchiseMarketStateProvider } from '../Market/entity';
 import { FranchiseLocation } from '../types';
 import { FranchiseLocationFeeEditor } from './component/FranchiseLocationFeeEditor';
 import { FranchiseLocationMemberEditor } from './component/LocationMembersEditor';
 import { useFMLocationFees, useFMLocationMembers } from './hooks';
+import { Table, TableCaption, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table';
 
 const RemoveItemButton = ({ remove, index }: { remove: (index: number) => void; index: number }) => {
   return (
     <Icon
+      style={{ margin: '2px 0px 0px 10px' }}
       name="trash-alt"
       size={'2x'}
-      className={cx('text-danger', 'mb-2')}
+      className={cx('text-danger', 'mb-2 mr-4')}
       color="danger"
       onClick={() => {
         remove(index);
@@ -93,34 +97,165 @@ const BuildingEditControl = () => {
   );
 };
 
+const FranchiseDayHoursEditor = ({ openInterval, dayName }: { openInterval: any; dayName: any }) => {
+  return (
+    <FieldArray name={`hours.${dayName}.openIntervals`}>
+      {({ insert, remove, push }) => (
+        <Box>
+          <div>
+            <Table
+              className={cx(
+                css`
+                  width: 20% !important;
+                `
+              )}
+            >
+              <TableCaption
+                className={cx(
+                  css`
+                    caption-side: top !important;
+                  `
+                )}
+              >
+                {dayName}{' '}
+                <IconButton
+                  aria-label={`Hours-${dayName}-OpenIntervals`}
+                  icon={<AddIcon />}
+                  onClick={() => {
+                    push({
+                      start: '',
+                      end: '',
+                    });
+                  }}
+                />
+              </TableCaption>
+              <Thead>
+                <Tr>
+                  <Th>Start</Th>
+                  <Th>End</Th>
+                  <Th></Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {openInterval &&
+                  openInterval.length > 0 &&
+                  openInterval.map((hour: any, index: any) => (
+                    <Tr key={`hours.${dayName}.openIntervals.${index}.start`}>
+                      <Td>
+                        <Field
+                          name={`hours.${dayName}.openIntervals.${index}.start`}
+                          label="Start"
+                          type="time"
+                          className=""
+                        />
+                      </Td>{' '}
+                      <Td>
+                        <Field
+                          name={`hours.${dayName}.openIntervals.${index}.end`}
+                          label="End"
+                          type="time"
+                          className=""
+                        />
+                      </Td>
+                      <Td>
+                        <RemoveItemButton index={index} remove={remove} />
+                      </Td>
+                    </Tr>
+                  ))}
+              </Tbody>
+            </Table>
+          </div>
+        </Box>
+      )}
+    </FieldArray>
+  );
+};
+
 const HoursControl = ({ location }: { location: FranchiseLocation }) => {
   return (
     <Fragment>
       <h5>Hours of Operation</h5>
-
-      <Card>Create an editor for the hours</Card>
-
+      <Row>
+        <Col>
+          <FranchiseDayHoursEditor
+            openInterval={location.hours.sunday.openIntervals.length > 0 ? location.hours.sunday.openIntervals : []}
+            dayName="sunday"
+          />
+        </Col>
+        <Col>
+          <FranchiseDayHoursEditor
+            openInterval={location.hours.monday.openIntervals.length > 0 ? location.hours.monday.openIntervals : []}
+            dayName="monday"
+          />
+        </Col>
+        <Col>
+          <FranchiseDayHoursEditor
+            openInterval={location.hours.tuesday.openIntervals.length > 0 ? location.hours.tuesday.openIntervals : []}
+            dayName="tuesday"
+          />
+        </Col>
+        <Col>
+          <FranchiseDayHoursEditor
+            openInterval={
+              location.hours.wednesday.openIntervals.length > 0 ? location.hours.wednesday.openIntervals : []
+            }
+            dayName="wednesday"
+          />
+        </Col>
+        <Col>
+          <FranchiseDayHoursEditor
+            openInterval={location.hours.thursday.openIntervals.length > 0 ? location.hours.thursday.openIntervals : []}
+            dayName="thursday"
+          />
+        </Col>
+        <Col>
+          <FranchiseDayHoursEditor
+            openInterval={location.hours.friday.openIntervals.length > 0 ? location.hours.friday.openIntervals : []}
+            dayName="friday"
+          />
+        </Col>
+        <Col>
+          <FranchiseDayHoursEditor
+            openInterval={location.hours.saturday.openIntervals.length > 0 ? location.hours.saturday.openIntervals : []}
+            dayName="saturday"
+          />
+        </Col>
+      </Row>
       <FieldArrayWrapper header="Modified Hours">
         <FieldArray name="modifiedHours">
           {({ insert, remove, push }) => (
             <Fragment>
-              <Button
-                color="info"
-                onClick={() => {
-                  push({
-                    totalSquareFeet: 0,
-                  });
-                }}
-              >
-                Add Modified Hours
-              </Button>
+              <Navbar color="light" light>
+                <Nav className="ml-auto">
+                  <NavItem>
+                    <Button
+                      color="secondary"
+                      onClick={() => {
+                        push({
+                          totalSquareFeet: 0,
+                        });
+                      }}
+                    >
+                      Add Modified Hours
+                    </Button>
+                  </NavItem>
+                </Nav>
+              </Navbar>
+
               <div className="form-inline ml-1">
                 {location.modifiedHours &&
                   location.modifiedHours.length > 0 &&
                   location.modifiedHours.map((bar, index) => (
-                    <div key={`modifiedHours-${index}`} className="form-row mt-2">
+                    <div
+                      key={`modifiedHours-${index}`}
+                      className={css`
+                        display: flex;
+                        width: 100%;
+                        margin: 10px;
+                      `}
+                    >
                       <RemoveItemButton index={index} remove={remove} />
-                      <div className="input-group mr-2">
+                      <div className="input-group  mr-4">
                         <label htmlFor={`modifiedHours.${index}.dateToModify`} className="mr-2 sr-only">
                           Date
                         </label>
@@ -129,7 +264,7 @@ const HoursControl = ({ location }: { location: FranchiseLocation }) => {
                         </div>
                         <Field name={`modifiedHours.${index}.dateToModify`} type="date" className="form-control" />
                       </div>
-                      <div className="input-group mr-2">
+                      <div className="input-group mr-4">
                         <label htmlFor={`modifiedHours.${index}.openTime`} className="mr-2 sr-only">
                           Open Time
                         </label>
@@ -165,6 +300,82 @@ const HoursControl = ({ location }: { location: FranchiseLocation }) => {
         </FieldArray>
       </FieldArrayWrapper>
     </Fragment>
+  );
+};
+
+const FranchiseDatesEditor = ({ location }: { location: FranchiseLocation }) => {
+  return (
+    <>
+      <FieldArray name={`openDateIntervals`}>
+        {({ insert, remove, push }) => (
+          <Box>
+            <div>
+              <Table
+                className={cx(
+                  css`
+                    width: 20% !important;
+                  `
+                )}
+              >
+                <TableCaption
+                  className={cx(
+                    css`
+                      text-align: right !important;
+                      right: 15px;
+                      position: relative;
+                    `
+                  )}
+                >
+                  <IconButton
+                    aria-label={`openDateIntervals`}
+                    icon={<AddIcon />}
+                    onClick={() => {
+                      push({
+                        start: '',
+                        end: '',
+                      });
+                    }}
+                  />
+                </TableCaption>
+                <Thead>
+                  <Tr>
+                    <Th>Start</Th>
+                    <Th>End</Th>
+                    <Th></Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {location.openDateIntervals &&
+                    location.openDateIntervals.map((date: any, index: any) => (
+                      <Tr key={`openDateIntervals.${index}.start`}>
+                        <Td>
+                          <Field
+                            name={`openDateIntervals.${index}.start`}
+                            label="Start"
+                            type="date"
+                            className="form-control"
+                          />
+                        </Td>{' '}
+                        <Td>
+                          <Field
+                            name={`openDateIntervals.${index}.end`}
+                            label="End"
+                            type="date"
+                            className="form-control"
+                          />
+                        </Td>
+                        <Td>
+                          <RemoveItemButton index={index} remove={remove} />
+                        </Td>
+                      </Tr>
+                    ))}
+                </Tbody>
+              </Table>
+            </div>
+          </Box>
+        )}
+      </FieldArray>
+    </>
   );
 };
 
@@ -362,6 +573,7 @@ export const LocationEditor = ({
             <div className={cx('pt-2')}>
               <Nav tabs>
                 <TabEntry tabId="details" tabText="Details" activeTab={activeTab} toggle={toggle} />
+                <TabEntry tabId="dates" tabText="Dates" activeTab={activeTab} toggle={toggle} />
                 <TabEntry tabId="hours" tabText="Hours" activeTab={activeTab} toggle={toggle} />
                 <TabEntry tabId="members" tabText="Members" activeTab={activeTab} toggle={toggle} />
                 <TabEntry tabId="fees" tabText="Fees" activeTab={activeTab} toggle={toggle} />
@@ -415,6 +627,29 @@ export const LocationEditor = ({
                             </option>
                           ))}
                       </FormField>
+                      <FormField as="input" name="smallWare" label="Small Ware" />
+                      <FormField as="input" name="kes" label="KES" />
+                    </Row>
+                    <Row>
+                      <FormField as="select" name="realEstateType" label="Real Estate Type">
+                        <option value="Downtown">Downtown</option>
+                        <option value="Residential">Residential</option>
+                        <option value="University">University</option>
+                        <option value="Retail Center">Retail Center</option>
+                      </FormField>
+                      <FormField as="select" name="stage" label="Stage">
+                        <option value="Franchise Aggreement">Franchise Aggreement</option>
+                        <option value="Site Approval">Site Approval</option>
+                        <option value="LOI Submitted">LOI Submitted</option>
+                        <option value="Lease Sign">Lease Sign</option>
+                        <option value="Design / Permitting">Design / Permitting</option>
+                        <option value="Under Construction">Under Construction</option>
+                      </FormField>
+                      <FormField name="distributionCenter" label="Distribution Center" />
+                      <FormField as="select" name="training" label="Training">
+                        <option value="Self">Self</option>
+                        <option value="Corporate">Corporate</option>
+                      </FormField>
                     </Row>
                     <hr />
                     <BuildingEditControl />
@@ -424,6 +659,9 @@ export const LocationEditor = ({
                     <PatiosEditControl location={values} />
                     <hr className="mb-3" />
                   </Fragment>
+                </TabPane>
+                <TabPane tabId="dates">
+                  <FranchiseDatesEditor location={values} />
                 </TabPane>
                 <TabPane tabId="hours">
                   <HoursControl location={values} />

@@ -1,7 +1,9 @@
+import { getApiService } from '@savantly/sprout-runtime';
 import { FormField } from '@sprout-platform/ui';
 import { css } from 'emotion';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import TypeAheadSelectField from 'plugin/component/TypeAheadSelectField';
+import { API_URL } from 'plugin/config/appModuleConfiguration';
 import React, { Fragment, useMemo, useState } from 'react';
 import { Prompt, useNavigate } from 'react-router-dom';
 import { Alert, Button, Col, Row } from 'reactstrap';
@@ -26,6 +28,23 @@ export const FranchiseVendorEditor = ({ item, afterSave }: FranchiseVendorEditor
         }>
       | undefined
   );
+  const [vendorTy, setVendorTy] = useState(false);
+  useMemo(() => {
+    if (item.typeId) {
+      getApiService()
+        .get(`${API_URL}/vendor-type/`)
+        .then(response => {
+          const found = response?.data?.content.filter((l: any) => l.itemId === item.typeId)?.[0]?.name;
+          item.typeId = found;
+          setVendorTy(true);
+        })
+        .catch(err => {
+          console.error(err.message || err.detail || 'An error occurred while saving.');
+        });
+    } else {
+      setVendorTy(true);
+    }
+  }, [item, setVendorTy]);
   useMemo(() => {
     if (!vendorType) {
       vendorTypeService.load().then(result => {
@@ -35,7 +54,7 @@ export const FranchiseVendorEditor = ({ item, afterSave }: FranchiseVendorEditor
       setVendorTypeOptions(
         vendorType['content'].map((o: any) => {
           return {
-            value: o.name,
+            value: o.itemId,
             displayText: o.name,
           };
         })
@@ -46,68 +65,70 @@ export const FranchiseVendorEditor = ({ item, afterSave }: FranchiseVendorEditor
   return (
     <Fragment>
       {error && <Alert color="danger">{error}</Alert>}
-      <Formik
-        initialValues={itemState}
-        validate={values => {
-          const errors: any = {};
-          if (!values.name) {
-            errors['name'] = {
-              required: 'A name is required',
-            };
-          }
-        }}
-        onSubmit={(values, helpers) => {
-          console.log(values);
-          const promiseToSave = values.itemId
-            ? vendorService.update(values.itemId, values)
-            : vendorService.create(values);
-          promiseToSave
-            .then(response => {
-              helpers.setSubmitting(false);
-              helpers.resetForm();
-              afterSave(response.data, helpers);
-            })
-            .catch(err => {
-              setError(err.message || err.detail || 'An error occurred while saving.');
-            });
-        }}
-      >
-        {(props: FormikProps<FranchiseVendor>) => (
-          <Form>
-            <Prompt message="You have unsaved changes. Are you sure?" when={props.dirty} />
-            <div
-              className={css`
-                display: flex;
-              `}
-            >
-              <Button className="ml-auto" onClick={() => navigate(-1)}>
-                Cancel
-              </Button>
-              <Button className="ml-2" color="primary" type="submit">
-                Save
-              </Button>
-            </div>
-            <Row>
-              <Col>
-                <FormField name="name" label="Name" />
-                <FormField name="phoneNumber" label="Phone Number" />
-                <FormField name="notes" label="Notes" />
-              </Col>
-              <Col>
-                <FormField name="emailAddress" label="Email Address" />
-                <FormField name="mailingAddress" label="Mailing Address" />
+      {vendorTy && (
+        <Formik
+          initialValues={itemState}
+          validate={values => {
+            const errors: any = {};
+            if (!values.name) {
+              errors['name'] = {
+                required: 'A name is required',
+              };
+            }
+          }}
+          onSubmit={(values, helpers) => {
+            console.log(values);
+            const promiseToSave = values.itemId
+              ? vendorService.update(values.itemId, values)
+              : vendorService.create(values);
+            promiseToSave
+              .then(response => {
+                helpers.setSubmitting(false);
+                helpers.resetForm();
+                afterSave(response.data, helpers);
+              })
+              .catch(err => {
+                setError(err.message || err.detail || 'An error occurred while saving.');
+              });
+          }}
+        >
+          {(props: FormikProps<FranchiseVendor>) => (
+            <Form>
+              <Prompt message="You have unsaved changes. Are you sure?" when={props.dirty} />
+              <div
+                className={css`
+                  display: flex;
+                `}
+              >
+                <Button className="ml-auto" onClick={() => navigate(-1)}>
+                  Cancel
+                </Button>
+                <Button className="ml-2" color="primary" type="submit">
+                  Save
+                </Button>
+              </div>
+              <Row>
                 <Col>
-                  <TypeAheadSelectField
-                    name={`typeId`}
-                    label="Type"
-                    items={vendorTypeOptions ? vendorTypeOptions : []}
-                  />
+                  <FormField name="name" label="Name" />
+                  <FormField name="phoneNumber" label="Phone Number" />
+                  <FormField name="notes" label="Notes" />
                 </Col>
-              </Col>
-            </Row>
-          </Form>
-        )}
-      </Formik>
+                <Col>
+                  <FormField name="emailAddress" label="Email Address" />
+                  <FormField name="mailingAddress" label="Mailing Address" />
+                  <Col>
+                    <TypeAheadSelectField
+                      name={`typeId`}
+                      label="Type"
+                      items={vendorTypeOptions ? vendorTypeOptions : []}
+                    />
+                  </Col>
+                </Col>
+              </Row>
+            </Form>
+          )}
+        </Formik>
+      )}
     </Fragment>
   );
 };

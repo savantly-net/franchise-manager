@@ -149,7 +149,8 @@ dependencies {
     developmentOnly "org.springframework.boot:spring-boot-devtools",
 		'org.postgresql:postgresql'
     
-    testImplementation "org.testcontainers:postgresql:1.15.3"
+    testImplementation "org.testcontainers:postgresql:1.15.3",
+		"org.mockito:mockito-core:3.+"
     
     testImplementation "net.savantly.sprout:sprout-module-test:${sproutVersion}"
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {

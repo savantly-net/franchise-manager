@@ -28,6 +28,12 @@ export class HourInterval {
   end = '23:00';
 }
 
+export interface DateInterval {
+  id: string;
+  start: Date;
+  end: Date;
+}
+
 export class FranchiseDayHours {
   isClosed = false;
   openIntervals: HourInterval[] = [];
@@ -76,6 +82,12 @@ export class FranchiseLocation {
   concept = 'TRADITIONAL';
   locationType = 'STANDALONE';
   // @Size(max = 100)
+  smallWare = '';
+  kes = '';
+  realEstateType = '';
+  stage = '';
+  distributionCenter = '';
+  training = '';
   marketId = '';
   phoneNumber: Number = 0;
   bars: FranchiseBar[] = [];
@@ -87,6 +99,7 @@ export class FranchiseLocation {
   fees: FranchiseFee[] = [];
   dateOpened: string = dateTime().format('YYYY-MM-DD');
   dateClosed?: string;
+  openDateIntervals: DateInterval[] = [];
 }
 
 export interface FranchiseLocationState {
