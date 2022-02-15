@@ -1,4 +1,4 @@
-package net.savantly.sprout.franchise.domain.operations.visits;
+package net.savantly.sprout.franchise.domain.operations.visit;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

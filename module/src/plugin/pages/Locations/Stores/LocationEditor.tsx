@@ -9,10 +9,10 @@ import React, { Fragment, ReactElement, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Nav, NavItem, NavLink, Row, TabContent, Navbar, TabPane } from 'reactstrap';
 import { franchiseGroupsStateProvider } from '../Groups/entity';
-import { franchiseMarketStateProvider } from '../Markets/entity';
+import { franchiseMarketStateProvider } from '../Market/entity';
 import { FranchiseLocation } from '../types';
-import { FranchiseLocationFeeEditor } from './components/FranchiseLocationFeeEditor';
-import { FranchiseLocationMemberEditor } from './components/LocationMembersEditor';
+import { FranchiseLocationFeeEditor } from './component/FranchiseLocationFeeEditor';
+import { FranchiseLocationMemberEditor } from './component/LocationMembersEditor';
 import { useFMLocationFees, useFMLocationMembers } from './hooks';
 import { Table, TableCaption, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table';
 

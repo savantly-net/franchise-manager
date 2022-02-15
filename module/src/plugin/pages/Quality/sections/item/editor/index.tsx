@@ -4,7 +4,7 @@ import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 import { confirm, FormField, ItemEditorProps } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import { Field, FieldArray, Form, Formik, FormikProps } from 'formik';
-import FormikTextInput from 'plugin/components/FormikTextInput';
+import FormikTextInput from 'plugin/component/FormikTextInput';
 import { AppModuleRootState } from 'plugin/types';
 import React, { Fragment, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

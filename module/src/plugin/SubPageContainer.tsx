@@ -15,10 +15,10 @@ import StorePosPage from './pages/Locations/StorePos/StorePosPage';
 import NewsletterIndexPage from './pages/Newsletter/NewsletterIndexPage';
 import QAIIndexPage from './pages/Quality/QAIIndexPage';
 import QAISubmissionsIndexPage from './pages/Quality/submissions/QAISubmissionsIndexPage';
-import { QAISubmissionView } from './pages/Quality/visits/QAISubmissionView';
-import StoreVisitIndexPage from './pages/Quality/visits/StoreVisitIndexPage';
+import { QAISubmissionView } from './pages/Quality/visit/QAISubmissionView';
+import StoreVisitIndexPage from './pages/Quality/visit/StoreVisitIndexPage';
 import ReportManagerIndexPage from './pages/ReportManager/ReportManagerIndexPage';
-import ReportsIndexPage from './pages/Reports/ReportsIndexPage';
+import ReportsIndexPage from './pages/Report/ReportsIndexPage';
 import { AppModuleRootState, AppPluginSettings } from './types';
 import VendersPage from './pages/Vendors/VendersIndexPage';
 

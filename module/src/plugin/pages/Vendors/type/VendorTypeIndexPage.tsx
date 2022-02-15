@@ -1,6 +1,6 @@
 import { NavModel, NavModelItem } from '@savantly/sprout-api';
 import { EntityPage } from '@sprout-platform/ui';
-import { FMPage } from 'plugin/components/FMPage';
+import { FMPage } from 'plugin/component/FMPage';
 import React, { FC, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppModuleRootState, AppModuleState } from '../../../types';

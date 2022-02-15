@@ -2,7 +2,7 @@ import { getApiService } from '@savantly/sprout-runtime';
 import { FormField } from '@sprout-platform/ui';
 import { css } from 'emotion';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import TypeAheadSelectField from 'plugin/components/TypeAheadSelectField';
+import TypeAheadSelectField from 'plugin/component/TypeAheadSelectField';
 import { API_URL } from 'plugin/config/appModuleConfiguration';
 import React, { Fragment, useMemo, useState } from 'react';
 import { Prompt, useNavigate } from 'react-router-dom';

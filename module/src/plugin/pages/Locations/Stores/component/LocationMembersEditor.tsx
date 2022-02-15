@@ -1,8 +1,8 @@
 import { Icon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import { FieldArray } from 'formik';
-import TypeAheadSelectField from 'plugin/components/TypeAheadSelectField';
-import { UserPicker } from 'plugin/components/UserPicker';
+import TypeAheadSelectField from 'plugin/component/TypeAheadSelectField';
+import { UserPicker } from 'plugin/component/UserPicker';
 import { useAppUsers } from 'plugin/services/userService';
 import React, { Fragment } from 'react';
 import { Button, Col, Row } from 'reactstrap';

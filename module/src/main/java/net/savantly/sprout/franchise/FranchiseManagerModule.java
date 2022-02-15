@@ -13,7 +13,7 @@ import net.savantly.sprout.franchise.db.FMDBMigration;
 import net.savantly.sprout.franchise.domain.DomainServiceConfiguration;
 import net.savantly.sprout.franchise.domain.kpi.KpiConfiguration;
 import net.savantly.sprout.franchise.domain.operations.qai.QAIConfiguration;
-import net.savantly.sprout.franchise.domain.operations.visits.StoreVisitConfiguration;
+import net.savantly.sprout.franchise.domain.operations.visit.StoreVisitConfiguration;
 
 @EntityScan
 @Configuration(FranchiseManagerModule.KEY)

@@ -8,7 +8,7 @@ import { franchiseFeeTypesStateProvider } from 'plugin/pages/Locations/Fees/feeT
 import { franchiseGroupsStateProvider } from 'plugin/pages/Locations/Groups/entity';
 import { franchiseVendorStateProvider } from 'plugin/pages/Vendors/entity';
 import { vendorTypeStateProvider } from 'plugin/pages/Vendors/type/entity';
-import { franchiseMarketStateProvider } from 'plugin/pages/Locations/Markets/entity';
+import { franchiseMarketStateProvider } from 'plugin/pages/Locations/Market/entity';
 import { franchiseOwnershipStateProvider } from 'plugin/pages/Locations/Owners/entity';
 import { FranchiseLocationsReducer } from 'plugin/pages/Locations/state/reducers';
 import { storePosStateProvider } from 'plugin/pages/Locations/StorePos/entity';
@@ -16,7 +16,7 @@ import { newsletterStateProvider } from 'plugin/pages/Newsletter/entityConfig';
 import { qaiQuestionCategoryStateProvider } from 'plugin/pages/Quality/categories/entity';
 import { qaiSectionStateProvider } from 'plugin/pages/Quality/sections/entity';
 import { qaiSubmissionStateProvider } from 'plugin/pages/Quality/submissions/entity';
-import { storeVisitStateProvider } from 'plugin/pages/Quality/visits/entity';
+import { storeVisitStateProvider } from 'plugin/pages/Quality/visit/entity';
 import { reportSourceStateProvider } from 'plugin/pages/ReportManager/entityConfig';
 import { IModule } from 'redux-dynamic-modules';
 import { AppModuleRootState, AppModuleState } from '../types';

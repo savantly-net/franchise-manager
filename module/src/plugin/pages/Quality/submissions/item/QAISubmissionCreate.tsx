@@ -1,5 +1,5 @@
 import { LoadingIcon } from '@sprout-platform/ui';
-import { LocationSelector } from 'plugin/pages/Locations/Stores/components/LocationSelector';
+import { LocationSelector } from 'plugin/pages/Locations/Stores/component/LocationSelector';
 import { AppModuleRootState } from 'plugin/types';
 import React, { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
