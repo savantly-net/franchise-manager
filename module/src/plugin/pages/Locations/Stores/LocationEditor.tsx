@@ -591,6 +591,7 @@ export const LocationEditor = ({
                   <Fragment>
                     <Row>
                       <FormField name="name" type="text" label="Name" placeholder="Enter the location name" />
+                      <FormField name="emailAddress" type="email" label="Email" placeholder="Enter email" />
                       <FormField name="phoneNumber" label="Phone Number" />
                       <DateField name="dateOpened" label="Open Date" />
                       <DateField name="dateClosed" label="Close Date" />
