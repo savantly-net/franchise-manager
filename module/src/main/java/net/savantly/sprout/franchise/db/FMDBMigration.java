@@ -17,14 +17,9 @@ public class FMDBMigration {
 	private final Logger log = LoggerFactory.getLogger(FMDBMigration.class);
 	Flyway flyway;
 
-	private boolean autoMigrate = false;
+	private boolean autoMigrate = true;
 
 	public FMDBMigration(DataSource ds) {
-		this.dataSource = ds;
-	}
-
-	public FMDBMigration(DataSource ds, boolean auto) {
-		this.autoMigrate = false;
 		this.dataSource = ds;
 	}
 

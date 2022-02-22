@@ -41,7 +41,9 @@ public class FMDBMigration_test extends AbstractContainerBaseTest {
 
         @Bean
         public FMDBMigration migration(DataSource dataSource) {
-            return new FMDBMigration(dataSource, false);
+            FMDBMigration mig = new FMDBMigration(dataSource);
+            mig.setAutoMigrate(false);
+            return mig;
         }
 
         @Bean
