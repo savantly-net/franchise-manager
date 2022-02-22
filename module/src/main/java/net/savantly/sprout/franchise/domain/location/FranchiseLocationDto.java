@@ -64,7 +64,7 @@ public class FranchiseLocationDto {
 	
 	private String emailAddress;
 	
-	private Long phoneNumber;
+	private String phoneNumber;
 	
 	private Set<FranchiseBarDto> bars = new HashSet<>();
 

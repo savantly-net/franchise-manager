@@ -62,7 +62,7 @@ public class LocationApiTest extends AbstractContainerBaseTest {
 				.setLocationType(LocationType.STANDALONE)
 				.setMarketId(test)
 				.setName(test)
-				.setPhoneNumber(123L)
+				.setPhoneNumber(test)
 				.setState(test)
 				.setZip(test)
 				.setDateOpened(testDate)
@@ -93,7 +93,7 @@ public class LocationApiTest extends AbstractContainerBaseTest {
 
 		Assertions.assertEquals(LocationConcept.TRADITIONAL, response.getBody().getConcept());
 		Assertions.assertEquals(LocationType.STANDALONE, response.getBody().getLocationType());
-		Assertions.assertEquals(123L, response.getBody().getPhoneNumber());
+		Assertions.assertEquals(test, response.getBody().getPhoneNumber());
 		
 		Assertions.assertEquals(testDate, response.getBody().getDateOpened());
 		Assertions.assertEquals(testDate, response.getBody().getDateClosed());
@@ -122,7 +122,7 @@ public class LocationApiTest extends AbstractContainerBaseTest {
 
 		Assertions.assertEquals(LocationConcept.TRADITIONAL, response2.getBody().getConcept());
 		Assertions.assertEquals(LocationType.STANDALONE, response2.getBody().getLocationType());
-		Assertions.assertEquals(123L, response2.getBody().getPhoneNumber());
+		Assertions.assertEquals(test, response2.getBody().getPhoneNumber());
 		
 	}
 	

@@ -94,7 +94,7 @@ public class FranchiseLocation extends TenantKeyedEntity  {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<LocationOpenDateInterval> openDateIntervals = new HashSet<>();
 	
-	private Long phoneNumber;
+	private String phoneNumber;
 
 	@Size(max = 100)
 	@Column(length = 100)
