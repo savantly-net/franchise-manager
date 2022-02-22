@@ -89,7 +89,7 @@ export class FranchiseLocation {
   distributionCenter = '';
   training = '';
   marketId = '';
-  phoneNumber: Number = 0;
+  phoneNumber = '';
   bars: FranchiseBar[] = [];
   patios: FranchisePatio[] = [];
   building: FranchiseBuilding = new FranchiseBuilding();
