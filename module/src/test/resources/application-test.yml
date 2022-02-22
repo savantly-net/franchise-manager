@@ -22,6 +22,7 @@ sprout:
 spring:
   flyway:
     enabled: true
+    baseline-on-migrate: true
   data:
     rest:
       default-page-size: 200
