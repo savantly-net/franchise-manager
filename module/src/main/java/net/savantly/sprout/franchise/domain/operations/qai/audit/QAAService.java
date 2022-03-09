@@ -35,7 +35,7 @@ public class QAAService {
 
 	private Set<String> saveSectionSubmissions(QAADto dto) {
 		Set<String> result = new HashSet<>();
-		for (QAISectionSubmissionDto sectionDto : dto.sections) {
+		for (QAISectionSubmissionDto sectionDto : dto.getSections()) {
 			result.add(this.qaiSubmissionService.upsertEntity(sectionDto).getItemId());
 		}
 		return result;
@@ -49,7 +49,7 @@ public class QAAService {
 			.setLocationId(dto.getLocationId())
 			.setManagerOnDuty(dto.getManagerOnDuty())
 			.setResponsibleAlcoholCert(dto.getResponsibleAlcoholCert());
-		dto.sections.forEach(s -> {
+		dto.getSections().forEach(s -> {
 			if (Objects.nonNull(s.getItemId())) {
 				entity.sectionIds.add(s.getItemId());
 			}

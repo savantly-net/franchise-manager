@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -23,13 +24,18 @@ import lombok.experimental.Accessors;
 public class QAASubmission {
 	@Id
 	private String id;
+	@Column(name = "location_id")
 	private String locationId;
+	@Column(name = "date_scored")
 	private LocalDateTime dateScored;
+	@Column(name = "manager_on_duty")
 	private String managerOnDuty;
 	private String fsc;
+	@Column(name = "responsible_alcohol_cert")
 	private String responsibleAlcoholCert;
 	
 	@ElementCollection
 	@CollectionTable(name = "fm_qaa_submission_sections", joinColumns = { @JoinColumn(name = "qaa_submission_id")})
+	@Column(name="section_id")
 	Set<String> sectionIds = new HashSet<>();
 }

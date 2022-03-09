@@ -20,5 +20,5 @@ public class QAADto {
 	private String fsc;
 	private String responsibleAlcoholCert;
 
-	Set<QAISectionSubmissionDto> sections = new HashSet<QAISectionSubmissionDto>();
+	private Set<QAISectionSubmissionDto> sections = new HashSet<QAISectionSubmissionDto>();
 }
