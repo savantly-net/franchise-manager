@@ -4,6 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import net.savantly.sprout.core.tenancy.TenantKeyedRepository;
+import net.savantly.sprout.franchise.domain.operations.qai.audit.QAAApi;
+import net.savantly.sprout.franchise.domain.operations.qai.audit.QAAService;
+import net.savantly.sprout.franchise.domain.operations.qai.audit.QAASubmissionRepository;
 import net.savantly.sprout.franchise.domain.operations.qai.guestQuestion.QAIGuestQuestionRepository;
 import net.savantly.sprout.franchise.domain.operations.qai.guestQuestion.QAIGuestQuestionService;
 import net.savantly.sprout.franchise.domain.operations.qai.guestQuestion.answer.QAIGuestQuestionAnswerRespository;
@@ -27,6 +30,16 @@ import net.savantly.sprout.franchise.domain.operations.qai.section.submission.QA
 @Configuration
 public class QAIConfiguration {
 
+	@Bean
+	public QAAService qaaSubmissionService(QAISubmissionService submissionService, QAASubmissionRepository submissionRepository) {
+		return new QAAService(submissionService, submissionRepository);
+	}
+	
+	@Bean
+	public QAAApi qaaApi(QAAService qaaService) {
+		return new QAAApi(qaaService);
+	}
+	
 	@Bean
 	public QAIQuestionAnswerService qaiQuestionAnswerService(QAIQuestionAnswerRepository repository) {
 		return new QAIQuestionAnswerService(repository);

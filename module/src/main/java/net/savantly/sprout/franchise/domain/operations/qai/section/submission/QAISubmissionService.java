@@ -2,6 +2,8 @@ package net.savantly.sprout.franchise.domain.operations.qai.section.submission;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -18,6 +20,17 @@ public class QAISubmissionService {
 	private final QAISectionSubmissionRepository repository;
 	private final QAIQuestionAnswerService qaService;
 	private final QAIGuestQuestionAnswerGroupService gqaService;
+	
+	public QAISectionSubmissionDto upsertEntity(QAISectionSubmissionDto object) {
+		if (Objects.isNull(object.getItemId())) {
+			return convert(updateEntity(new QAISectionSubmission(), object));
+		} else {
+			QAISectionSubmission entity = this.repository.findByIdItemId(object.getItemId()).orElse(new QAISectionSubmission());
+			updateEntity(entity, object);
+			return convert(entity);
+		}
+		
+	}
 	
 	public QAISectionSubmission createEntity(QAISectionSubmissionDto object) {
 		return updateEntity(new QAISectionSubmission(), object);
@@ -45,6 +58,10 @@ public class QAISubmissionService {
 				.setManagerOnDuty(entity.getManagerOnDuty())
 				.setStaffAttendance(entity.getStaffAttendance())
 				.setStatus(entity.getStatus());
+	}
+	
+	public Optional<QAISectionSubmissionDto> findByItemId(String itemId) {
+		return this.repository.findByIdItemId(itemId).map(s -> this.convert(s));
 	}
 
 	public List<QAISectionSubmissionDto> findByLocation(String locationId) {
