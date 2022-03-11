@@ -2,6 +2,7 @@ package net.savantly.sprout.franchise.domain.operations.qai.audit;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,8 +35,8 @@ public class QAAApi {
 
 	@PostMapping
 	@Operation(summary = "Saves a QAA Submission")
-	public QAADto save(@RequestBody QAADto qaaDto) {
-		return this.service.save(qaaDto);
+	public ResponseEntity<QAADto> save(@RequestBody QAADto qaaDto) {
+		return ResponseEntity.status(201).body(service.save(qaaDto));
 	}
 
 	@DeleteMapping("/{id}")
