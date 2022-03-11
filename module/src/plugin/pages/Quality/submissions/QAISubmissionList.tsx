@@ -86,7 +86,7 @@ const IndexPage = () => {
             <Button
               color="info"
               onClick={() => {
-                navigate(`../item/${row.itemId}`);
+                navigate(`../item/${row.id}`);
               }}
             >
               <Icon name="eye" />
@@ -94,7 +94,7 @@ const IndexPage = () => {
             <Button
               color="warning"
               onClick={() => {
-                navigate(`../item/${row.itemId}/edit`);
+                navigate(`../item/${row.id}/edit`);
               }}
             >
               <Icon name="pen" />
@@ -102,7 +102,7 @@ const IndexPage = () => {
             <Button
               color="danger"
               onClick={() => {
-                navigate(`../item/${row.itemId}/delete`);
+                navigate(`../item/${row.id}/delete`);
               }}
               disabled={!userIsQAIAdmin}
             >

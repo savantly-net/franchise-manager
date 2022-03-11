@@ -13,7 +13,8 @@ export const useQAISectionSubmission = (submissionId?: String): QAISectionSubmis
     if (!qaiSelector.isFetched && !qaiSelector.isFetching) {
       dispatch(qaiSubmissionStateProvider.loadState());
     } else if (qaiSelector.isFetched && !qaiSelector.isFetching) {
-      const found = qaiSelector.response?.content.filter(s => s.itemId === submissionId);
+      const found = qaiSelector.response?.content.filter(s => s.id === submissionId);
+      // const found = qaiSelector.response?.content.filter(s => s.itemId === submissionId);
       if (found && found.length > 0) {
         setInternalState(found[0]);
       }

@@ -71,6 +71,7 @@ export interface QAISectionSubmission extends TenantedEntity {
   // staffAttendance?: { [key: string]: string };
   // answers: QAIQuestionAnswer[];
   // guestAnswers: QAIGuestQuestionAnswerGroup[];
+  itemId?: string;
   locationId?: string;
   sectionId?: string;
   managerOnDuty?: string;
