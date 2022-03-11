@@ -4,6 +4,35 @@
 }
 
 .table-count {
-  width: 30% !important;
+  width: 100% !important;
   border: 1px solid #D0D7DE;
+}
+
+.col-4.location-select {
+  max-width: 30%;
+  padding-left: 28px;
+  padding-right: 0px;
+  margin-right: 34px;
+}
+
+.form-group {
+  margin-bottom: 3px !important;
+  margin-top: 3px;
+}
+.category-name {
+  padding: 5px 0px;
+  font-size: 14px;
+}
+.section-namename {
+  font-size: 17px;
+}
+
+/* tr > td.col-3 {
+  padding: 10px;
+  text-align: center;
+} */
+
+.trCls {
+  padding: 10px;
+  text-align: center;
 }

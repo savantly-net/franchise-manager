@@ -16,6 +16,7 @@ import { NewsletterState } from './pages/Newsletter/entityConfig';
 import { QAIQuestionCategoryState } from './pages/Quality/categories/entity';
 import { QAISectionState } from './pages/Quality/sections/entity';
 import { QAISectionSubmissionState } from './pages/Quality/submissions/entity';
+// import { QAASectionSubmissionState } from './pages/Quality/submissions/qaaentity';
 import { StoreVisitState } from './pages/Quality/visit/entity';
 import { ReportSourceState } from './pages/ReportManager/entityConfig';
 
@@ -47,6 +48,7 @@ export interface AppModuleState {
   qaiSections: QAISectionState;
   qaiQuestionCategories: QAIQuestionCategoryState;
   qaiSubmissions: QAISectionSubmissionState;
+  // qaaSubmissions: QAASectionSubmissionState;
   reportSources: ReportSourceState;
   storeVisits: StoreVisitState;
   storePosState: StorePosState;

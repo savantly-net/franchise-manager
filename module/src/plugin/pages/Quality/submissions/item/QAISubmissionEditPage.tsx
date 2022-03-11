@@ -2,24 +2,28 @@ import { LoadingIcon } from '@sprout-platform/ui';
 import { AppModuleRootState } from 'plugin/types';
 import React, { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+// import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Alert } from 'reactstrap';
 import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
-import { qaiSectionStateProvider } from '../../sections/entity';
+// import { qaiSectionStateProvider } from '../../sections/entity';
 import { useQAISection } from '../../sections/hooks';
-import { QAISectionSubmissionEditModel, qaiSubmissionService } from '../entity';
+import { QAISectionSubmissionEditModel } from '../entity';
+// import { QAISectionSubmissionEditModel, qaiSubmissionService } from '../entity';
 import { useQAISectionSubmission } from '../hooks';
-import { QAISubmissionEditor } from './editor';
-import { convertQAISubmissionEditModel, updateQaiSubmissionEditModel } from './qaiSubmissionEditModelUtil';
+// import { QAISubmissionEditor } from './editor';
+// import { convertQAISubmissionEditModel, updateQaiSubmissionEditModel } from './qaiSubmissionEditModelUtil';
+import { updateQaiSubmissionEditModel } from './qaiSubmissionEditModelUtil';
 
 type InternalState = QAISectionSubmissionEditModel | undefined;
 
 const QAISubmissionEditPage = () => {
   const categoryState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiQuestionCategories);
   const dispatch = useDispatch();
-  const [error, setError] = useState('');
+  const [error] = useState('');
+  // const [error, setError] = useState('');
   const [draftSubmission, setDraftSubmission] = useState(undefined as InternalState);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const submissionId = useParams().itemId;
   const qaiSectionSubmission = useQAISectionSubmission(submissionId);
   const qaiSection = useQAISection(qaiSectionSubmission?.sectionId);
@@ -50,7 +54,7 @@ const QAISubmissionEditPage = () => {
       {error && <Alert color="warning">{error}</Alert>}
       <div>{showLoading && <LoadingIcon className="m-auto" />}</div>
       <div className="mb-2">
-        {qaiSection && draftSubmission && (
+        {/* {qaiSection && draftSubmission && (
           <QAISubmissionEditor
             initialValue={draftSubmission}
             onSubmit={(value, helpers) => {
@@ -71,7 +75,7 @@ const QAISubmissionEditPage = () => {
             }}
             onCancel={() => console.log('cancelled')}
           />
-        )}
+        )} */}
       </div>
     </div>
   );

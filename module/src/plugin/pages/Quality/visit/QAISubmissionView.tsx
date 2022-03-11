@@ -154,7 +154,7 @@ export const QAISubmissionView = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {qaiSection.guestQuestions.map(q => (
+                  {/* {qaiSection.guestQuestions.map(q => (
                     <Tr>
                       <Td>{q.text}</Td>
                       {items.guestAnswers &&
@@ -162,7 +162,7 @@ export const QAISubmissionView = () => {
                           <Td>{answers.find(({ guestQuestionId }) => guestQuestionId === q.itemId)?.value}</Td>
                         ))}
                     </Tr>
-                  ))}
+                  ))} */}
                   <Tr>
                     <Td>Notes</Td>
                     {items.guestAnswers && items.guestAnswers.map(({ notes }) => <Td>{notes}</Td>)}

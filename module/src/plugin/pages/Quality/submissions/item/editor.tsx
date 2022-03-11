@@ -11,10 +11,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Prompt } from 'react-router-dom';
 import { Alert, Button, ButtonGroup } from 'reactstrap';
 import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
-import { QAIGuestQuestion, QAISection, qaiSectionService } from '../../sections/entity';
+import { QAISection, qaiSectionService } from '../../sections/entity';
+// import { QAIGuestQuestion, QAISection, qaiSectionService } from '../../sections/entity';
 import {
-  QAIGuestQuestionAnswerEditModel,
-  QAIGuestQuestionAnswerGroupEditModel,
+  // QAIGuestQuestionAnswerEditModel,
+  // QAIGuestQuestionAnswerGroupEditModel,
   QAISectionSubmissionEditModel,
 } from '../entity';
 
@@ -146,7 +147,7 @@ const AnswerGroupsComponent = ({
                                   </td>
                                 </tr>
                               )}
-                              {formProps.values.answerGroups[groupIndex].answers[index].value === 'NO' && (
+                              {/* {formProps.values.answerGroups[groupIndex].answers[index].value === 'NO' && (
                                 <tr className="d-flex table-info">
                                   <td className="col-1"></td>
                                   <td className="col-1">Notes</td>
@@ -164,7 +165,7 @@ const AnswerGroupsComponent = ({
                                     />
                                   </td>
                                 </tr>
-                              )}
+                              )} */}
                             </Fragment>
                           ))}
                         </Fragment>
@@ -180,96 +181,97 @@ const AnswerGroupsComponent = ({
   );
 };
 
-const GuestAnswerGroupsComponent = (
-  props: FormikProps<QAISectionSubmissionEditModel> & {
-    getGuestQuestionAnswerGroup: () => QAIGuestQuestionAnswerGroupEditModel;
-  }
-) => {
-  return (
-    <FieldArray name="guestAnswerGroups">
-      {fieldArrayProps => (
-        <Fragment>
-          <div className="mb-2">
-            <div className="d-flex">
-              <h5 className="mr-2">Guest Surveys</h5>
-              <Button
-                onClick={() => {
-                  fieldArrayProps.push(props.getGuestQuestionAnswerGroup());
-                }}
-              >
-                <Icon name="plus"></Icon>
-              </Button>
-            </div>
-            {props.values.guestAnswerGroups &&
-              props.values.guestAnswerGroups.map((g, groupIndex) => (
-                <Fragment>
-                  <h6>Guest #{groupIndex + 1}</h6>
-                  <table className="table table-hover table-sm table-striped">
-                    <tbody>
-                      {g.answers.map((q, index) => (
-                        <Fragment>
-                          <tr className="d-flex">
-                            <td className="col-1">{index + 1}.</td>
-                            <td className="col-1">{q.points}pts.</td>
-                            <td className="col-8">
-                              <input
-                                hidden={true}
-                                name={`guestAnswerGroups.${groupIndex}.answers.${index}.questionId`}
-                                value={q.guestQuestionId}
-                              />
-                              <span>{q.questionText}</span>
-                            </td>
-                            <td className="col-2">
-                              <Field
-                                className="form-control"
-                                name={`guestAnswerGroups.${groupIndex}.answers.${index}.value`}
-                                as="select"
-                              >
-                                <option></option>
-                                <option value="YES">Yes</option>
-                                <option value="NO">No</option>
-                              </Field>
-                            </td>
-                          </tr>
-                        </Fragment>
-                      ))}
-                    </tbody>
-                    <tfoot>
-                      <tr className="d-flex table-info">
-                        <td className="col-1"></td>
-                        <td className="col-1">Notes</td>
-                        <td className="col-10">
-                          <Field
-                            className={cx(
-                              'form-control',
-                              css`
-                                width: 100%;
-                              `
-                            )}
-                            name={`guestAnswerGroups.${groupIndex}.notes`}
-                            as="textarea"
-                            rows="2"
-                          />
-                        </td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </Fragment>
-              ))}
-          </div>
-        </Fragment>
-      )}
-    </FieldArray>
-  );
-};
+// const GuestAnswerGroupsComponent = (
+//   props: FormikProps<QAISectionSubmissionEditModel> & {
+//     getGuestQuestionAnswerGroup: () => QAIGuestQuestionAnswerGroupEditModel;
+//   }
+// ) => {
+//   return (
+//     <FieldArray name="guestAnswerGroups">
+//       {fieldArrayProps => (
+//         <Fragment>
+//           <div className="mb-2">
+//             <div className="d-flex">
+//               <h5 className="mr-2">Guest Surveys</h5>
+//               <Button
+//                 onClick={() => {
+//                   fieldArrayProps.push(props.getGuestQuestionAnswerGroup());
+//                 }}
+//               >
+//                 <Icon name="plus"></Icon>
+//               </Button>
+//             </div>
+//             {props.values.guestAnswerGroups &&
+//               props.values.guestAnswerGroups.map((g, groupIndex) => (
+//                 <Fragment>
+//                   <h6>Guest #{groupIndex + 1}</h6>
+//                   <table className="table table-hover table-sm table-striped">
+//                     <tbody>
+//                       {g.answers.map((q, index) => (
+//                         <Fragment>
+//                           <tr className="d-flex">
+//                             <td className="col-1">{index + 1}.</td>
+//                             <td className="col-1">{q.points}pts.</td>
+//                             <td className="col-8">
+//                               <input
+//                                 hidden={true}
+//                                 name={`guestAnswerGroups.${groupIndex}.answers.${index}.questionId`}
+//                                 value={q.guestQuestionId}
+//                               />
+//                               <span>{q.questionText}</span>
+//                             </td>
+//                             <td className="col-2">
+//                               <Field
+//                                 className="form-control"
+//                                 name={`guestAnswerGroups.${groupIndex}.answers.${index}.value`}
+//                                 as="select"
+//                               >
+//                                 <option></option>
+//                                 <option value="YES">Yes</option>
+//                                 <option value="NO">No</option>
+//                               </Field>
+//                             </td>
+//                           </tr>
+//                         </Fragment>
+//                       ))}
+//                     </tbody>
+//                     <tfoot>
+//                       <tr className="d-flex table-info">
+//                         <td className="col-1"></td>
+//                         <td className="col-1">Notes</td>
+//                         <td className="col-10">
+//                           <Field
+//                             className={cx(
+//                               'form-control',
+//                               css`
+//                                 width: 100%;
+//                               `
+//                             )}
+//                             name={`guestAnswerGroups.${groupIndex}.notes`}
+//                             as="textarea"
+//                             rows="2"
+//                           />
+//                         </td>
+//                       </tr>
+//                     </tfoot>
+//                   </table>
+//                 </Fragment>
+//               ))}
+//           </div>
+//         </Fragment>
+//       )}
+//     </FieldArray>
+//   );
+// };
 
 export interface QAISubmissionEditorProps {
   initialValue: QAISectionSubmissionEditModel;
   onSubmit: (value: QAISectionSubmissionEditModel, helpers: FormikHelpers<QAISectionSubmissionEditModel>) => void;
   onCancel: () => void;
+  sectionData: any;
 }
 type SectionStateType = QAISection | undefined;
-export const QAISubmissionEditor = ({ initialValue, onSubmit, onCancel }: QAISubmissionEditorProps) => {
+export const QAISubmissionEditor = ({ initialValue, onSubmit, onCancel, sectionData }: QAISubmissionEditorProps) => {
   const submissionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSubmissions);
   const [sectionState, setSectionState] = useState(undefined as SectionStateType);
   const categoryState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiQuestionCategories);
@@ -283,7 +285,7 @@ export const QAISubmissionEditor = ({ initialValue, onSubmit, onCancel }: QAISub
 
   const fileService = getFileService();
   const fmConfig = useFMConfig();
-
+  console.log(sectionData, ' sectionData');
   useMemo(() => {
     if (!attachmentFolder && !creatingAttachmentFolder && fmConfig) {
       setCreatingAttachmentFolder(true);
@@ -337,27 +339,28 @@ export const QAISubmissionEditor = ({ initialValue, onSubmit, onCancel }: QAISub
 
   const showLoading = categoryState.isFetching || submissionState.isFetching;
 
-  const scaffoldGuestQuestionAnswerGroup = (
-    guestQuestions: QAIGuestQuestion[]
-  ): QAIGuestQuestionAnswerGroupEditModel => {
-    const answers: QAIGuestQuestionAnswerEditModel[] = guestQuestions.map(q => {
-      return {
-        guestQuestionId: q.itemId,
-        order: q.order,
-        points: q.points,
-        questionText: q.text,
-      };
-    });
-    return {
-      answers,
-      attachments: [],
-    };
-  };
+  // const scaffoldGuestQuestionAnswerGroup = (
+  //   guestQuestions: QAIGuestQuestion[]
+  // ): QAIGuestQuestionAnswerGroupEditModel => {
+  //   const answers: QAIGuestQuestionAnswerEditModel[] = guestQuestions.map(q => {
+  //     return {
+  //       guestQuestionId: q.itemId,
+  //       order: q.order,
+  //       points: q.points,
+  //       questionText: q.text,
+  //     };
+  //   });
+  //   return {
+  //     answers,
+  //     attachments: [],
+  //   };
+  // };
 
   return (
     <div>
       {error && <Alert color="warning">{error}</Alert>}
       <div>{showLoading && <LoadingIcon className="m-auto" />}</div>
+      {sectionData?.response && sectionData?.response.map((s: any, index: number) => <>{console.log(s, 'sssssss')}</>)}
       <div className="mb-2">
         {sectionState && draftSubmission && (
           <Fragment>
@@ -388,28 +391,28 @@ export const QAISubmissionEditor = ({ initialValue, onSubmit, onCancel }: QAISub
                             )
                           );
                         }
-                        Promise.all(fileUploads).then(responses => {
-                          const newFiles: FileItem[] = responses.map(f => {
-                            return f.data as FileItem;
-                          });
-                          const attachments = [
-                            ...props.values.answerGroups[groupIndex].answers[answerIndex].attachments,
-                            ...newFiles,
-                          ];
-                          props.setFieldValue(
-                            `answerGroups.${groupIndex}.answers.${answerIndex}.attachments`,
-                            attachments
-                          );
-                        });
+                        // Promise.all(fileUploads).then(responses => {
+                        //   const newFiles: FileItem[] = responses.map(f => {
+                        //     return f.data as FileItem;
+                        //   });
+                        //   const attachments = [
+                        //     ...props.values.answerGroups[groupIndex].answers[answerIndex].attachments,
+                        //     ...newFiles,
+                        //   ];
+                        //   props.setFieldValue(
+                        //     `answerGroups.${groupIndex}.answers.${answerIndex}.attachments`,
+                        //     attachments
+                        //   );
+                        // });
                       }
                     }}
                   />
-                  <GuestAnswerGroupsComponent
+                  {/* <GuestAnswerGroupsComponent
                     getGuestQuestionAnswerGroup={() => {
                       return scaffoldGuestQuestionAnswerGroup(sectionState.guestQuestions);
                     }}
                     {...props}
-                  />
+                  /> */}
                 </Fragment>
               )}
             </Form>

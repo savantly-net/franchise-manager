@@ -1,4 +1,10 @@
-import { BaseEntityService, EntityStateProvider, PagedEntityState, TenantedEntity } from '@savantly/sprout-api';
+import {
+  BaseEntityService,
+  EntityStateProvider,
+  PagedEntityState,
+  TenantedEntity,
+  dateTime,
+} from '@savantly/sprout-api';
 import axios from 'axios';
 import { API_URL } from 'plugin/config/appModuleConfiguration';
 import { FileItem } from 'plugin/types';
@@ -14,9 +20,11 @@ export interface QAIGuestQuestionAnswer {
   value?: QAIQuestionAnswerType;
 }
 export interface QAIGuestQuestionAnswerEditModel extends QAIGuestQuestionAnswer {
-  questionText: string;
-  points: number;
-  order: number;
+  questionText?: string;
+  points?: number;
+  order?: number;
+  answers?: QAIGuestQuestionAnswerEditModel[];
+  guestAnswers?: QAIGuestQuestionAnswerGroup[];
 }
 
 export interface QAIGuestQuestionAnswerGroup {
@@ -46,15 +54,36 @@ export interface QAIQuestionAnswerEditModel extends QAIQuestionAnswer {
   order: number;
 }
 
+export interface QAAGuestQuestionAnswerGroupEditModel {
+  sectionId?: string;
+  locationId?: string;
+  status?: string;
+  answers: QAIGuestQuestionAnswerEditModel[];
+  guestAnswers: QAIGuestQuestionAnswerGroup[];
+}
+
 export interface QAISectionSubmission extends TenantedEntity {
+  // locationId?: string;
+  // sectionId?: string;
+  // managerOnDuty?: string;
+  // dateScored?: string;
+  // status?: QAISubmissionStatus;
+  // staffAttendance?: { [key: string]: string };
+  // answers: QAIQuestionAnswer[];
+  // guestAnswers: QAIGuestQuestionAnswerGroup[];
   locationId?: string;
   sectionId?: string;
   managerOnDuty?: string;
   dateScored?: string;
   status?: QAISubmissionStatus;
   staffAttendance?: { [key: string]: string };
-  answers: QAIQuestionAnswer[];
-  guestAnswers: QAIGuestQuestionAnswerGroup[];
+  answers?: QAIQuestionAnswer[];
+  guestAnswers?: QAIGuestQuestionAnswerGroup[];
+  // sections?: [{}];
+  fsc?: string;
+  fsm?: string;
+  responsibleAlcoholCert?: string;
+  sections?: QAAGuestQuestionAnswerGroupEditModel[];
 }
 
 export interface QAIQuestionAnswerGroupEditModel {
@@ -70,8 +99,12 @@ export interface QAISectionSubmissionEditModel {
   dateScored?: string;
   status?: QAISubmissionStatus;
   staffAttendance?: { [key: string]: string };
-  answerGroups: QAIQuestionAnswerGroupEditModel[];
-  guestAnswerGroups: QAIGuestQuestionAnswerGroupEditModel[];
+  answerGroups?: QAIQuestionAnswerGroupEditModel[];
+  guestAnswerGroups?: QAIGuestQuestionAnswerGroupEditModel[];
+  fsc?: string;
+  fsm?: string;
+  responsibleAlcoholCert?: string;
+  sections?: QAAGuestQuestionAnswerGroupEditModel[];
 }
 
 export type QAISectionSubmissionState = PagedEntityState<QAISectionSubmission>;
@@ -79,7 +112,8 @@ export type QAISectionSubmissionState = PagedEntityState<QAISectionSubmission>;
 class QAISectionSubmissionService extends BaseEntityService<QAISectionSubmission> {
   constructor() {
     super({
-      baseUrl: `${API_URL}/qai/submission`,
+      baseUrl: `${API_URL}/qaa/submission`,
+      // baseUrl: `${API_URL}/qai/submission`,
     });
   }
 
@@ -96,8 +130,10 @@ export const qaiSubmissionStateProvider = new EntityStateProvider<QAISectionSubm
     isFetched: false,
     isFetching: false,
     example: {
+      sections: [],
       answers: [],
       guestAnswers: [],
+      dateScored: dateTime().format('YYYY-MM-DDTHH:mm:ssZ'),
     },
   },
   stateKey: 'qaiSubmissionState',

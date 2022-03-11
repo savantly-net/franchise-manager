@@ -40,37 +40,42 @@ const QAISubmissionViewPage = () => {
           setError(err.message || 'There was a problem retrieving the submission');
         });
     } else {
-      if (Object.keys(item?.guestAnswers).length > 0) {
-        let gqNo = 0;
-        let gqYes = 0;
-        for (const guestMainAns of item?.guestAnswers) {
-          for (const subAnswer of guestMainAns.answers) {
-            if (subAnswer.value === 'YES') {
-              gqYes = gqYes + 1;
-            } else {
-              gqNo = gqNo + 1;
-            }
-          }
-        }
-        setYesCount(gqYes);
-        setNoCount(gqNo);
-      }
-      if (Object.keys(item?.answers).length > 0) {
-        let answersValue: any = item?.answers.map(x => x.value);
-        if (answersValue !== undefined) {
-          let staticNo = 0;
-          let statcYes = 0;
-          for (const guestAns of answersValue) {
-            if (guestAns === 'YES') {
-              statcYes = statcYes + 1;
-            } else {
-              staticNo = staticNo + 1;
-            }
-          }
-          setQuestionYesCount(statcYes);
-          setQuestionNoCount(staticNo);
-        }
-      }
+      // if (Object.keys(item?.guestAnswers).length > 0) {
+      //   let gqNo = 0;
+      //   let gqYes = 0;
+      //   for (const guestMainAns of item?.guestAnswers) {
+      //     for (const subAnswer of guestMainAns.answers) {
+      //       if (subAnswer.value === 'YES') {
+      //         gqYes = gqYes + 1;
+      //       } else {
+      //         gqNo = gqNo + 1;
+      //       }
+      //     }
+      //   }
+      //   setYesCount(gqYes);
+      //   setNoCount(gqNo);
+      // }
+      // if (Object.keys(item?.answers).length > 0) {
+      //   let answersValue: any = item?.answers.map(x => x.value);
+      //   if (answersValue !== undefined) {
+      //     let staticNo = 0;
+      //     let statcYes = 0;
+      //     for (const guestAns of answersValue) {
+      //       if (guestAns === 'YES') {
+      //         statcYes = statcYes + 1;
+      //       } else {
+      //         staticNo = staticNo + 1;
+      //       }
+      //     }
+      //     setQuestionYesCount(statcYes);
+      //     setQuestionNoCount(staticNo);
+      //   }
+      // }
+
+      setYesCount(0);
+      setNoCount(0);
+      setQuestionYesCount(0);
+      setQuestionNoCount(0);
       console.log('item.guestAnswers', item);
     }
   }, [itemId, item]);
@@ -154,7 +159,7 @@ const QAISubmissionViewPage = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {qaiSection.guestQuestions.map(q => (
+                  {/* {qaiSection.guestQuestions.map(q => (
                     <Tr>
                       <Td>{q.text}</Td>
                       {item.guestAnswers &&
@@ -162,7 +167,7 @@ const QAISubmissionViewPage = () => {
                           <Td>{answers.find(({ guestQuestionId }) => guestQuestionId === q.itemId)?.value}</Td>
                         ))}
                     </Tr>
-                  ))}
+                  ))} */}
                   <Tr>
                     <Td>Notes</Td>
                     {item.guestAnswers && item.guestAnswers.map(({ notes }) => <Td>{notes}</Td>)}
