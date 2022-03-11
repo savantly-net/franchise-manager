@@ -37,7 +37,7 @@ public class QAISubmissionService {
 	}
 
 	public QAISectionSubmission updateEntity(QAISectionSubmission entity, QAISectionSubmissionDto object) {
-		return entity
+		entity
 			.setLocationId(object.getLocationId())
 			.setSectionId(object.getSectionId())
 			.setAnswers(qaService.upsert(object.getAnswers()))
@@ -46,10 +46,13 @@ public class QAISubmissionService {
 			.setManagerOnDuty(object.getManagerOnDuty())
 			.setStaffAttendance(object.getStaffAttendance())
 			.setStatus(object.getStatus());
+		return this.repository.save(entity);
 	}
 
 	public QAISectionSubmissionDto convert(QAISectionSubmission entity) {
-		return new QAISectionSubmissionDto().setAnswers(qaService.convert(entity.getAnswers()))
+		QAISectionSubmissionDto dto = new QAISectionSubmissionDto();
+		dto.setItemId(entity.getItemId());
+		return dto.setAnswers(qaService.convert(entity.getAnswers()))
 				.setLocationId(entity.getLocationId())
 				.setSectionId(entity.getSectionId())
 				.setDateScored(entity.getDateScored())

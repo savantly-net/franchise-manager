@@ -63,6 +63,7 @@ public class QAAService {
 	
 	private QAADto convert(QAASubmission entity) {
 		QAADto dto = new QAADto()
+			.setId(entity.getId())
 			.setDateScored(entity.getDateScored())
 			.setFsc(entity.getFsc())
 			.setLocationId(entity.getLocationId())

@@ -6,6 +6,8 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 
+import javax.transaction.Transactional;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +30,7 @@ import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import example.TestApplication;
+import net.savantly.sprout.core.tenancy.TenantedPrimaryKey;
 import net.savantly.sprout.franchise.domain.operations.qai.audit.QAADto;
 import net.savantly.sprout.franchise.domain.operations.qai.audit.QAAService;
 import net.savantly.sprout.franchise.domain.operations.qai.audit.QAASubmissionRepository;
@@ -35,6 +38,8 @@ import net.savantly.sprout.franchise.domain.operations.qai.guestQuestion.QAIGues
 import net.savantly.sprout.franchise.domain.operations.qai.question.QAIQuestionRepository;
 import net.savantly.sprout.franchise.domain.operations.qai.question.category.QAIQuestionCategory;
 import net.savantly.sprout.franchise.domain.operations.qai.question.category.QAIQuestionCategoryRepository;
+import net.savantly.sprout.franchise.domain.operations.qai.section.QAISection;
+import net.savantly.sprout.franchise.domain.operations.qai.section.QAISectionRepository;
 import net.savantly.sprout.franchise.domain.operations.qai.section.submission.QAISectionSubmissionDto;
 import test.AbstractContainerBaseTest;
 
@@ -57,6 +62,8 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 	QAIQuestionCategoryRepository categoryRepo;
 	@Autowired
 	QAIQuestionRepository qrepo;
+	@Autowired
+	QAISectionRepository qsrepo;
 	@Autowired
 	QAIGuestQuestionRepository gqrepo;
 	
@@ -90,6 +97,17 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 		this.gqrepo.deleteAll();
 		this.qrepo.deleteAll();
 		this.categoryRepo.deleteAll();
+		this.qsrepo.deleteAll();
+		
+		this.qsrepo.save(getExampleSection());
+	}
+
+	private QAISection getExampleSection() {
+		QAISection s = new QAISection();
+		TenantedPrimaryKey key = new TenantedPrimaryKey();
+		key.setItemId("1");
+		s.setId(key);
+		return s.setName("test");
 	}
 
 	@DynamicPropertySource
@@ -127,10 +145,19 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 				QAADto.class);
 
 		Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode(), "Should create one");
-		Assertions.assertTrue(response.getBody().getFsc().contentEquals(test));
+		Assertions.assertNotNull(response.getBody());
+		QAADto resultBody = response.getBody();
+
+		Assertions.assertNotNull(resultBody.getId());
+		Assertions.assertTrue(resultBody.getFsc().contentEquals(test));
+		Assertions.assertTrue(resultBody.getLocationId().contentEquals(test));
+		
+		Assertions.assertEquals(dto.getDateScored(), resultBody.getDateScored());
+		Assertions.assertEquals(dto.getSections().size(), resultBody.getSections().size());
 	}
 	
 	@Test
+	@Transactional
 	public void test() {
 		service.save(exampleDto());
 	}
