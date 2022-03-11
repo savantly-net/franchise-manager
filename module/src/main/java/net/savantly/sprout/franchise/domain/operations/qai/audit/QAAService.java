@@ -21,6 +21,10 @@ public class QAAService {
 	public Page<QAADto> getPage(Pageable pageable) {
 		return this.repository.findAll(pageable).map(q -> convert(q));
 	}
+
+	public QAADto getOneById(String id) {
+		return convert(this.repository.findById(id).orElseThrow());
+	}
 	
 	public QAADto save(QAADto dto) {
 		Set<String> sectionIds = saveSectionSubmissions(dto);
@@ -85,4 +89,5 @@ public class QAAService {
 		entity.setId(UUID.randomUUID().toString());
 		return entity;
 	}
+
 }

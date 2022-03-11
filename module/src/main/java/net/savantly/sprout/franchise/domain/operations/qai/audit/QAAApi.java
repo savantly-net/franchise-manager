@@ -26,6 +26,12 @@ public class QAAApi {
 		return this.service.getPage(pageable);
 	}
 
+	@GetMapping("/{id}")
+	@Operation(summary = "Gets a page of the QAA Submissions")
+	public QAADto getOneById(@PathVariable("id") String id) {
+		return this.service.getOneById(id);
+	}
+
 	@PostMapping
 	@Operation(summary = "Saves a QAA Submission")
 	public QAADto save(@RequestBody QAADto qaaDto) {
