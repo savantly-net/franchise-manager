@@ -1,0 +1,59 @@
+{
+  "locationId": "string",
+  "dateScored": "2022-03-11T05:45:20.256Z",
+  "managerOnDuty": "string",
+  "fsc": "string",
+  "responsibleAlcoholCert": "string",
+  "sections": [
+    {
+      "sectionId": "string",
+      "locationId": "string",
+      "managerOnDuty": "string",
+      "dateScored": "2022-03-11T05:45:20.256Z",
+      "status": "DRAFT",
+      "answers": [
+        {
+          "questionId": "string",
+          "value": "YES",
+          "notes": "string",
+          "attachments": [
+            {
+              "id": "string",
+              "name": "string",
+              "downloadUrl": "string",
+              "contentType": "string"
+            }
+          ]
+        }
+      ],
+      "guestAnswers": [
+        {
+          "answers": [
+            {
+              "guestQuestionId": "string",
+              "value": "YES"
+            }
+          ],
+          "notes": "string",
+          "attachments": [
+            {
+              "id": "string",
+              "name": "string",
+              "downloadUrl": "string",
+              "contentType": "string"
+            }
+          ]
+        }
+      ],
+      "staffAttendance": {
+        "Manager": "string",
+        "Cashier(s)": "string",
+        "Bartender(s)": "string",
+        "Line Cook(s)": "string",
+        "Prep": "string",
+        "Dish/Busser": "string",
+        "Expo": "string"
+      }
+    }
+  ]
+}
