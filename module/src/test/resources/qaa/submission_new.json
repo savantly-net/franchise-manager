@@ -6,8 +6,8 @@
   "responsibleAlcoholCert": "string",
   "sections": [
     {
-      "sectionId": "string",
-      "locationId": "string",
+      "sectionId": "1",
+      "locationId": "1",
       "managerOnDuty": "string",
       "dateScored": "2022-03-11T05:45:20.256Z",
       "status": "DRAFT",
