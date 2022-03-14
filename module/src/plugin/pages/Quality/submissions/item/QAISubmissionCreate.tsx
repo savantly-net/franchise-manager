@@ -3,8 +3,6 @@ import { FileMetaData } from '@savantly/sprout-api';
 import { LocationSelector } from 'plugin/pages/Locations/Stores/component/LocationSelector';
 import React, { useMemo, useState, useEffect, Fragment } from 'react';
 import { getUserContextService } from '@savantly/sprout-runtime';
-// import React, { useMemo, useEffect, useState, Fragment } from 'react';
-// import React, { useMemo, useEffect, useState, Fragment } from 'react';
 import { AppModuleRootState, FileItem } from 'plugin/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -13,12 +11,7 @@ import { qaiSectionStateProvider } from '../../sections/entity';
 import { getFileService } from '@savantly/sprout-runtime';
 import { AxiosResponse } from 'axios';
 import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
-// import {
-//   //   // QAASectionSubmission,
-//   //   qaaSubmissionService,
-//   qaaSubmissionStateProvider,
-// } from '../qaaentity';
-import moment from 'moment';
+import { dateTimeForTimeZone } from '@savantly/sprout-api';
 import {
   QAISectionSubmission,
   qaiSubmissionService,
@@ -37,8 +30,6 @@ const QAISubmissionCreate = () => {
   const fileService = getFileService();
   const userContext = getUserContextService().getUserContext();
 
-  // type InternalState = QAISectionSubmissionEditModel | undefined;
-  // const [draftSubmission, setDraftSubmission] = useState(undefined as InternalState);
   const [categoryList, setCategoryList] = useState([]);
   const [draftSubmission, setDraftSubmission] = useState({
     locationId: '',
@@ -75,11 +66,9 @@ const QAISubmissionCreate = () => {
 
   useEffect(() => {
     if (sectionState?.response) {
-      // console.log(sectionState?.response, " sectionState?.response")
       let sections: any = [];
       sectionState?.response.map((item: any, i: number) => {
         sections[i] = {};
-        // sections[i].itemId = item.itemId;
         sections[i].sectionId = item.itemId;
         sections[i].locationId = selectedLocation;
         sections[i].name = item.name;
@@ -106,25 +95,21 @@ const QAISubmissionCreate = () => {
         sections[i].answers = answers;
 
         let guestanswers: any = [];
-        // guestanswers.answers = [];
-
         item.guestQuestions.map((item1: any = {}, i1: number) => {
-          let tests: any = {};
-          // tests.itemId = null;
-          // tests.itemId = item1.itemId;
-          tests.notes = item1.text;
-          tests.attachments = [];
-          tests.answers = [
-            // { itemId: '', guestQuestionId: item1.itemId, notes: item1.text, value: 'YES' },
-            { guestQuestionId: item1.itemId, notes: item1.text, value: 'NO' },
-            { guestQuestionId: item1.itemId, notes: item1.text, value: 'NO' },
-            { guestQuestionId: item1.itemId, notes: item1.text, value: 'NO' },
-          ];
-          guestanswers.push(tests);
+          if (item1.text) {
+            let tests: any = {};
+            tests.notes = item1.text;
+            tests.attachments = [];
+            tests.answers = [
+              { guestQuestionId: item1.itemId, notes: item1.text, value: 'NO' },
+              { guestQuestionId: item1.itemId, notes: item1.text, value: 'NO' },
+              { guestQuestionId: item1.itemId, notes: item1.text, value: 'NO' },
+            ];
+            guestanswers.push(tests);
+          }
         });
         sections[i].guestAnswers = guestanswers;
       });
-      // console.log(sections, ' sectionssections');
       setDraftSubmission({
         locationId: selectedLocation,
         dateScored: '',
@@ -135,8 +120,6 @@ const QAISubmissionCreate = () => {
       });
     }
   }, [sectionState, selectedLocation, userContext]);
-
-  // console.log(draftSubmission, ' draftSubmission');
 
   const showLoading = sectionState.isFetching || submissionState.isFetching;
 
@@ -149,24 +132,15 @@ const QAISubmissionCreate = () => {
             initialValues={draftSubmission}
             onSubmit={async (values: QAISectionSubmission, { resetForm }) => {
               values.locationId = selectedLocation;
-              console.log(draftSubmission.sections, 'draftSubmission.sections');
-
-              values.dateScored = moment.utc(moment(values.dateScored)).format();
-              console.log(values.dateScored, 'values.dateScored');
-              console.log(values.sections, 'values.sections');
+              values.dateScored = dateTimeForTimeZone(values.dateScored).toISOString();
               values.sections?.map((submitData: any = {}) => {
                 submitData.dateScored = values.dateScored;
                 submitData.locationId = values.locationId;
                 submitData.managerOnDuty = values.managerOnDuty;
               });
-              console.log(values, 'valuesvaluesvalues');
-              // return;
               qaiSubmissionService
                 .create(values)
-                // .create({"locationId":"ca772775-c5f7-47c1-b8c1-c652dc225732","dateScored":"2022-03-11T05:45:20.256Z","managerOnDuty":"test duty","fsc":"test fsc","responsibleAlcoholCert":"test alcohol","sections":[{"sectionId":"4a043303-e56c-4407-9f90-0dbe72d8704e","locationId":"ca772775-c5f7-47c1-b8c1-c652dc225732","managerOnDuty":"string","dateScored":"2022-03-11T05:45:20.256Z","status":"DRAFT","answers":[{"questionId":"cd1fecdb-a1f9-4398-9942-342d26b4c24a","value":"YES","notes":"test notes","attachments":[]}],"guestAnswers":[{"answers":[{"guestQuestionId":"91e80547-c328-4ebb-9c98-8e4c6f13c72a","value":"YES"}],"notes":"test notes","attachments":[]}],"staffAttendance":{"Manager":"dsds","Cashier(s)":"sdsa","Bartender(s)":"sdsa","Line Cook(s)":"stsdsring","Prep":"sadsad","Dish/Busser":"sdsad","Expo":"stdsaring"}}]})
                 .then(response => {
-                  console.log(response, 'response.data.id');
-                  console.log(response.data.id, 'response.data.id');
                   dispatch(qaiSectionStateProvider.loadState());
                   dispatch(qaiSubmissionStateProvider.loadState());
                   navigate(`../item/${response.data.id}`);

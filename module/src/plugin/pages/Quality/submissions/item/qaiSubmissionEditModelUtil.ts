@@ -178,26 +178,26 @@ export const createQaiSubmissionEditModel = ({
   };
 };
 
-export const convertQAISubmissionEditModel = (model: QAISectionSubmissionEditModel): QAISectionSubmission => {
-  return {
-    itemId: model.itemId,
-    managerOnDuty: model.managerOnDuty,
-    sectionId: model.sectionId,
-    locationId: model.locationId,
-    staffAttendance: model.staffAttendance,
-    status: model.status,
-    // answers: model.answerGroups.flatMap(g => {
-    //   return g.answers.map(a => {
-    //     const answer: QAIQuestionAnswer = {
-    //       itemId: a.itemId,
-    //       notes: a.notes,
-    //       questionId: a.questionId,
-    //       value: a.value,
-    //       attachments: a.attachments,
-    //     };
-    //     return answer;
-    //   });
-    // }),
-    guestAnswers: model.guestAnswerGroups,
-  };
-};
+// export const convertQAISubmissionEditModel = (model: QAISectionSubmissionEditModel): QAISectionSubmission => {
+//   return {
+//     itemId: model.itemId,
+//     managerOnDuty: model.managerOnDuty,
+//     sectionId: model.sectionId,
+//     locationId: model.locationId,
+//     staffAttendance: model.staffAttendance,
+//     status: model.status,
+//     // answers: model.answerGroups.flatMap(g => {
+//     //   return g.answers.map(a => {
+//     //     const answer: QAIQuestionAnswer = {
+//     //       itemId: a.itemId,
+//     //       notes: a.notes,
+//     //       questionId: a.questionId,
+//     //       value: a.value,
+//     //       attachments: a.attachments,
+//     //     };
+//     //     return answer;
+//     //   });
+//     // }),
+//     guestAnswers: model.guestAnswerGroups,
+//   };
+// };

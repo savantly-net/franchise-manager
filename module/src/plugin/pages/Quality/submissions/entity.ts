@@ -24,9 +24,12 @@ export interface QAIGuestQuestionAnswerEditModel extends QAIGuestQuestionAnswer 
   points?: number;
   order?: number;
   answers?: QAIGuestQuestionAnswerEditModel[];
+  attachments?: FileItem[];
   guestAnswers?: QAIGuestQuestionAnswerGroup[];
 }
-
+/**
+ * Guest Question Interface
+ */
 export interface QAIGuestQuestionAnswerGroup {
   itemId?: string;
   answers: QAIGuestQuestionAnswer[];
@@ -55,6 +58,7 @@ export interface QAIQuestionAnswerEditModel extends QAIQuestionAnswer {
 }
 
 export interface QAAGuestQuestionAnswerGroupEditModel {
+  itemId?: string;
   sectionId?: string;
   locationId?: string;
   status?: string;
@@ -63,14 +67,7 @@ export interface QAAGuestQuestionAnswerGroupEditModel {
 }
 
 export interface QAISectionSubmission extends TenantedEntity {
-  // locationId?: string;
-  // sectionId?: string;
-  // managerOnDuty?: string;
-  // dateScored?: string;
-  // status?: QAISubmissionStatus;
-  // staffAttendance?: { [key: string]: string };
-  // answers: QAIQuestionAnswer[];
-  // guestAnswers: QAIGuestQuestionAnswerGroup[];
+  id?: any;
   itemId?: string;
   locationId?: string;
   sectionId?: string;
@@ -80,11 +77,10 @@ export interface QAISectionSubmission extends TenantedEntity {
   staffAttendance?: { [key: string]: string };
   answers?: QAIQuestionAnswer[];
   guestAnswers?: QAIGuestQuestionAnswerGroup[];
-  // sections?: [{}];
   fsc?: string;
   fsm?: string;
   responsibleAlcoholCert?: string;
-  sections?: QAAGuestQuestionAnswerGroupEditModel[];
+  sections: QAAGuestQuestionAnswerGroupEditModel[];
 }
 
 export interface QAIQuestionAnswerGroupEditModel {
