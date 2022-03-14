@@ -12,14 +12,10 @@ import { qaiSectionStateProvider } from '../../sections/entity';
 import { getFileService } from '@savantly/sprout-runtime';
 import { AxiosResponse } from 'axios';
 import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
-// import { getUserContextService } from '@savantly/sprout-runtime';
-
-// type InternalState = QAISectionSubmissionEditModel | undefined;
 
 const QAISubmissionEditPage = () => {
   const categoryState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiQuestionCategories);
   const dispatch = useDispatch();
-  // const [error] = useState('');
   const [error, setError] = useState('');
   const submissionId = useParams().itemId;
   const qaiSectionSubmission = useQAISectionSubmission(submissionId);
@@ -100,6 +96,10 @@ const QAISubmissionEditPage = () => {
   const getSection = (sectionId: string) => {
     const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
     return searchSection?.name ? searchSection?.name : 'Unknown Section';
+  };
+  const getSectionRequireStaffAttendance = (sectionId: string) => {
+    const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
+    return searchSection?.requireStaffAttendance ? searchSection?.requireStaffAttendance : false;
   };
 
   return (
@@ -283,6 +283,20 @@ const QAISubmissionEditPage = () => {
                             </tbody>
                           </table>
                         </div>
+                        {s?.staffAttendance && getSectionRequireStaffAttendance(s.sectionId) === true && (
+                          <>
+                            <p className="ml-3">Staff Attendance</p>
+                            <FormField placeholder="Cashiers" name={`sections.${index}.staffAttendance.Cashiers`} />
+                            <FormField placeholder="Bartenders" name={`sections.${index}.staffAttendance.Bartenders`} />
+                            <FormField placeholder="Line Cooks" name={`sections.${index}.staffAttendance.Line Cooks`} />
+                            <FormField placeholder="Prep" name={`sections.${index}.staffAttendance.Prep`} />
+                            <FormField
+                              placeholder="Dish/Busser"
+                              name={`sections.${index}.staffAttendance.Dish/Busser`}
+                            />
+                            <FormField placeholder="Expo" name={`sections.${index}.staffAttendance.Expo`} />
+                          </>
+                        )}
                         <br />
                       </>
                     ))}

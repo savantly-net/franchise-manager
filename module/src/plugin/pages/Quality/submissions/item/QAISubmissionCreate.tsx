@@ -12,13 +12,7 @@ import { getFileService } from '@savantly/sprout-runtime';
 import { AxiosResponse } from 'axios';
 import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
 import { dateTimeForTimeZone } from '@savantly/sprout-api';
-import {
-  QAISectionSubmission,
-  qaiSubmissionService,
-  qaiSubmissionStateProvider,
-  // QAIGuestQuestionAnswerGroup,
-} from '../entity';
-//  import { QAISectionSubmissionEditModel } from '../entity';
+import { QAISectionSubmission, qaiSubmissionService, qaiSubmissionStateProvider } from '../entity';
 
 const QAISubmissionCreate = () => {
   const submissionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSubmissions);
@@ -76,12 +70,13 @@ const QAISubmissionCreate = () => {
         sections[i].managerOnDuty = '';
         sections[i].dateScored = '';
         sections[i].status = 'DRAFT';
+        sections[i].requireStaffAttendance = item.requireStaffAttendance;
+        sections[i].staffAttendance = {};
 
         let answers: any = [];
 
         item.questions.map((item1: any, i1: number) => {
           let test: any = {};
-          // test.itemId = item1.itemId;
           test.questionId = item1.itemId;
           test.sectionId = item1.sectionId;
           test.categoryId = item1.categoryId;
@@ -337,6 +332,17 @@ const QAISubmissionCreate = () => {
                           </tbody>
                         </table>
                       </div>
+                      {s?.requireStaffAttendance && s.requireStaffAttendance === true && (
+                        <>
+                          <p className="ml-3">Staff Attendance</p>
+                          <FormField placeholder="Cashiers" name={`sections.${index}.staffAttendance.Cashiers`} />
+                          <FormField placeholder="Bartenders" name={`sections.${index}.staffAttendance.Bartenders`} />
+                          <FormField placeholder="Line Cooks" name={`sections.${index}.staffAttendance.Line Cooks`} />
+                          <FormField placeholder="Prep" name={`sections.${index}.staffAttendance.Prep`} />
+                          <FormField placeholder="Dish/Busser" name={`sections.${index}.staffAttendance.Dish/Busser`} />
+                          <FormField placeholder="Expo" name={`sections.${index}.staffAttendance.Expo`} />
+                        </>
+                      )}
                       <br />
                     </>
                   ))}

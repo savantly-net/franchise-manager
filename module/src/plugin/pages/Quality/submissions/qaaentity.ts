@@ -9,7 +9,6 @@ import {
 import axios from 'axios';
 import { API_URL } from 'plugin/config/appModuleConfiguration';
 import { FileItem } from 'plugin/types';
-// import { QAISection, qaiSectionService } from '../sections/entity';
 export type QAISubmissionStatus = 'DRAFT' | 'FINAL';
 
 export type QAIGuestQuestionAnswerType = 'YES' | 'NO';
@@ -31,9 +30,6 @@ export interface AnswerEditModel extends QAIGuestQuestionAnswer {
   order?: number;
   itemId?: string;
   attachments: FileItem[];
-  // answers?: QAIGuestQuestionAnswer[];
-  // answers?: AnswerEditModel[];
-  // guestAnswers?: QAIGuestQuestionAnswerGroup[];
 }
 
 export interface QAIGuestQuestionAnswerGroup {
@@ -81,11 +77,6 @@ export interface QAIQuestionAnswer {
   notes?: string;
   attachments: FileItem[];
 }
-// export interface QAIQuestionAnswerEditModel extends QAIQuestionAnswer {
-//   questionText: string;
-//   points: number;
-//   order: number;
-// }
 
 /**
  * For sections
@@ -108,35 +99,11 @@ export interface QAASectionSubmission extends TenantedEntity {
   dateScored?: string;
   status?: QAISubmissionStatus;
   staffAttendance?: { [key: string]: string };
-  // answers?: QAIQuestionAnswer[];
-  // guestAnswers?: QAIGuestQuestionAnswerGroup[];
   fsc?: string;
   fsm?: string;
   responsibleAlcoholCert?: string;
-  // sections: QAISection[];
   sections: QAASection[];
 }
-
-// export interface QAIQuestionAnswerGroupEditModel {
-//   groupName: string;
-//   answers: QAIQuestionAnswerEditModel[];
-// }
-
-// export interface QAISectionSubmissionEditModel {
-//   itemId: string;
-//   sectionId?: string;
-//   locationId: string;
-//   managerOnDuty?: string;
-//   dateScored?: string;
-//   status?: QAISubmissionStatus;
-//   staffAttendance?: { [key: string]: string };
-//   answerGroups?: QAIQuestionAnswerGroupEditModel[];
-//   guestAnswerGroups?: QAIGuestQuestionAnswerGroupEditModel[];
-//   fsc?: string;
-//   fsm?: string;
-//   responsibleAlcoholCert?: string;
-//   sections?: QAAGuestQuestionAnswerGroupEditModel[];
-// }
 
 export type QAASectionSubmissionState = PagedEntityState<QAASectionSubmission>;
 
