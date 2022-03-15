@@ -1,14 +1,6 @@
 import { QAIQuestionCategory } from '../../categories/entity';
 import { QAIQuestion, QAISection } from '../../sections/entity';
-// import { QAIGuestQuestion, QAIQuestion, QAISection } from '../../sections/entity';
-import {
-  // QAIGuestQuestionAnswerEditModel,
-  // QAIGuestQuestionAnswerGroup,
-  // QAIGuestQuestionAnswerGroupEditModel,
-  // QAIQuestionAnswer,
-  QAISectionSubmission,
-  QAISectionSubmissionEditModel,
-} from '../entity';
+import { QAISectionSubmission, QAISectionSubmissionEditModel } from '../entity';
 
 function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -55,54 +47,6 @@ export const updateQaiSubmissionEditModel = ({
 
   const questionGroups = getQuestionGroups(section);
 
-  // const getQuestionAnswer = (questionId?: string) => {
-  //   // const found = entity.answers.filter(a => a.questionId === questionId);
-  //   // if (found && found.length > 0) {
-  //   //   return found[0];
-  //   // }
-  //   return undefined;
-  // };
-
-  // const getGuestQuestionAnswers = (
-  //   ga: QAIGuestQuestionAnswerGroup,
-  //   models: QAIGuestQuestion[]
-  // ): QAIGuestQuestionAnswerEditModel[] => {
-  //   const result: QAIGuestQuestionAnswerEditModel[] = [];
-  //   models.forEach(m => {
-  //     const found = ga.answers.filter(a => a.guestQuestionId === m.itemId);
-  //     if (found && found.length > 0) {
-  //       const selected = found[0];
-  //       result.push({
-  //         order: m.order,
-  //         points: m.points,
-  //         questionText: m.text,
-  //         guestQuestionId: selected.guestQuestionId,
-  //         itemId: selected.itemId,
-  //         value: selected.value,
-  //       });
-  //     }
-  //   });
-  //   return result;
-  // };
-
-  // const scaffoldGuestQuestionAnswerGroups = (
-  //   guestAnswers: QAIGuestQuestionAnswerGroup[]
-  // ): QAIGuestQuestionAnswerGroupEditModel[] => {
-  //   const result: QAIGuestQuestionAnswerGroupEditModel[] = [];
-
-  //   // const guestQuestionGroupModels: QAIGuestQuestion[] = section.guestQuestions;
-
-  //   // guestAnswers.forEach(ga => {
-  //   //   result.push({
-  //   //     itemId: ga.itemId,
-  //   //     attachments: ga.attachments,
-  //   //     notes: ga.notes,
-  //   //     answers: getGuestQuestionAnswers(ga, guestQuestionGroupModels),
-  //   //   });
-  //   // });
-  //   return result;
-  // };
-
   return {
     itemId: entity.itemId,
     sectionId: section.itemId,
@@ -115,16 +59,10 @@ export const updateQaiSubmissionEditModel = ({
         points: q.points,
         order: q.order,
         attachments: [],
-        // value: getQuestionAnswer(q.itemId)?.value,
-        // notes: getQuestionAnswer(q.itemId)?.notes,
-        //   attachments: getQuestionAnswer(q.itemId)?.attachments || [],
-        //   value: getQuestionAnswer(q.itemId)?.value,
-        //   notes: getQuestionAnswer(q.itemId)?.notes,
       })),
       groupName: getCategoryName(questionCategories, g),
     })),
     guestAnswerGroups: [],
-    // guestAnswerGroups: scaffoldGuestQuestionAnswerGroups(entity.guestAnswers),
   };
 };
 
@@ -138,26 +76,6 @@ export const createQaiSubmissionEditModel = ({
   questionCategories: QAIQuestionCategory[];
 }): QAISectionSubmissionEditModel => {
   const questionGroups = getQuestionGroups(sections);
-
-  // const scaffoldGuestQuestionAnswerGroup = (
-  //   guestQuestions: QAIGuestQuestion[]
-  // ): QAIGuestQuestionAnswerGroupEditModel => {
-  //   const answers: QAIGuestQuestionAnswerEditModel[] = guestQuestions.map(q => {
-  //     return {
-  //       guestQuestionId: q.itemId,
-  //       order: q.order,
-  //       points: q.points,
-  //       questionText: q.text,
-  //     };
-  //   });
-  //   return {
-  //     answers,
-  //     attachments: [],
-  //   };
-  // };
-  // if (!sections.itemId) {
-  //   throw new Error('The section does not have an itemId');
-  // }
 
   return {
     itemId: uuidv4(),
@@ -174,30 +92,5 @@ export const createQaiSubmissionEditModel = ({
       groupName: getCategoryName(questionCategories, g),
     })),
     guestAnswerGroups: [],
-    // guestAnswerGroups: [scaffoldGuestQuestionAnswerGroup(sections.guestQuestions)],
   };
 };
-
-// export const convertQAISubmissionEditModel = (model: QAISectionSubmissionEditModel): QAISectionSubmission => {
-//   return {
-//     itemId: model.itemId,
-//     managerOnDuty: model.managerOnDuty,
-//     sectionId: model.sectionId,
-//     locationId: model.locationId,
-//     staffAttendance: model.staffAttendance,
-//     status: model.status,
-//     // answers: model.answerGroups.flatMap(g => {
-//     //   return g.answers.map(a => {
-//     //     const answer: QAIQuestionAnswer = {
-//     //       itemId: a.itemId,
-//     //       notes: a.notes,
-//     //       questionId: a.questionId,
-//     //       value: a.value,
-//     //       attachments: a.attachments,
-//     //     };
-//     //     return answer;
-//     //   });
-//     // }),
-//     guestAnswers: model.guestAnswerGroups,
-//   };
-// };

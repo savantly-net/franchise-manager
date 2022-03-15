@@ -13,6 +13,7 @@ import { AxiosResponse } from 'axios';
 import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
 import { dateTimeForTimeZone } from '@savantly/sprout-api';
 import { QAISectionSubmission, qaiSubmissionService, qaiSubmissionStateProvider } from '../entity';
+import { useFMConfig } from 'plugin/config/useFmConfig';
 
 const QAISubmissionCreate = () => {
   const submissionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSubmissions);
@@ -23,6 +24,8 @@ const QAISubmissionCreate = () => {
   const [error, setError] = useState('');
   const fileService = getFileService();
   const userContext = getUserContextService().getUserContext();
+  const [attachmentFolder, setAttachmentFolder] = useState(undefined as FileMetaData | undefined);
+  const fmConfig = useFMConfig();
 
   const [categoryList, setCategoryList] = useState([]);
   const [draftSubmission, setDraftSubmission] = useState({
@@ -56,6 +59,75 @@ const QAISubmissionCreate = () => {
   const getCategory = (categoryId: string) => {
     const searchCategory: any = categoryList.find((temp: any) => temp.itemId === categoryId);
     return searchCategory?.name ? searchCategory?.name : 'Unknown Category';
+  };
+
+  const checkFolderCreated = (itemId: string) => {
+    if (fmConfig && fmConfig?.rootFolder) {
+      fileService
+        .getFilesByPath(fmConfig.rootFolder.id)
+        .then(response => {
+          const found = response.data.children.filter(f => f.name === itemId);
+          if (found && found.length > 0) {
+            setAttachmentFolder(found[0]);
+          } else {
+            fileService
+              .createFile({
+                name: itemId,
+                isDir: true,
+                parent: fmConfig.rootFolder.id,
+              })
+              .then(response => {
+                setAttachmentFolder(response.data);
+              })
+              .catch(err => {
+                console.error(err);
+                setError('Could not create attachment folder');
+              });
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          setError('Could not retrieve attachment folders');
+        });
+    }
+  };
+
+  const fileUpload = async (props: any, value: any, sectionidx: number, idx: number, sectionId: string) => {
+    if (value.files) {
+      const fileUploads: Array<Promise<AxiosResponse<FileMetaData>>> = [];
+      for (let index = 0; index < value.files.length; index++) {
+        const file = value.files[index];
+        try {
+          await fileUploads.push(
+            fileService.uploadFile(
+              {
+                name: file.name,
+                isDir:
+                  attachmentFolder !== undefined && Object.keys(attachmentFolder).length > 0
+                    ? attachmentFolder.isDir
+                    : false,
+                parent:
+                  attachmentFolder !== undefined &&
+                  Object.keys(attachmentFolder).length > 0 &&
+                  attachmentFolder !== undefined
+                    ? attachmentFolder.name
+                    : sectionId,
+              },
+              file
+            )
+          );
+        } catch (e) {
+          setError('error' + e);
+        }
+        Promise.all(fileUploads).then(responses => {
+          const newFiles = responses.map(f => {
+            return f.data as FileItem;
+          });
+          const attachments = [...draftSubmission.sections[sectionidx]['answers'][idx]['attachments'], ...newFiles];
+          props.setFieldValue(`sections.${sectionidx}.answers.${idx}.attachments`, attachments);
+        });
+      }
+    }
   };
 
   useEffect(() => {
@@ -133,6 +205,7 @@ const QAISubmissionCreate = () => {
                 submitData.locationId = values.locationId;
                 submitData.managerOnDuty = values.managerOnDuty;
               });
+
               qaiSubmissionService
                 .create(values)
                 .then(response => {
@@ -188,16 +261,16 @@ const QAISubmissionCreate = () => {
                   </div>
                 </Fragment>
                 {draftSubmission &&
-                  draftSubmission?.sections.map((s: any, index: number) => (
+                  draftSubmission?.sections.map((sectionObj: any, index: number) => (
                     <>
                       <div className="mb-3 col-12">
                         <h1 className="section-name">
-                          Section {index + 1}: {s?.name}
+                          Section {index + 1}: {sectionObj?.name}
                         </h1>
                         <hr className="mb-2 mt-2" />
                         <Fragment>
-                          {s?.answers &&
-                            s?.answers.map((question: any, idx: number) => (
+                          {sectionObj?.answers &&
+                            sectionObj?.answers.map((question: any, idx: number) => (
                               <>
                                 <h1 className="category-name">{getCategory(question.categoryId)}</h1>
                                 <table
@@ -208,7 +281,7 @@ const QAISubmissionCreate = () => {
                                     <Fragment>
                                       <tr>
                                         <td className="col-1">
-                                          {s.order}.{question.order}
+                                          {sectionObj.order}.{question.order}
                                         </td>
                                         <td className="col-4">{question.notes}</td>
                                         <td className="col-1">{question.points}</td>
@@ -229,46 +302,20 @@ const QAISubmissionCreate = () => {
                                           <FileUploadButton
                                             buttonContent={
                                               <Fragment>
-                                                <Icon name="paperclip"></Icon>
+                                                <Icon
+                                                  onClick={value => {
+                                                    checkFolderCreated(sectionObj.sectionId);
+                                                  }}
+                                                  name="paperclip"
+                                                ></Icon>
                                                 <span>Attach</span>
                                               </Fragment>
                                             }
                                             onCancel={() => {}}
-                                            onConfirm={value => {
-                                              if (value.files) {
-                                                const fileUploads: Array<Promise<AxiosResponse<FileMetaData>>> = [];
-                                                for (let index = 0; index < value.files.length; index++) {
-                                                  const file = value.files[index];
-
-                                                  try {
-                                                    fileUploads.push(
-                                                      fileService.uploadFile(
-                                                        {
-                                                          name: file.name,
-                                                          isDir: false,
-                                                          parent: draftSubmission.sections[index]['sectionId'],
-                                                        },
-                                                        file
-                                                      )
-                                                    );
-                                                  } catch (e) {
-                                                    setError('error' + e);
-                                                  }
-                                                  Promise.all(fileUploads).then(responses => {
-                                                    const newFiles = responses.map(f => {
-                                                      return f.data as FileItem;
-                                                    });
-                                                    const attachments = [
-                                                      ...draftSubmission.sections[index]['answers'][idx]['attachments'],
-                                                      ...newFiles,
-                                                    ];
-                                                    props.setFieldValue(
-                                                      `sections.${index}.answers.${idx}.attachments`,
-                                                      attachments
-                                                    );
-                                                  });
-                                                }
-                                              }
+                                            onConfirm={async value => {
+                                              setTimeout(function() {
+                                                fileUpload(props, value, index, idx, sectionObj.sectionId);
+                                              }, 5000);
                                             }}
                                             accept={['image/*']}
                                           />
@@ -283,7 +330,7 @@ const QAISubmissionCreate = () => {
 
                         <h1 className="category-name">Guest Question</h1>
                         <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
-                          {s?.guestAnswers && Object.keys(s?.guestAnswers).length > 0 && (
+                          {sectionObj?.guestAnswers && Object.keys(sectionObj?.guestAnswers).length > 0 && (
                             <thead>
                               <tr className="trCls">
                                 <td className="col-4">Question</td>
@@ -295,8 +342,8 @@ const QAISubmissionCreate = () => {
                           )}
                           <tbody>
                             <Fragment>
-                              {s?.guestAnswers &&
-                                s?.guestAnswers.map((Qanswer: any, idGusts: number) => (
+                              {sectionObj?.guestAnswers &&
+                                sectionObj?.guestAnswers.map((Qanswer: any, idGusts: number) => (
                                   <>
                                     <Fragment>
                                       <tr>
@@ -323,7 +370,7 @@ const QAISubmissionCreate = () => {
                                     </Fragment>
                                   </>
                                 ))}
-                              {s?.guestAnswers && Object.keys(s?.guestAnswers).length === 0 && (
+                              {sectionObj?.guestAnswers && Object.keys(sectionObj?.guestAnswers).length === 0 && (
                                 <tr className="trCls">
                                   <td className="col-12">Not available</td>
                                 </tr>
@@ -332,7 +379,7 @@ const QAISubmissionCreate = () => {
                           </tbody>
                         </table>
                       </div>
-                      {s?.requireStaffAttendance && s.requireStaffAttendance === true && (
+                      {sectionObj?.requireStaffAttendance && sectionObj.requireStaffAttendance === true && (
                         <>
                           <p className="ml-3">Staff Attendance</p>
                           <FormField placeholder="Cashiers" name={`sections.${index}.staffAttendance.Cashiers`} />

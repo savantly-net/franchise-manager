@@ -110,7 +110,6 @@ class QAISectionSubmissionService extends BaseEntityService<QAISectionSubmission
   constructor() {
     super({
       baseUrl: `${API_URL}/qaa/submission`,
-      // baseUrl: `${API_URL}/qai/submission`,
     });
   }
 

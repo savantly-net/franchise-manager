@@ -129,8 +129,6 @@ export const qaaSubmissionStateProvider = new EntityStateProvider<QAASectionSubm
     example: {
       itemId: '',
       sections: [],
-      // answers: [],
-      // guestAnswers: [],
       dateScored: dateTime().format('YYYY-MM-DDTHH:mm:ssZ'),
     },
   },

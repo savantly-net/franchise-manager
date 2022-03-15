@@ -12,6 +12,7 @@ import { qaiSectionStateProvider } from '../../sections/entity';
 import { getFileService } from '@savantly/sprout-runtime';
 import { AxiosResponse } from 'axios';
 import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
+import { useFMConfig } from 'plugin/config/useFmConfig';
 
 const QAISubmissionEditPage = () => {
   const categoryState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiQuestionCategories);
@@ -26,6 +27,9 @@ const QAISubmissionEditPage = () => {
   const navigate = useNavigate();
   const [sectionList, setSectionList] = useState<any>();
   const [checkData, setCheckData] = useState(false);
+
+  const [attachmentFolder, setAttachmentFolder] = useState(undefined as FileMetaData | undefined);
+  const fmConfig = useFMConfig();
 
   const [draftSubmission, setDraftSubmission] = useState({
     id: '',
@@ -102,6 +106,75 @@ const QAISubmissionEditPage = () => {
     return searchSection?.requireStaffAttendance ? searchSection?.requireStaffAttendance : false;
   };
 
+  const checkFolderCreated = (itemId: string) => {
+    if (fmConfig && fmConfig?.rootFolder) {
+      fileService
+        .getFilesByPath(fmConfig.rootFolder.id)
+        .then(response => {
+          const found = response.data.children.filter(f => f.name === itemId);
+          if (found && found.length > 0) {
+            setAttachmentFolder(found[0]);
+          } else {
+            fileService
+              .createFile({
+                name: itemId,
+                isDir: true,
+                parent: fmConfig.rootFolder.id,
+              })
+              .then(response => {
+                setAttachmentFolder(response.data);
+              })
+              .catch(err => {
+                console.error(err);
+                setError('Could not create attachment folder');
+              });
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          setError('Could not retrieve attachment folders');
+        });
+    }
+  };
+
+  const fileUpload = async (props: any, value: any, sectionidx: number, idx: number, sectionId: string) => {
+    if (value.files) {
+      const fileUploads: Array<Promise<AxiosResponse<FileMetaData>>> = [];
+      for (let index = 0; index < value.files.length; index++) {
+        const file = value.files[index];
+        try {
+          await fileUploads.push(
+            fileService.uploadFile(
+              {
+                name: file.name,
+                isDir:
+                  attachmentFolder !== undefined && Object.keys(attachmentFolder).length > 0
+                    ? attachmentFolder.isDir
+                    : false,
+                parent:
+                  attachmentFolder !== undefined &&
+                  Object.keys(attachmentFolder).length > 0 &&
+                  attachmentFolder !== undefined
+                    ? attachmentFolder.name
+                    : sectionId,
+              },
+              file
+            )
+          );
+        } catch (e) {
+          setError('error' + e);
+        }
+        Promise.all(fileUploads).then(responses => {
+          const newFiles = responses.map(f => {
+            return f.data as FileItem;
+          });
+          const attachments = [...draftSubmission.sections[sectionidx]['answers'][idx]['attachments'], ...newFiles];
+          props.setFieldValue(`sections.${sectionidx}.answers.${idx}.attachments`, attachments);
+        });
+      }
+    }
+  };
+
   return (
     <div>
       {error && <Alert color="warning">{error}</Alert>}
@@ -132,16 +205,16 @@ const QAISubmissionEditPage = () => {
               {props => (
                 <>
                   {draftSubmission?.sections &&
-                    draftSubmission?.sections.map((s: any, index: number) => (
+                    draftSubmission?.sections.map((sectionObj: any, index: number) => (
                       <>
                         <div className="mb-3 col-12">
                           <h1 className="section-name">
-                            Section {index + 1}: {getSection(s.sectionId)}
+                            Section {index + 1}: {getSection(sectionObj.sectionId)}
                           </h1>
                           <hr className="mb-2 mt-2" />
                           <Fragment>
-                            {s?.answers &&
-                              s?.answers.map((question: any, idx: number) => (
+                            {sectionObj?.answers &&
+                              sectionObj?.answers.map((question: any, idx: number) => (
                                 <>
                                   <h1 className="category-name">{getCategory(question.categoryId)}</h1>
                                   <table
@@ -152,7 +225,7 @@ const QAISubmissionEditPage = () => {
                                       <Fragment>
                                         <tr>
                                           <td className="col-1">
-                                            {s.order}.{question.order}
+                                            {sectionObj.order}.{question.order}
                                           </td>
                                           <td className="col-4">{question.notes}</td>
                                           <td className="col-1">{question.points}</td>
@@ -169,58 +242,29 @@ const QAISubmissionEditPage = () => {
                                             </Fragment>
                                           </td>
 
-                                          <td className="col-2">
+                                          <td
+                                            className="col-2"
+                                            onClick={value => {
+                                              checkFolderCreated(sectionObj.sectionId);
+                                            }}
+                                          >
                                             <FileUploadButton
                                               buttonContent={
                                                 <Fragment>
-                                                  <Icon name="paperclip"></Icon>
+                                                  <Icon
+                                                    onClick={value => {
+                                                      checkFolderCreated(sectionObj.sectionId);
+                                                    }}
+                                                    name="paperclip"
+                                                  ></Icon>
                                                   <span>Attach</span>
                                                 </Fragment>
                                               }
                                               onCancel={() => {}}
                                               onConfirm={async value => {
-                                                if (
-                                                  draftSubmission.sections !== undefined &&
-                                                  value.files &&
-                                                  draftSubmission?.sections[index]['sectionId'] !== undefined
-                                                ) {
-                                                  const fileUploads: Array<Promise<AxiosResponse<FileMetaData>>> = [];
-                                                  for (let index = 0; index < value.files.length; index++) {
-                                                    const file = value.files[index];
-
-                                                    try {
-                                                      await fileUploads.push(
-                                                        fileService.uploadFile(
-                                                          {
-                                                            name: file.name,
-                                                            isDir: false,
-                                                            parent: draftSubmission?.sections[index]['sectionId'],
-                                                          },
-                                                          file
-                                                        )
-                                                      );
-                                                    } catch (e) {
-                                                      setError('error' + e);
-                                                    }
-                                                    Promise.all(fileUploads).then(responses => {
-                                                      const newFiles: FileItem[] = responses.map(f => {
-                                                        return f.data as FileItem;
-                                                      });
-                                                      if (newFiles !== undefined) {
-                                                        const attachments = [
-                                                          ...draftSubmission.sections[index]['answers'][idx][
-                                                            'attachments'
-                                                          ],
-                                                          ...newFiles,
-                                                        ];
-                                                        props.setFieldValue(
-                                                          `sections.${index}.answers.${idx}.attachments`,
-                                                          attachments
-                                                        );
-                                                      }
-                                                    });
-                                                  }
-                                                }
+                                                setTimeout(function() {
+                                                  fileUpload(props, value, index, idx, sectionObj.sectionId);
+                                                }, 5000);
                                               }}
                                               accept={['image/*']}
                                             />
@@ -235,7 +279,7 @@ const QAISubmissionEditPage = () => {
 
                           <h1 className="category-name">Guest Question</h1>
                           <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
-                            {s?.guestAnswers && Object.keys(s?.guestAnswers).length > 0 && (
+                            {sectionObj?.guestAnswers && Object.keys(sectionObj?.guestAnswers).length > 0 && (
                               <thead>
                                 <tr className="trCls">
                                   <td className="col-4">Question</td>
@@ -247,8 +291,8 @@ const QAISubmissionEditPage = () => {
                             )}
                             <tbody>
                               <Fragment>
-                                {s?.guestAnswers &&
-                                  s?.guestAnswers.map((Qanswer: any, idGusts: number) => (
+                                {sectionObj?.guestAnswers &&
+                                  sectionObj?.guestAnswers.map((Qanswer: any, idGusts: number) => (
                                     <>
                                       <Fragment>
                                         <tr>
@@ -274,7 +318,7 @@ const QAISubmissionEditPage = () => {
                                       </Fragment>
                                     </>
                                   ))}
-                                {s?.guestAnswers && Object.keys(s?.guestAnswers).length === 0 && (
+                                {sectionObj?.guestAnswers && Object.keys(sectionObj?.guestAnswers).length === 0 && (
                                   <tr className="trCls">
                                     <td className="col-12">Not available</td>
                                   </tr>
@@ -283,20 +327,27 @@ const QAISubmissionEditPage = () => {
                             </tbody>
                           </table>
                         </div>
-                        {s?.staffAttendance && getSectionRequireStaffAttendance(s.sectionId) === true && (
-                          <>
-                            <p className="ml-3">Staff Attendance</p>
-                            <FormField placeholder="Cashiers" name={`sections.${index}.staffAttendance.Cashiers`} />
-                            <FormField placeholder="Bartenders" name={`sections.${index}.staffAttendance.Bartenders`} />
-                            <FormField placeholder="Line Cooks" name={`sections.${index}.staffAttendance.Line Cooks`} />
-                            <FormField placeholder="Prep" name={`sections.${index}.staffAttendance.Prep`} />
-                            <FormField
-                              placeholder="Dish/Busser"
-                              name={`sections.${index}.staffAttendance.Dish/Busser`}
-                            />
-                            <FormField placeholder="Expo" name={`sections.${index}.staffAttendance.Expo`} />
-                          </>
-                        )}
+                        {sectionObj?.staffAttendance &&
+                          getSectionRequireStaffAttendance(sectionObj.sectionId) === true && (
+                            <>
+                              <p className="ml-3">Staff Attendance</p>
+                              <FormField placeholder="Cashiers" name={`sections.${index}.staffAttendance.Cashiers`} />
+                              <FormField
+                                placeholder="Bartenders"
+                                name={`sections.${index}.staffAttendance.Bartenders`}
+                              />
+                              <FormField
+                                placeholder="Line Cooks"
+                                name={`sections.${index}.staffAttendance.Line Cooks`}
+                              />
+                              <FormField placeholder="Prep" name={`sections.${index}.staffAttendance.Prep`} />
+                              <FormField
+                                placeholder="Dish/Busser"
+                                name={`sections.${index}.staffAttendance.Dish/Busser`}
+                              />
+                              <FormField placeholder="Expo" name={`sections.${index}.staffAttendance.Expo`} />
+                            </>
+                          )}
                         <br />
                       </>
                     ))}
