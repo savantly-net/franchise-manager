@@ -5,12 +5,19 @@ import { useFMLocation } from 'plugin/pages/Locations/Stores/hooks';
 import React, { Fragment, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Alert } from 'reactstrap';
-import { useQAISection } from '../../sections/hooks';
 import { QAISectionSubmission, qaiSubmissionService } from '../entity';
 import '../styles.css';
+import { AppModuleRootState } from 'plugin/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { qaiSectionStateProvider } from '../../sections/entity';
+import { LoadingIcon } from '@sprout-platform/ui';
 
 type InternalState = QAISectionSubmission | undefined;
 const QAISubmissionViewPage = () => {
+  const dispatch = useDispatch();
+
+  const sectionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSections);
+
   const itemId = useParams().itemId;
   const [item, setItem] = useState(undefined as InternalState);
   const [error, setError] = useState('');
@@ -18,9 +25,9 @@ const QAISubmissionViewPage = () => {
   let [noCount, setNoCount] = useState(0);
   let [questionYesCount, setQuestionYesCount] = useState(0);
   let [questionNoCount, setQuestionNoCount] = useState(0);
+  let [sectionList, setSectionList] = useState<any>();
 
   const fmLocation = useFMLocation(item?.locationId);
-  const qaiSection = useQAISection(item?.sectionId);
 
   if (!itemId) {
     const message = 'An itemId was not provided';
@@ -29,6 +36,10 @@ const QAISubmissionViewPage = () => {
   }
 
   useMemo(() => {
+    if (!sectionState.isFetched && !sectionState.isFetching) {
+      dispatch(qaiSectionStateProvider.loadState());
+    }
+
     if (!item) {
       qaiSubmissionService
         .getById(itemId)
@@ -39,64 +50,70 @@ const QAISubmissionViewPage = () => {
           console.error(err);
           setError(err.message || 'There was a problem retrieving the submission');
         });
-    } else {
-      if (Object.keys(item?.guestAnswers).length > 0) {
-        let gqNo = 0;
-        let gqYes = 0;
-        for (const guestMainAns of item?.guestAnswers) {
-          for (const subAnswer of guestMainAns.answers) {
-            if (subAnswer.value === 'YES') {
+    }
+    if (sectionState?.response) {
+      setSectionList(sectionState?.response);
+    }
+  }, [itemId, dispatch, item, sectionState]);
+
+  const showLoading = sectionState.isFetching;
+
+  const getSection = (sectionId: string) => {
+    const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
+    return searchSection?.name ? searchSection?.name : 'Unknown Section';
+  };
+
+  const getQuestionText = (questionId: string, sectionId: string) => {
+    const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
+    const searchQuestion: any = searchSection.questions.find((temp: any) => temp.itemId === questionId);
+    return searchQuestion?.text ? searchQuestion?.text : 'NA';
+  };
+
+  useMemo(() => {
+    if (item?.sections) {
+      let staticNo = 0;
+      let statcYes = 0;
+      let gqNo = 0;
+      let gqYes = 0;
+      item?.sections.map((s: any) => {
+        s?.guestAnswers.map((Qanswer: any) => {
+          Qanswer.answers.map((Questquestion: any) => {
+            if (Questquestion.value === 'YES') {
               gqYes = gqYes + 1;
             } else {
               gqNo = gqNo + 1;
             }
+          });
+        });
+        s?.answers.map((question: any) => {
+          if (question.value === 'YES') {
+            statcYes = statcYes + 1;
+          } else {
+            staticNo = staticNo + 1;
           }
-        }
+        });
         setYesCount(gqYes);
         setNoCount(gqNo);
-      }
-      if (Object.keys(item?.answers).length > 0) {
-        let answersValue: any = item?.answers.map(x => x.value);
-        if (answersValue !== undefined) {
-          let staticNo = 0;
-          let statcYes = 0;
-          for (const guestAns of answersValue) {
-            if (guestAns === 'YES') {
-              statcYes = statcYes + 1;
-            } else {
-              staticNo = staticNo + 1;
-            }
-          }
-          setQuestionYesCount(statcYes);
-          setQuestionNoCount(staticNo);
-        }
-      }
-      console.log('item.guestAnswers', item);
+        setQuestionYesCount(statcYes);
+        setQuestionNoCount(staticNo);
+      });
     }
-  }, [itemId, item]);
+  }, [item]);
 
-  const getQuestionText = (questionId?: string) => {
-    if (qaiSection && questionId) {
-      if (qaiSection) {
-        const list = qaiSection.questions.filter(q => q.itemId === questionId);
-        if (list && list.length > 0) {
-          return list[0].text;
-        }
-      }
-    }
-    return 'text unavailable';
-  };
   return (
     <Fragment>
+      <div>{showLoading && <LoadingIcon className="m-auto" />}</div>
       {error && <Alert color="warning">{error}</Alert>}
-      {item && qaiSection && (
+      {item && sectionList && (
         <div>
-          <h4>Location: {fmLocation?.name}</h4>
-          <h4>Section: {qaiSection.name}</h4>
-          <h4>Date Scored: {dateTime(item.dateScored).format('dd YYYY-MM-DD hh:mm A')}</h4>
+          <h4 className="mb-3">Location: {fmLocation?.name}</h4>
+          <h4 className="mb-3">fsc: {item?.fsc}</h4>
+          <h4 className="mb-3">Manager On Duty: {item?.managerOnDuty}</h4>
+          <h4 className="mb-3">Reponsibility Alcohol Certificate for Mgr/Bar staff: {item?.responsibleAlcoholCert}</h4>
+          <h4 className="mb-3">Date Scored: {dateTime(item.dateScored).format('dd YYYY-MM-DD hh:mm A')}</h4>
           <hr />
           <div className="mb-2">
-            <h5>Details</h5>
+            <h5 className="mb-2">Details</h5>
             {item.staffAttendance && (
               <div>
                 <label className="mr-2">Staff Attendance Log: </label>
@@ -112,19 +129,93 @@ const QAISubmissionViewPage = () => {
             )}
 
             <div>
+              {item?.sections &&
+                item?.sections.map((s: any, index: number) => (
+                  <>
+                    <div className="mb-3 col-12">
+                      <h1 className="section-name">
+                        Section {index + 1}: {getSection(s?.sectionId)}
+                        {s?.name}
+                      </h1>
+                      <Fragment>
+                        {s?.answers &&
+                          s?.answers.map((question: any, idx: number) => (
+                            <>
+                              <Table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
+                                <Tbody>
+                                  <Fragment>
+                                    <Tr>
+                                      <Td className="col-5">{getQuestionText(question.questionId, s.sectionId)} </Td>
+                                      <Td className="col-4">{question.notes}</Td>
+                                      <Td className="col-2 ">
+                                        <Fragment>{question.value}</Fragment>
+                                      </Td>
+                                    </Tr>
+                                  </Fragment>
+                                </Tbody>
+                              </Table>
+                            </>
+                          ))}
+                      </Fragment>
+
+                      <h1 className="category-name">Guest Question</h1>
+                      <Table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
+                        {s?.guestAnswers && Object.keys(s?.guestAnswers).length > 0 && (
+                          <Thead>
+                            <Tr className="trCls">
+                              <Th className="col-4">Question</Th>
+                              <Th className="col-2">Quest 1</Th>
+                              <Th className="col-2">Quest 2</Th>
+                              <Th className="col-2">Quest 3</Th>
+                            </Tr>
+                          </Thead>
+                        )}
+                        <Tbody>
+                          <Fragment>
+                            {s?.guestAnswers &&
+                              s?.guestAnswers.map((Qanswer: any, idGusts: number) => (
+                                <>
+                                  <Fragment>
+                                    <Tr>
+                                      <Td className="col-3">{Qanswer.notes}</Td>
+                                      {Qanswer?.answers &&
+                                        Qanswer.answers.map((Questquestion: any, idGust: number) => (
+                                          <>
+                                            <Td className="col-2 ">
+                                              <Fragment>{Questquestion.value}</Fragment>
+                                            </Td>
+                                          </>
+                                        ))}
+                                    </Tr>
+                                  </Fragment>
+                                </>
+                              ))}
+                            {s?.guestAnswers && Object.keys(s?.guestAnswers).length === 0 && (
+                              <Tr className="trCls">
+                                <Td className="col-12">Not available</Td>
+                              </Tr>
+                            )}
+                          </Fragment>
+                        </Tbody>
+                      </Table>
+                    </div>
+                    <br />
+                  </>
+                ))}
+            </div>
+            <div>
               <label className="mr-2">Questions: </label>
-              <table className="table table-sm">
-                <tbody>
+              <Table className="table table-sm">
+                <Tbody>
                   {item.answers &&
                     item.answers.map(c => (
                       <Fragment>
-                        <tr className="d-flex">
-                          <td className="col-5">{getQuestionText(c.questionId)}</td>
-                          <td className="col-2">{c.value}</td>
-                          <td className="col-5">{c.notes}</td>
-                        </tr>
-                        <tr className="d-flex">
-                          <td className="col-12 d-flex">
+                        <Tr className="d-flex">
+                          <Td className="col-2">{c.value}</Td>
+                          <Td className="col-5">{c.notes}</Td>
+                        </Tr>
+                        <Tr className="d-flex">
+                          <Td className="col-12 d-flex">
                             {c.attachments.map(attachment => (
                               <div className="col-4">
                                 <div
@@ -137,14 +228,14 @@ const QAISubmissionViewPage = () => {
                                 <img src={attachment.downloadUrl} width="100%" />
                               </div>
                             ))}
-                          </td>
-                        </tr>
+                          </Td>
+                        </Tr>
                       </Fragment>
                     ))}
-                </tbody>
-              </table>
+                </Tbody>
+              </Table>
             </div>
-            <div>
+            {/* <div>
               <label className="mr-2">Guest Questions: </label>
               <Table>
                 <Thead>
@@ -154,7 +245,7 @@ const QAISubmissionViewPage = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {qaiSection.guestQuestions.map(q => (
+                  {{qaiSection.guestQuestions.map(q => (
                     <Tr>
                       <Td>{q.text}</Td>
                       {item.guestAnswers &&
@@ -162,14 +253,14 @@ const QAISubmissionViewPage = () => {
                           <Td>{answers.find(({ guestQuestionId }) => guestQuestionId === q.itemId)?.value}</Td>
                         ))}
                     </Tr>
-                  ))}
+                  ))} 
                   <Tr>
                     <Td>Notes</Td>
                     {item.guestAnswers && item.guestAnswers.map(({ notes }) => <Td>{notes}</Td>)}
                   </Tr>
                 </Tbody>
               </Table>
-            </div>
+            </div> */}
             <div className="mt-1">
               <Table style={{ marginTop: '50px', border: '1px solid #D0D7DE;' }} mt="4" className="table-count">
                 <Thead>

@@ -35,7 +35,7 @@ const IndexPage = () => {
       text: 'Questions',
       formatter: (cell, row) => {
         const section = getSection(row.itemId);
-        return <span>{section ? section?.guestQuestions.length + section?.questions.length : ''}</span>;
+        return <span>{section?.guestQuestions ? section?.guestQuestions.length + section?.questions.length : ''}</span>;
       },
     },
   ];
