@@ -155,7 +155,8 @@ const QAISubmissionCreate = () => {
           test.order = item1.order;
           test.points = item1.points;
           test.value = 'YES';
-          test.notes = item1.text;
+          test.text = item1.text;
+          test.notes = item1.notes;
           test.attachments = [];
           answers.push(test);
         });
@@ -283,7 +284,7 @@ const QAISubmissionCreate = () => {
                                         <td className="col-1">
                                           {sectionObj.order}.{question.order}
                                         </td>
-                                        <td className="col-4">{question.notes}</td>
+                                        <td className="col-4">{question.text}</td>
                                         <td className="col-1">{question.points}</td>
                                         <td className="col-2 ">
                                           <Fragment>

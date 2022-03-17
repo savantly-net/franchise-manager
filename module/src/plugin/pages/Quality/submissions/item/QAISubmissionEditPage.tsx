@@ -105,7 +105,23 @@ const QAISubmissionEditPage = () => {
     const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
     return searchSection?.requireStaffAttendance ? searchSection?.requireStaffAttendance : false;
   };
-
+  const getQuestions = (questionId: string, dataTt: string) => {
+    var questionText: any;
+    sectionList.map((temp: any) => {
+      temp.questions.map((q: any) => {
+        if (q.itemId === questionId) {
+          return (questionText = q);
+        }
+      });
+    });
+    if (dataTt === 'order') {
+      return questionText?.order;
+    } else if (dataTt === 'points') {
+      return questionText?.points;
+    } else {
+      return questionText?.text;
+    }
+  };
   const checkFolderCreated = (itemId: string) => {
     if (fmConfig && fmConfig?.rootFolder) {
       fileService
@@ -225,10 +241,11 @@ const QAISubmissionEditPage = () => {
                                       <Fragment>
                                         <tr>
                                           <td className="col-1">
-                                            {sectionObj.order}.{question.order}
+                                            {sectionObj.order}
+                                            {getQuestions(question.questionId, 'order') + '.0'}
                                           </td>
-                                          <td className="col-4">{question.notes}</td>
-                                          <td className="col-1">{question.points}</td>
+                                          <td className="col-4">{getQuestions(question.questionId, 'text')}</td>
+                                          <td className="col-1">{getQuestions(question.questionId, 'points')}</td>
                                           <td className="col-2 ">
                                             <Fragment>
                                               <FormField
@@ -270,6 +287,17 @@ const QAISubmissionEditPage = () => {
                                             />
                                           </td>
                                         </tr>
+                                        {question.value === 'NO' && (
+                                          <tr>
+                                            <td colSpan={2}>Notes</td>
+                                            <td colSpan={3}>
+                                              <FormField
+                                                placeholder="notes"
+                                                name={`sections.${index}.answers.${idx}.notes`}
+                                              />
+                                            </td>
+                                          </tr>
+                                        )}
                                       </Fragment>
                                     </tbody>
                                   </table>

@@ -48,6 +48,7 @@ export interface QAIQuestionAnswer {
   itemId?: string;
   questionId?: string;
   value?: QAIQuestionAnswerType;
+  text?: string;
   notes?: string;
   attachments: FileItem[];
 }
