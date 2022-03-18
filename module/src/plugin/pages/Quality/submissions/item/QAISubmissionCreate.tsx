@@ -48,7 +48,7 @@ const QAISubmissionCreate = () => {
           setCategoryList(response?.data.content);
         })
         .catch(err => {
-          setError('Could not create attachment folder');
+          setError(err.message || 'Could not create attachment folder');
         });
       if (!sectionState.isFetched && !sectionState.isFetching) {
         dispatch(qaiSectionStateProvider.loadState());
@@ -80,14 +80,12 @@ const QAISubmissionCreate = () => {
                 setAttachmentFolder(response.data);
               })
               .catch(err => {
-                console.error(err);
-                setError('Could not create attachment folder');
+                setError(err.message || 'Could not create attachment folder');
               });
           }
         })
         .catch(err => {
-          console.error(err);
-          setError('Could not retrieve attachment folders');
+          setError(err.message || 'Could not retrieve attachment folders');
         });
     }
   };
@@ -198,6 +196,7 @@ const QAISubmissionCreate = () => {
           <Form
             initialValues={draftSubmission}
             onSubmit={async (values: QAISectionSubmission, { resetForm }) => {
+              setError('');
               values.locationId = selectedLocation;
               values.dateScored = dateTimeForTimeZone(values.dateScored).toISOString();
               values.sections?.map((submitData: any = {}) => {
@@ -270,124 +269,147 @@ const QAISubmissionCreate = () => {
                         <hr className="mb-2 mt-2" />
                         <Fragment>
                           {sectionObj?.answers &&
-                            sectionObj?.answers.map((question: any, idx: number) => (
-                              <>
-                                <h1 className="category-name">{getCategory(question.categoryId)}</h1>
-                                <table
-                                  style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }}
-                                  className="table-count"
-                                >
-                                  <tbody>
-                                    <Fragment>
-                                      <tr>
-                                        <td className="col-1">
-                                          {sectionObj.order}.{question.order}
-                                        </td>
-                                        <td className="col-4">{question.notes}</td>
-                                        <td className="col-1">{question.points}</td>
-                                        <td className="col-2 ">
-                                          <Fragment>
-                                            <FormField
-                                              name={`sections.${index}.answers.${idx}.value`}
-                                              className="mb-1"
-                                              as="select"
-                                            >
-                                              <option value="YES">Yes</option>
-                                              <option value="NO">No</option>
-                                            </FormField>
-                                          </Fragment>
-                                        </td>
+                            sectionObj?.answers
+                              .sort((next: any, prev: any) => next.order - prev.order)
+                              .map((question: any, idx: number) => (
+                                <>
+                                  <h1 className="category-name">{getCategory(question.categoryId)}</h1>
+                                  <table
+                                    style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }}
+                                    className="table-count"
+                                  >
+                                    <tbody>
+                                      <Fragment>
+                                        <tr>
+                                          <td className="col-1">
+                                            {sectionObj.order}.{question.order}
+                                          </td>
+                                          <td className="col-4">{question.notes}</td>
+                                          <td className="col-1">{question.points}</td>
+                                          <td className="col-2 ">
+                                            <Fragment>
+                                              <FormField
+                                                name={`sections.${index}.answers.${idx}.value`}
+                                                className="mb-1"
+                                                as="select"
+                                              >
+                                                <option value="YES">Yes</option>
+                                                <option value="NO">No</option>
+                                              </FormField>
+                                            </Fragment>
+                                          </td>
 
-                                        <td className="col-2">
-                                          <FileUploadButton
-                                            buttonContent={
-                                              <Fragment>
-                                                <Icon
-                                                  onClick={value => {
-                                                    checkFolderCreated(sectionObj.sectionId);
-                                                  }}
-                                                  name="paperclip"
-                                                ></Icon>
-                                                <span>Attach</span>
-                                              </Fragment>
-                                            }
-                                            onCancel={() => {}}
-                                            onConfirm={async value => {
-                                              setTimeout(function() {
-                                                fileUpload(props, value, index, idx, sectionObj.sectionId);
-                                              }, 5000);
-                                            }}
-                                            accept={['image/*']}
-                                          />
-                                        </td>
-                                      </tr>
-                                    </Fragment>
-                                  </tbody>
-                                </table>
-                              </>
-                            ))}
-                        </Fragment>
-
-                        <h1 className="category-name">Guest Question</h1>
-                        <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
-                          {sectionObj?.guestAnswers && Object.keys(sectionObj?.guestAnswers).length > 0 && (
-                            <thead>
-                              <tr className="trCls">
-                                <td className="col-4">Question</td>
-                                <td className="col-2">Quest 1</td>
-                                <td className="col-2">Quest 2</td>
-                                <td className="col-2">Quest 3</td>
-                              </tr>
-                            </thead>
-                          )}
-                          <tbody>
-                            <Fragment>
-                              {sectionObj?.guestAnswers &&
-                                sectionObj?.guestAnswers.map((Qanswer: any, idGusts: number) => (
-                                  <>
-                                    <Fragment>
-                                      <tr>
-                                        <td className="col-3">{Qanswer.notes}</td>
-                                        {Qanswer?.answers &&
-                                          Qanswer.answers.map((Questquestion: any, idGust: number) => (
-                                            <>
-                                              <td className="col-2 ">
+                                          <td className="col-2">
+                                            <FileUploadButton
+                                              buttonContent={
                                                 <Fragment>
-                                                  <FormField
-                                                    name={`sections.${index}.guestAnswers.${idGusts}.answers.${idGust}.value`}
-                                                    className="mb-1"
-                                                    as="select"
-                                                  >
-                                                    {/* <option value="NA">N/A</option> */}
-                                                    <option value="YES">Yes</option>
-                                                    <option value="NO">No</option>
-                                                  </FormField>
+                                                  <Icon
+                                                    onClick={value => {
+                                                      checkFolderCreated(sectionObj.sectionId);
+                                                    }}
+                                                    name="paperclip"
+                                                  ></Icon>
+                                                  <span>Attach</span>
                                                 </Fragment>
-                                              </td>
-                                            </>
-                                          ))}
-                                      </tr>
-                                    </Fragment>
-                                  </>
-                                ))}
-                              {sectionObj?.guestAnswers && Object.keys(sectionObj?.guestAnswers).length === 0 && (
+                                              }
+                                              onCancel={() => {}}
+                                              onConfirm={async value => {
+                                                setTimeout(function() {
+                                                  fileUpload(props, value, index, idx, sectionObj.sectionId);
+                                                }, 5000);
+                                              }}
+                                              accept={['image/*']}
+                                            />
+                                          </td>
+                                        </tr>
+                                      </Fragment>
+                                    </tbody>
+                                  </table>
+                                </>
+                              ))}
+                        </Fragment>
+                        {sectionObj?.guestAnswers && Object.keys(sectionObj?.guestAnswers).length > 0 && (
+                          <>
+                            <h1 className="category-name">Guest Question</h1>
+                            <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
+                              <thead>
                                 <tr className="trCls">
-                                  <td className="col-12">Not available</td>
+                                  <th className="col-4">Question</th>
+                                  <th className="col-2">Guest 1</th>
+                                  <th className="col-2">Guest 2</th>
+                                  <th className="col-2">Guest 3</th>
                                 </tr>
-                              )}
-                            </Fragment>
-                          </tbody>
-                        </table>
+                              </thead>
+                              <tbody>
+                                <Fragment>
+                                  {sectionObj?.guestAnswers &&
+                                    sectionObj?.guestAnswers.map((Qanswer: any, idGusts: number) => (
+                                      <>
+                                        <Fragment>
+                                          <tr>
+                                            <td className="col-3">{Qanswer.notes}</td>
+                                            {Qanswer?.answers &&
+                                              Qanswer.answers.map((Questquestion: any, idGust: number) => (
+                                                <>
+                                                  <td className="col-2 ">
+                                                    <Fragment>
+                                                      <FormField
+                                                        name={`sections.${index}.guestAnswers.${idGusts}.answers.${idGust}.value`}
+                                                        className="mb-1"
+                                                        as="select"
+                                                      >
+                                                        <option value="NA">N/A</option>
+                                                        <option value="YES">Yes</option>
+                                                        <option value="NO">No</option>
+                                                      </FormField>
+                                                    </Fragment>
+                                                  </td>
+                                                </>
+                                              ))}
+                                          </tr>
+                                        </Fragment>
+                                      </>
+                                    ))}
+                                </Fragment>
+                              </tbody>
+                            </table>
+                          </>
+                        )}
                       </div>
                       {sectionObj?.requireStaffAttendance && sectionObj.requireStaffAttendance === true && (
                         <>
                           <p className="ml-3">Staff Attendance</p>
-                          <FormField placeholder="Cashiers" name={`sections.${index}.staffAttendance.Cashiers`} />
-                          <FormField placeholder="Bartenders" name={`sections.${index}.staffAttendance.Bartenders`} />
-                          <FormField placeholder="Line Cooks" name={`sections.${index}.staffAttendance.Line Cooks`} />
-                          <FormField placeholder="Prep" name={`sections.${index}.staffAttendance.Prep`} />
-                          <FormField placeholder="Dish/Busser" name={`sections.${index}.staffAttendance.Dish/Busser`} />
-                          <FormField placeholder="Expo" name={`sections.${index}.staffAttendance.Expo`} />
+                          <div className="d-flex mb-3">
+                            <div className="col-4">
+                              <FormField placeholder="Cashiers" name={`sections.${index}.staffAttendance.Cashiers`} />
+                            </div>
+                            <div className="col-4">
+                              <FormField
+                                placeholder="Bartenders"
+                                name={`sections.${index}.staffAttendance.Bartenders`}
+                              />
+                            </div>
+                            <div className="col-4">
+                              <FormField
+                                placeholder="Line Cooks"
+                                name={`sections.${index}.staffAttendance.Line Cooks`}
+                              />
+                            </div>
+                          </div>
+                          <div className="d-flex ">
+                            <div className="col-4">
+                              <FormField placeholder="Prep" name={`sections.${index}.staffAttendance.Prep`} />
+                            </div>
+                            <div className="col-4">
+                              <FormField
+                                placeholder="Dish/Busser"
+                                name={`sections.${index}.staffAttendance.Dish/Busser`}
+                              />
+                            </div>
+                            <div className="col-4">
+                              <FormField placeholder="Expo" name={`sections.${index}.staffAttendance.Expo`} />
+                            </div>
+                          </div>
                         </>
                       )}
                       <br />
