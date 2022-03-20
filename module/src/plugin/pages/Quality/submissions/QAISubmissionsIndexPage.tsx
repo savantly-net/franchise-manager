@@ -8,7 +8,7 @@ import QAISubmissionViewPage from './item/QAISubmissionViewPage';
 import SubmissionListPage from './QAISubmissionList';
 
 const navModelItem: NavModelItem = {
-  text: 'QAI Submissions',
+  text: 'Quality Assurance Audit Submissions',
   url: './list',
   icon: 'clipboard-list',
   children: [

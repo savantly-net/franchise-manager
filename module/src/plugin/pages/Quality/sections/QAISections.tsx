@@ -53,11 +53,11 @@ const IndexPage = () => {
       subTitleProvider={({ item, pageName }: { item?: EntityClass; pageName: EntityPageName }) => {
         switch (pageName) {
           case 'create':
-            return 'Create a new QAI Section';
+            return 'Create a new QAA Section';
           case 'edit':
             return '';
           case 'list':
-            return 'Manage the QAI Sections';
+            return 'Manage the QAA Sections';
           case 'view':
             return '';
           default:
@@ -67,11 +67,11 @@ const IndexPage = () => {
       titleProvider={({ item, pageName }: { item?: EntityClass; pageName: EntityPageName }) => {
         switch (pageName) {
           case 'create':
-            return 'New QAI Section';
+            return 'New QAA Section';
           case 'edit':
-            return `Editing the QAI Section: ${item?.name}`;
+            return `Editing the QAA Section: ${item?.name}`;
           case 'list':
-            return 'All QAI Section';
+            return 'All QAA Section';
           case 'view':
             return item?.name || '';
           default:
