@@ -1,18 +1,17 @@
-import { Form, FileUploadButton, FormField, Icon, LoadingIcon } from '@sprout-platform/ui';
-import React, { useMemo, useState, useEffect, Fragment } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { Alert } from 'reactstrap';
-import { useQAISectionSubmission } from '../hooks';
-import { useNavigate } from 'react-router-dom';
 import { FileMetaData } from '@savantly/sprout-api';
-import { AppModuleRootState, FileItem } from 'plugin/types';
-import { QAISectionSubmission, qaiSubmissionService, qaiSubmissionStateProvider } from '../entity';
-import { qaiSectionStateProvider } from '../../sections/entity';
 import { getFileService } from '@savantly/sprout-runtime';
+import { FileUploadButton, Form, FormField, Icon, LoadingIcon } from '@sprout-platform/ui';
 import { AxiosResponse } from 'axios';
-import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
 import { useFMConfig } from 'plugin/config/useFmConfig';
+import { AppModuleRootState, FileItem } from 'plugin/types';
+import React, { Fragment, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Alert } from 'reactstrap';
+import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
+import { qaiSectionStateProvider } from '../../sections/entity';
+import { QAISectionSubmission, qaiSubmissionService, qaiSubmissionStateProvider } from '../entity';
+import { useQAISectionSubmission } from '../hooks';
 
 const QAISubmissionEditPage = () => {
   const categoryState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiQuestionCategories);
@@ -101,27 +100,24 @@ const QAISubmissionEditPage = () => {
     const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
     return searchSection?.name ? searchSection?.name : 'Unknown Section';
   };
+
+  const getOrder = (sectionId: string, categoryId: string) => {
+    const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
+    let sectionOrder = 0;
+    let questionOrder = 0;
+    if (categoryId && searchSection !== undefined && searchSection !== null && searchSection?.questions.length > 0) {
+      sectionOrder = searchSection.order;
+      const questionOrders = searchSection.questions.find((temps: any) => temps.itemId === categoryId);
+      questionOrder = questionOrders?.order ? questionOrders?.order : 0;
+    }
+    return `${sectionOrder}.${questionOrder}`;
+  };
+
   const getSectionRequireStaffAttendance = (sectionId: string) => {
     const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
     return searchSection?.requireStaffAttendance ? searchSection?.requireStaffAttendance : false;
   };
-  const getQuestions = (questionId: string, dataTt: string) => {
-    var questionText: any;
-    sectionList.map((temp: any) => {
-      temp.questions.map((q: any) => {
-        if (q.itemId === questionId) {
-          return (questionText = q);
-        }
-      });
-    });
-    if (dataTt === 'order') {
-      return questionText?.order;
-    } else if (dataTt === 'points') {
-      return questionText?.points;
-    } else {
-      return questionText?.text;
-    }
-  };
+
   const checkFolderCreated = (itemId: string) => {
     if (fmConfig && fmConfig?.rootFolder) {
       fileService
@@ -141,14 +137,12 @@ const QAISubmissionEditPage = () => {
                 setAttachmentFolder(response.data);
               })
               .catch(err => {
-                console.error(err);
-                setError('Could not create attachment folder');
+                setError(err.message || 'Could not create attachment folder');
               });
           }
         })
         .catch(err => {
-          console.error(err);
-          setError('Could not retrieve attachment folders');
+          setError(err.message || 'Could not retrieve attachment folders');
         });
     }
   };
@@ -201,6 +195,7 @@ const QAISubmissionEditPage = () => {
             <Form
               initialValues={draftSubmission}
               onSubmit={async (values: QAISectionSubmission, { resetForm }) => {
+                setError('');
                 if (values?.itemId !== undefined) {
                   qaiSubmissionService
                     .create(values)
@@ -230,150 +225,168 @@ const QAISubmissionEditPage = () => {
                           <hr className="mb-2 mt-2" />
                           <Fragment>
                             {sectionObj?.answers &&
-                              sectionObj?.answers.map((question: any, idx: number) => (
-                                <>
-                                  <h1 className="category-name">{getCategory(question.categoryId)}</h1>
-                                  <table
-                                    style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }}
-                                    className="table-count"
-                                  >
-                                    <tbody>
-                                      <Fragment>
-                                        <tr>
-                                          <td className="col-1">
-                                            {sectionObj.order}
-                                            {getQuestions(question.questionId, 'order') + '.0'}
-                                          </td>
-                                          <td className="col-4">{getQuestions(question.questionId, 'text')}</td>
-                                          <td className="col-1">{getQuestions(question.questionId, 'points')}</td>
-                                          <td className="col-2 ">
-                                            <Fragment>
-                                              <FormField
-                                                name={`sections.${index}.answers.${idx}.value`}
-                                                className="mb-1"
-                                                as="select"
-                                              >
-                                                <option value="YES">Yes</option>
-                                                <option value="NO">No</option>
-                                              </FormField>
-                                            </Fragment>
-                                          </td>
-
-                                          <td
-                                            className="col-2"
-                                            onClick={value => {
-                                              checkFolderCreated(sectionObj.sectionId);
-                                            }}
-                                          >
-                                            <FileUploadButton
-                                              buttonContent={
-                                                <Fragment>
-                                                  <Icon
-                                                    onClick={value => {
-                                                      checkFolderCreated(sectionObj.sectionId);
-                                                    }}
-                                                    name="paperclip"
-                                                  ></Icon>
-                                                  <span>Attach</span>
-                                                </Fragment>
-                                              }
-                                              onCancel={() => {}}
-                                              onConfirm={async value => {
-                                                setTimeout(function() {
-                                                  fileUpload(props, value, index, idx, sectionObj.sectionId);
-                                                }, 5000);
-                                              }}
-                                              accept={['image/*']}
-                                            />
-                                          </td>
-                                        </tr>
-                                        {question.value === 'NO' && (
+                              sectionObj?.answers
+                                .sort((next: any, prev: any) => next.order - prev.order)
+                                .map((question: any, idx: number) => (
+                                  <>
+                                    {idx === 0 && <h1 className="category-name">{getCategory(question.categoryId)}</h1>}
+                                    <table
+                                      style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }}
+                                      className="table-count"
+                                    >
+                                      <tbody>
+                                        <Fragment>
                                           <tr>
-                                            <td colSpan={2}>Notes</td>
-                                            <td colSpan={3}>
-                                              <FormField
-                                                placeholder="notes"
-                                                name={`sections.${index}.answers.${idx}.notes`}
+                                            <td className="col-1">
+                                              {getOrder(sectionObj.sectionId, question.questionId)}
+                                            </td>
+                                            <td className="col-4">{question.notes}</td>
+                                            <td className="col-1">{question.points}</td>
+                                            <td className="col-2 ">
+                                              <Fragment>
+                                                <FormField
+                                                  name={`sections.${index}.answers.${idx}.value`}
+                                                  className="mb-1"
+                                                  as="select"
+                                                >
+                                                  <option value="YES">Yes</option>
+                                                  <option value="NO">No</option>
+                                                </FormField>
+                                              </Fragment>
+                                            </td>
+
+                                            <td
+                                              className="col-2"
+                                              onClick={value => {
+                                                checkFolderCreated(sectionObj.sectionId);
+                                              }}
+                                            >
+                                              <FileUploadButton
+                                                buttonContent={
+                                                  <Fragment>
+                                                    <Icon
+                                                      onClick={value => {
+                                                        checkFolderCreated(sectionObj.sectionId);
+                                                      }}
+                                                      name="paperclip"
+                                                    ></Icon>
+                                                    <span>Attach</span>
+                                                  </Fragment>
+                                                }
+                                                onCancel={() => {}}
+                                                onConfirm={async value => {
+                                                  setTimeout(function() {
+                                                    fileUpload(props, value, index, idx, sectionObj.sectionId);
+                                                  }, 5000);
+                                                }}
+                                                accept={['image/*']}
                                               />
                                             </td>
                                           </tr>
-                                        )}
-                                      </Fragment>
-                                    </tbody>
-                                  </table>
-                                </>
-                              ))}
-                          </Fragment>
 
-                          <h1 className="category-name">Guest Question</h1>
-                          <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
-                            {sectionObj?.guestAnswers && Object.keys(sectionObj?.guestAnswers).length > 0 && (
-                              <thead>
-                                <tr className="trCls">
-                                  <td className="col-4">Question</td>
-                                  <td className="col-2">Quest 1</td>
-                                  <td className="col-2">Quest 2</td>
-                                  <td className="col-2">Quest 3</td>
-                                </tr>
-                              </thead>
-                            )}
-                            <tbody>
-                              <Fragment>
-                                {sectionObj?.guestAnswers &&
-                                  sectionObj?.guestAnswers.map((Qanswer: any, idGusts: number) => (
-                                    <>
-                                      <Fragment>
-                                        <tr>
-                                          <td className="col-3">{Qanswer.notes}</td>
-                                          {Qanswer?.answers &&
-                                            Qanswer.answers.map((Questquestion: any, idGust: number) => (
-                                              <>
-                                                <td className="col-2 ">
-                                                  <Fragment>
-                                                    <FormField
-                                                      name={`sections.${index}.guestAnswers.${idGusts}.answers.${idGust}.value`}
-                                                      className="mb-1"
-                                                      as="select"
-                                                    >
-                                                      <option value="YES">Yes</option>
-                                                      <option value="NO">No</option>
-                                                    </FormField>
-                                                  </Fragment>
-                                                </td>
-                                              </>
-                                            ))}
-                                        </tr>
-                                      </Fragment>
-                                    </>
-                                  ))}
-                                {sectionObj?.guestAnswers && Object.keys(sectionObj?.guestAnswers).length === 0 && (
+                                          {question.value === 'NO' && (
+                                            <tr>
+                                              <td colSpan={2}>Notes</td>
+                                              <td colSpan={3}>
+                                                <FormField
+                                                  placeholder="notes"
+                                                  name={`sections.${index}.answers.${idx}.notes`}
+                                                />
+                                              </td>
+                                            </tr>
+                                          )}
+                                        </Fragment>
+                                      </tbody>
+                                    </table>
+                                  </>
+                                ))}
+                          </Fragment>
+                          {sectionObj?.guestAnswers && Object.keys(sectionObj?.guestAnswers).length > 0 && (
+                            <>
+                              <h1 className="category-name">Guest Question</h1>
+                              <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
+                                <thead>
                                   <tr className="trCls">
-                                    <td className="col-12">Not available</td>
+                                    <td className="col-4">Question</td>
+                                    <td className="col-2">Guest 1</td>
+                                    <td className="col-2">Guest 2</td>
+                                    <td className="col-2">Guest 3</td>
                                   </tr>
-                                )}
-                              </Fragment>
-                            </tbody>
-                          </table>
+                                </thead>
+                                <tbody>
+                                  <Fragment>
+                                    {sectionObj?.guestAnswers &&
+                                      sectionObj?.guestAnswers.map((Qanswer: any, idGusts: number) => (
+                                        <>
+                                          <Fragment>
+                                            <tr>
+                                              <td className="col-3">{Qanswer.notes}</td>
+                                              {Qanswer?.answers &&
+                                                Qanswer.answers.map((Questquestion: any, idGust: number) => (
+                                                  <>
+                                                    <td className="col-2 ">
+                                                      <Fragment>
+                                                        <FormField
+                                                          name={`sections.${index}.guestAnswers.${idGusts}.answers.${idGust}.value`}
+                                                          className="mb-1"
+                                                          as="select"
+                                                        >
+                                                          <option value="NA">N/A</option>
+                                                          <option value="YES">Yes</option>
+                                                          <option value="NO">No</option>
+                                                        </FormField>
+                                                      </Fragment>
+                                                    </td>
+                                                  </>
+                                                ))}
+                                            </tr>
+                                          </Fragment>
+                                        </>
+                                      ))}
+                                  </Fragment>
+                                </tbody>
+                              </table>
+                            </>
+                          )}
                         </div>
                         {sectionObj?.staffAttendance &&
                           getSectionRequireStaffAttendance(sectionObj.sectionId) === true && (
                             <>
                               <p className="ml-3">Staff Attendance</p>
-                              <FormField placeholder="Cashiers" name={`sections.${index}.staffAttendance.Cashiers`} />
-                              <FormField
-                                placeholder="Bartenders"
-                                name={`sections.${index}.staffAttendance.Bartenders`}
-                              />
-                              <FormField
-                                placeholder="Line Cooks"
-                                name={`sections.${index}.staffAttendance.Line Cooks`}
-                              />
-                              <FormField placeholder="Prep" name={`sections.${index}.staffAttendance.Prep`} />
-                              <FormField
-                                placeholder="Dish/Busser"
-                                name={`sections.${index}.staffAttendance.Dish/Busser`}
-                              />
-                              <FormField placeholder="Expo" name={`sections.${index}.staffAttendance.Expo`} />
+                              <div className="d-flex mb-3">
+                                <div className="col-4">
+                                  <FormField
+                                    placeholder="Cashiers"
+                                    name={`sections.${index}.staffAttendance.Cashiers`}
+                                  />
+                                </div>
+                                <div className="col-4">
+                                  <FormField
+                                    placeholder="Bartenders"
+                                    name={`sections.${index}.staffAttendance.Bartenders`}
+                                  />
+                                </div>
+                                <div className="col-4">
+                                  <FormField
+                                    placeholder="Line Cooks"
+                                    name={`sections.${index}.staffAttendance.Line Cooks`}
+                                  />
+                                </div>
+                              </div>
+                              <div className="d-flex ">
+                                <div className="col-4">
+                                  <FormField placeholder="Prep" name={`sections.${index}.staffAttendance.Prep`} />
+                                </div>
+                                <div className="col-4">
+                                  <FormField
+                                    placeholder="Dish/Busser"
+                                    name={`sections.${index}.staffAttendance.Dish/Busser`}
+                                  />
+                                </div>
+                                <div className="col-4">
+                                  <FormField placeholder="Expo" name={`sections.${index}.staffAttendance.Expo`} />
+                                </div>
+                              </div>
                             </>
                           )}
                         <br />

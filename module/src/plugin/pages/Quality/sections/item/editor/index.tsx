@@ -57,6 +57,7 @@ const QuestionEditor = (props: FormikProps<QAISection>) => {
                 <Tr>
                   <Th>Question Text</Th>
                   <Th className="QAI__table__col__category">Category</Th>
+                  <Th className="QAI__table__col__tags">Tags</Th>
                   <Th className="QAI__table__col__points">Points</Th>
                   <Th className="QAI__table__col__actions">Actions</Th>
                 </Tr>
@@ -96,6 +97,9 @@ const QuestionEditor = (props: FormikProps<QAISection>) => {
                               ))}
                           </Fragment>
                         </FormField>
+                      </Td>
+                      <Td>
+                        <Field name={`questions.${index}.tags`} component={FormikTextInput} />
                       </Td>
                       <Td>
                         <Field name={`questions.${index}.points`} component={FormikTextInput} />
@@ -221,6 +225,12 @@ export const QAISectionEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
         }}
         validateOnBlur={true}
         onSubmit={(values, helpers) => {
+          values.questions.map((q, idx) => {
+            q.order = idx + 1;
+          });
+          values.guestQuestions.map((q, idx) => {
+            q.order = idx + 1;
+          });
           const promiseToSave = values.itemId ? service.update(values.itemId, values) : service.create(values);
           promiseToSave
             .then(response => {
@@ -248,6 +258,7 @@ export const QAISectionEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
                 Save
               </Button>
             </div>
+            <FormField name="order" label="Order" wrapperProps={wrapperProps} />
             <FormField name="name" label="Name" wrapperProps={wrapperProps} />
             <FormField
               name="requireStaffAttendance"
@@ -255,8 +266,8 @@ export const QAISectionEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
               wrapperProps={wrapperProps}
               as="select"
             >
-              <option value="true">Yes</option>
               <option value="false">No</option>
+              <option value="true">Yes</option>
             </FormField>
             <hr />
             <GuestQuestionEditor {...props} />

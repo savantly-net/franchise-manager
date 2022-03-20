@@ -7,6 +7,7 @@ export interface QAIQuestion extends TenantedEntity {
   points: number;
   order: number;
   categoryId: string;
+  tags: string;
 }
 
 export interface QAIGuestQuestion extends TenantedEntity {
