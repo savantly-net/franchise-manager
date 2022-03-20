@@ -3,9 +3,11 @@ import { API_URL } from 'plugin/config/appModuleConfiguration';
 
 export interface QAIQuestion extends TenantedEntity {
   text: string;
+  notes: string;
   points: number;
   order: number;
   categoryId: string;
+  tags: string;
 }
 
 export interface QAIGuestQuestion extends TenantedEntity {

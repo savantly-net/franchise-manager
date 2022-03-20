@@ -1,18 +1,17 @@
-import { Form, FileUploadButton, FormField, Icon, LoadingIcon } from '@sprout-platform/ui';
-import React, { useMemo, useState, useEffect, Fragment } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { Alert } from 'reactstrap';
-import { useQAISectionSubmission } from '../hooks';
-import { useNavigate } from 'react-router-dom';
 import { FileMetaData } from '@savantly/sprout-api';
-import { AppModuleRootState, FileItem } from 'plugin/types';
-import { QAISectionSubmission, qaiSubmissionService, qaiSubmissionStateProvider } from '../entity';
-import { qaiSectionStateProvider } from '../../sections/entity';
 import { getFileService } from '@savantly/sprout-runtime';
+import { FileUploadButton, Form, FormField, Icon, LoadingIcon } from '@sprout-platform/ui';
 import { AxiosResponse } from 'axios';
-import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
 import { useFMConfig } from 'plugin/config/useFmConfig';
+import { AppModuleRootState, FileItem } from 'plugin/types';
+import React, { Fragment, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Alert } from 'reactstrap';
+import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
+import { qaiSectionStateProvider } from '../../sections/entity';
+import { QAISectionSubmission, qaiSubmissionService, qaiSubmissionStateProvider } from '../entity';
+import { useQAISectionSubmission } from '../hooks';
 
 const QAISubmissionEditPage = () => {
   const categoryState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiQuestionCategories);
@@ -230,7 +229,7 @@ const QAISubmissionEditPage = () => {
                                 .sort((next: any, prev: any) => next.order - prev.order)
                                 .map((question: any, idx: number) => (
                                   <>
-                                    <h1 className="category-name">{getCategory(question.categoryId)}</h1>
+                                    {idx === 0 && <h1 className="category-name">{getCategory(question.categoryId)}</h1>}
                                     <table
                                       style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }}
                                       className="table-count"
@@ -284,6 +283,18 @@ const QAISubmissionEditPage = () => {
                                               />
                                             </td>
                                           </tr>
+
+                                          {question.value === 'NO' && (
+                                            <tr>
+                                              <td colSpan={2}>Notes</td>
+                                              <td colSpan={3}>
+                                                <FormField
+                                                  placeholder="notes"
+                                                  name={`sections.${index}.answers.${idx}.notes`}
+                                                />
+                                              </td>
+                                            </tr>
+                                          )}
                                         </Fragment>
                                       </tbody>
                                     </table>

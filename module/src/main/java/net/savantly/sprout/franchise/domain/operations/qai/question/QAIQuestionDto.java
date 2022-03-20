@@ -13,6 +13,7 @@ public class QAIQuestionDto {
 	private String itemId;
 	private String sectionId;
 	private String categoryId;
+	private String tags;
 
 	private int order;
 	@Max(1000)
