@@ -90,7 +90,7 @@ const QAISubmissionEditPage = () => {
     var categoryText: any;
     sectionList.map((temp: any) => {
       temp.questions.map((q: any) => {
-        if (q.itemId === questionId) {
+        if (q.itemId === questionId && categoryList) {
           categoryList.map((category: any) => {
             if (category.itemId === q.categoryId) {
               return (categoryText = category);
@@ -246,8 +246,7 @@ const QAISubmissionEditPage = () => {
                                       <Fragment>
                                         <tr>
                                           <td className="col-1">
-                                            {sectionObj.order}
-                                            {getQuestions(question.questionId, 'order') + '.0'}
+                                            {index + 1}.{getQuestions(question.questionId, 'order')}
                                           </td>
                                           <td className="col-4">{getQuestions(question.questionId, 'text')}</td>
                                           <td className="col-1">{getQuestions(question.questionId, 'points')}</td>
@@ -292,8 +291,8 @@ const QAISubmissionEditPage = () => {
                                             />
                                           </td>
                                         </tr>
-
-                                        {question.value === 'NO' && (
+                                        {(props.values.sections[index]['answers'][idx]['value'] === 'NO' ||
+                                          question.value === 'NO') && (
                                           <tr>
                                             <td colSpan={2}>Notes</td>
                                             <td colSpan={3}>
