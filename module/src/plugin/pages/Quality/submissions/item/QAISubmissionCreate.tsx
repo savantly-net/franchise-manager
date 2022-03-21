@@ -58,8 +58,13 @@ const QAISubmissionCreate = () => {
     }
   }, [sectionState, categoryState, dispatch]);
 
+  const showLoading = sectionState.isFetching || categoryState.isFetching || submissionState.isFetching;
+
   const getCategory = (categoryId: string) => {
-    const searchCategory: any = categoryList.find((temp: any) => temp.itemId === categoryId);
+    let searchCategory: any;
+    if (categoryList) {
+      searchCategory = categoryList.find((temp: any) => temp.itemId === categoryId);
+    }
     return searchCategory?.name ? searchCategory?.name : 'Unknown Category';
   };
 
@@ -188,8 +193,6 @@ const QAISubmissionCreate = () => {
       });
     }
   }, [sectionState, selectedLocation, userContext]);
-
-  const showLoading = sectionState.isFetching || categoryState.isFetching || submissionState.isFetching;
 
   const scoreDisplay = (sections: QAISectionSubmission[]) => {
     return (
