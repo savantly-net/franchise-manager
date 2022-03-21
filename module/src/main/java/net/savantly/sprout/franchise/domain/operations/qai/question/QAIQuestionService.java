@@ -33,6 +33,7 @@ public class QAIQuestionService {
 			.setPoints(item.getPoints())
 			.setText(item.getText())
 			.setCategory(findCategory(item.getCategoryId()))
+			.setTags(item.getTags())
 			.setDeleted(item.isDeleted())
 			.setSectionId(item.getSectionId());
 		this.repository.save(entity);
@@ -41,7 +42,7 @@ public class QAIQuestionService {
 
 	private QAIQuestionDto convert(QAIQuestion item) {
 		return new QAIQuestionDto().setItemId(item.getItemId()).setSectionId(item.getSectionId())
-				.setOrder(item.getOrder()).setPoints(item.getPoints()).setText(item.getText())
+				.setOrder(item.getOrder()).setPoints(item.getPoints()).setText(item.getText()).setTags(item.getTags())
 				.setCategoryId(item.getCategory().getItemId()).setDeleted(item.isDeleted());
 	}
 

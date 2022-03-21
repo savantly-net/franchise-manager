@@ -23,6 +23,7 @@ public class QAIQuestion extends TenantKeyedEntity {
 	
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	private QAIQuestionCategory category;
+	private String tags;
 
 	@Column(name = "item_order")
 	private int order;
