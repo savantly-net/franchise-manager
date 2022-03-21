@@ -23,7 +23,7 @@ const QAISubmissionEditPage = () => {
   const submissionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSubmissions);
   const sectionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSections);
   const fileService = getFileService();
-  const [categoryList, setCategoryList] = useState([]);
+  const [categoryList, setCategoryList] = useState<any>();
   const navigate = useNavigate();
   const [sectionList, setSectionList] = useState<any>();
   const [checkData, setCheckData] = useState(false);
@@ -55,24 +55,22 @@ const QAISubmissionEditPage = () => {
     if (!categoryState.isFetched && !categoryState.isFetching) {
       dispatch(qaiQuestionCategoryStateProvider.loadState());
       dispatch(qaiSubmissionStateProvider.loadState());
-      qaiQuestionCategoryStateProvider.props.entityService
-        .load()
-        .then((response: any) => {
-          setCategoryList(response?.data.content);
-        })
-        .catch(err => {
-          setError('Could not create attachment folder');
-        });
+      // qaiQuestionCategoryStateProvider.props.entityService
+      //   .load()
+      //   .then((response: any) => {
+      //     setCategoryList(response?.data.content);
+      //   })
+      //   .catch(err => {
+      //     setError('Could not create attachment folder');
+      //   });
     }
     if (sectionState?.response) {
       setSectionList(sectionState?.response);
     }
+    if (categoryState?.response) {
+      setCategoryList(categoryState?.response?.content);
+    }
   }, [sectionState, categoryState, dispatch]);
-
-  const getCategory = (categoryId: string) => {
-    const searchCategory: any = categoryList.find((temp: any) => temp.itemId === categoryId);
-    return searchCategory?.name ? searchCategory?.name : 'Unknown Category';
-  };
 
   useEffect(() => {
     if (
@@ -95,8 +93,23 @@ const QAISubmissionEditPage = () => {
     }
   }, [qaiSectionSubmission, submissionId, checkData]);
 
-  const showLoading = sectionState.isFetching || submissionState.isFetching;
+  const showLoading = sectionState.isFetching || categoryState.isFetching || submissionState.isFetching;
 
+  const getCategory = (questionId: string) => {
+    var categoryText: any;
+    sectionList.map((temp: any) => {
+      temp.questions.map((q: any) => {
+        if (q.itemId === questionId) {
+          categoryList.map((category: any) => {
+            if (category.itemId === q.categoryId) {
+              return (categoryText = category);
+            }
+          });
+        }
+      });
+    });
+    return categoryText?.name;
+  };
   const getSection = (sectionId: string) => {
     const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
     return searchSection?.name ? searchSection?.name : 'Unknown Section';
@@ -232,7 +245,7 @@ const QAISubmissionEditPage = () => {
                             {sectionObj?.answers &&
                               sectionObj?.answers.map((question: any, idx: number) => (
                                 <>
-                                  <h1 className="category-name">{getCategory(question.categoryId)}</h1>
+                                  <h1 className="category-name">{getCategory(question.questionId)}</h1>
                                   <table
                                     style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }}
                                     className="table-count"

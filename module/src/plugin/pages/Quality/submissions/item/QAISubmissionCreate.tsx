@@ -27,7 +27,7 @@ const QAISubmissionCreate = () => {
   const [attachmentFolder, setAttachmentFolder] = useState(undefined as FileMetaData | undefined);
   const fmConfig = useFMConfig();
 
-  const [categoryList, setCategoryList] = useState([]);
+  const [categoryList, setCategoryList] = useState<any>();
   const [draftSubmission, setDraftSubmission] = useState({
     locationId: '',
     dateScored: '',
@@ -42,17 +42,20 @@ const QAISubmissionCreate = () => {
     if (!categoryState.isFetched && !categoryState.isFetching) {
       dispatch(qaiQuestionCategoryStateProvider.loadState());
       dispatch(qaiSubmissionStateProvider.loadState());
-      qaiQuestionCategoryStateProvider.props.entityService
-        .load()
-        .then((response: any) => {
-          setCategoryList(response?.data.content);
-        })
-        .catch(err => {
-          setError('Could not create attachment folder');
-        });
+      // qaiQuestionCategoryStateProvider.props.entityService
+      //   .load()
+      //   .then((response: any) => {
+      //     setCategoryList(response?.data.content);
+      //   })
+      //   .catch(err => {
+      //     setError('Could not create attachment folder');
+      //   });
       if (!sectionState.isFetched && !sectionState.isFetching) {
         dispatch(qaiSectionStateProvider.loadState());
       }
+    }
+    if (categoryState?.response) {
+      setCategoryList(categoryState?.response?.content);
     }
   }, [sectionState, categoryState, dispatch]);
 
@@ -189,7 +192,7 @@ const QAISubmissionCreate = () => {
     }
   }, [sectionState, selectedLocation, userContext]);
 
-  const showLoading = sectionState.isFetching || submissionState.isFetching;
+  const showLoading = sectionState.isFetching || categoryState.isFetching || submissionState.isFetching;
 
   return (
     <div>
