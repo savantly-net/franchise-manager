@@ -34,7 +34,9 @@ import net.savantly.sprout.core.tenancy.TenantedPrimaryKey;
 import net.savantly.sprout.franchise.domain.operations.qai.audit.QAADto;
 import net.savantly.sprout.franchise.domain.operations.qai.audit.QAAService;
 import net.savantly.sprout.franchise.domain.operations.qai.audit.QAASubmissionRepository;
+import net.savantly.sprout.franchise.domain.operations.qai.guestQuestion.QAIGuestQuestion;
 import net.savantly.sprout.franchise.domain.operations.qai.guestQuestion.QAIGuestQuestionRepository;
+import net.savantly.sprout.franchise.domain.operations.qai.question.QAIQuestion;
 import net.savantly.sprout.franchise.domain.operations.qai.question.QAIQuestionRepository;
 import net.savantly.sprout.franchise.domain.operations.qai.question.category.QAIQuestionCategory;
 import net.savantly.sprout.franchise.domain.operations.qai.question.category.QAIQuestionCategoryRepository;
@@ -99,7 +101,30 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 		this.categoryRepo.deleteAll();
 		this.qsrepo.deleteAll();
 		
-		this.qsrepo.save(getExampleSection());
+	}
+
+	private QAIGuestQuestion getExampleGuestQuestion() {
+		QAIGuestQuestion q = new QAIGuestQuestion();
+		TenantedPrimaryKey id = new TenantedPrimaryKey();
+		id.setItemId("1");
+		q.setId(id);
+		return q;
+	}
+
+	private QAIQuestion exampleQuestion() {
+		QAIQuestion q = new QAIQuestion();
+		TenantedPrimaryKey id = new TenantedPrimaryKey();
+		id.setItemId("1");
+		q.setId(id);
+		return q;
+	}
+
+	private QAIQuestionCategory getExampleCategory() {
+		QAIQuestionCategory cat = new QAIQuestionCategory();
+		TenantedPrimaryKey id = new TenantedPrimaryKey();
+		id.setItemId("1");
+		cat.setName("test");
+		return cat;
 	}
 
 	private QAISection getExampleSection() {
@@ -129,14 +154,24 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 
 	@Test
 	public void createOne() throws Exception {
+		
 
-		QAIQuestionCategory category = categoryRepo.save(new QAIQuestionCategory().setName("test"));
+		QAIQuestionCategory cat = this.categoryRepo.save(getExampleCategory());
+		QAIQuestion q = exampleQuestion();
+		q.setCategory(cat);
+		
+		QAIGuestQuestion gq = this.gqrepo.save(getExampleGuestQuestion());
+		
+		this.qsrepo.save(getExampleSection());
+		this.qrepo.save(q);
+		this.qsrepo.flush();
 
 		String test = "string";
 		String url = "/api/fm/qaa/submission";
 		
 		
 		QAADto dto = mapper.readValue(submissionNewJson, QAADto.class);
+
 
 		String body = new String(Files.readAllBytes(submissionNewJson.toPath()));
 		RequestEntity<String> request = RequestEntity.post(new URI(url)).contentType(MediaType.APPLICATION_JSON)
@@ -159,6 +194,8 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 	@Test
 	@Transactional
 	public void test() {
+
+		this.qsrepo.save(getExampleSection());
 		service.save(exampleDto());
 	}
 
@@ -175,7 +212,7 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 
 	private HashSet<QAISectionSubmissionDto> exampleSections() {
 		HashSet<QAISectionSubmissionDto> result = new HashSet<>();
-		result.add(new QAISectionSubmissionDto());
+		result.add(new QAISectionSubmissionDto().setSectionId("1"));
 		return result;
 	}
 }

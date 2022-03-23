@@ -13,7 +13,7 @@
       "status": "DRAFT",
       "answers": [
         {
-          "questionId": "string",
+          "questionId": "1",
           "value": "YES",
           "notes": "string",
           "attachments": [
@@ -30,7 +30,7 @@
         {
           "answers": [
             {
-              "guestQuestionId": "string",
+              "guestQuestionId": "1",
               "value": "YES"
             }
           ],

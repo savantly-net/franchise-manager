@@ -4,11 +4,13 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import lombok.RequiredArgsConstructor;
+import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreService;
 import net.savantly.sprout.franchise.domain.operations.qai.section.submission.QAISectionSubmissionDto;
 import net.savantly.sprout.franchise.domain.operations.qai.section.submission.QAISubmissionService;
 
@@ -17,6 +19,7 @@ public class QAAService {
 
 	final QAISubmissionService qaiSubmissionService;
 	final QAASubmissionRepository repository;
+	final QAAScoreService scoreService;
 	
 	public Page<QAADto> getPage(Pageable pageable) {
 		return this.repository.findAll(pageable).map(q -> convert(q));
@@ -30,7 +33,10 @@ public class QAAService {
 		Set<String> sectionIds = saveSectionSubmissions(dto);
 		QAASubmission entity = convert(dto);
 		entity.setSectionIds(sectionIds);
-		return convert(this.repository.save(entity));
+		QAASubmission saved = this.repository.save(entity);
+		QAADto result = convert(saved);
+		this.scoreService.createScoreFromSubmission(saved, result.getSections().stream().collect(Collectors.toList()));
+		return result;
 	}
 	
 	public void delete(String id) {
@@ -52,7 +58,9 @@ public class QAAService {
 			.setFsc(dto.getFsc())
 			.setLocationId(dto.getLocationId())
 			.setManagerOnDuty(dto.getManagerOnDuty())
-			.setResponsibleAlcoholCert(dto.getResponsibleAlcoholCert());
+			.setResponsibleAlcoholCert(dto.getResponsibleAlcoholCert())
+			.setTimeStart(dto.getStartTime())
+			.setTimeEnd(dto.getEndTime());
 		dto.getSections().forEach(s -> {
 			if (Objects.nonNull(s.getItemId())) {
 				entity.sectionIds.add(s.getItemId());
@@ -68,7 +76,9 @@ public class QAAService {
 			.setFsc(entity.getFsc())
 			.setLocationId(entity.getLocationId())
 			.setManagerOnDuty(entity.getManagerOnDuty())
-			.setResponsibleAlcoholCert(entity.getResponsibleAlcoholCert());
+			.setResponsibleAlcoholCert(entity.getResponsibleAlcoholCert())
+			.setEndTime(entity.getTimeEnd())
+			.setStartTime(entity.getTimeStart());
 		entity.getSectionIds().forEach(s -> {
 			if (Objects.nonNull(s)) {
 				dto.getSections().add(qaiSubmissionService.findByItemId(s).orElseThrow());
