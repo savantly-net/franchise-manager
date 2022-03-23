@@ -194,6 +194,8 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 	@Test
 	@Transactional
 	public void test() {
+
+		this.qsrepo.save(getExampleSection());
 		service.save(exampleDto());
 	}
 
