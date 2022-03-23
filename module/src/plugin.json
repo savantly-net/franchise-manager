@@ -116,13 +116,6 @@
           "icon": "clipboard-check",
           "addToNav": true,
           "path": "/a/franchise-manager/store-visits"
-        },
-        {
-          "name": "QAA Score",
-          "type": "page",
-          "icon": "clipboard-list",
-          "addToNav": true,
-          "path": "/a/franchise-manager/qaa/score"
         }
       ]
     },

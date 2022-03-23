@@ -6,6 +6,7 @@ import QAISubmissionCreate from './item/QAISubmissionCreate';
 import QAISubmissionEditPage from './item/QAISubmissionEditPage';
 import QAISubmissionViewPage from './item/QAISubmissionViewPage';
 import SubmissionListPage from './QAISubmissionList';
+import QAAScorePage from './qaa/QAAScorePage';
 
 const navModelItem: NavModelItem = {
   text: 'Quality Assurance Audit Submissions',
@@ -37,6 +38,7 @@ const IndexPage = () => {
         <Route path="/list" element={<SubmissionListPage />} />
         <Route path="/item/:itemId" element={<QAISubmissionViewPage />} />
         <Route path="/item/:itemId/edit" element={<QAISubmissionEditPage />} />
+        <Route path="/:itemId/score" element={<QAAScorePage />} />
       </Routes>
       <Outlet />
     </FMPage>

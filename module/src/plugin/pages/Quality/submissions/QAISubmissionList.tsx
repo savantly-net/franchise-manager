@@ -108,6 +108,14 @@ const IndexPage = () => {
             >
               <Icon name="trash" />
             </Button>
+            <Button
+              color="info"
+              onClick={() => {
+                navigate(`../${row.id}/score`);
+              }}
+            >
+              <Icon name="clipboard-list" />
+            </Button>
           </ButtonGroup>
         );
       },
