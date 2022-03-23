@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class QAAScoreService {
 			.setOverallRating(from.getOverallRating())
 			.setOverallRequired(from.getOverallRating())
 			.setOverallScore(from.getOverallScore())
-			.setScoresByTag(from.getScoresByTag().stream().map(s -> convert(s)).toList())
+			.setScoresByTag(from.getScoresByTag().stream().map(s -> convert(s)).collect(Collectors.toList()))
 			.setSections(convert(from.getSections()));
 		return dto;
 	}
@@ -58,7 +59,7 @@ public class QAAScoreService {
 			}
 			
 		}
-		return dto.values().stream().sorted().toList();
+		return dto.values().stream().sorted().collect(Collectors.toList());
 	}
 
 	private QAASectionCategoryScoreDto convert(QAASectionScore from) {

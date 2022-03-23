@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,7 @@ public class QAAService {
 		entity.setSectionIds(sectionIds);
 		QAASubmission saved = this.repository.save(entity);
 		QAADto result = convert(saved);
-		this.scoreService.createScoreFromSubmission(saved, result.getSections().stream().toList());
+		this.scoreService.createScoreFromSubmission(saved, result.getSections().stream().collect(Collectors.toList()));
 		return result;
 	}
 	
