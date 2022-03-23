@@ -1,3 +1,13 @@
+DO $$
+BEGIN
+	ALTER TABLE fm_qaa_submission ADD COLUMN time_start TIME;
+	ALTER TABLE fm_qaa_submission ADD COLUMN time_end TIME;
+
+EXCEPTION
+    WHEN duplicate_column THEN RAISE NOTICE 'column already exists';
+END $$;
+
+
 CREATE TABLE IF NOT EXISTS fm_qaa_score
 (
     submission_id character varying(42) NOT NULL,

@@ -45,7 +45,7 @@ public class QAAScore {
 
 	@Transient
 	public BigDecimal getOverallRating() {
-		if (Objects.isNull(overallRequired) || overallRequired == BigDecimal.ZERO) {
+		if (Objects.isNull(overallRequired) || overallRequired.equals(BigDecimal.ZERO)) {
 			return BigDecimal.ZERO;
 		} else {
 			return new BigDecimal(overallScore).divide(overallRequired, RoundingMode.HALF_UP);
