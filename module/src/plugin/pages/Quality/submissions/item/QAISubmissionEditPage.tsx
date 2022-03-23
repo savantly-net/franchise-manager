@@ -22,7 +22,7 @@ const QAISubmissionEditPage = () => {
   const submissionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSubmissions);
   const sectionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSections);
   const fileService = getFileService();
-  const [categoryList, setCategoryList] = useState([]);
+  const [categoryList, setCategoryList] = useState<any>();
   const navigate = useNavigate();
   const [sectionList, setSectionList] = useState<any>();
   const [checkData, setCheckData] = useState(false);
@@ -54,24 +54,14 @@ const QAISubmissionEditPage = () => {
     if (!categoryState.isFetched && !categoryState.isFetching) {
       dispatch(qaiQuestionCategoryStateProvider.loadState());
       dispatch(qaiSubmissionStateProvider.loadState());
-      qaiQuestionCategoryStateProvider.props.entityService
-        .load()
-        .then((response: any) => {
-          setCategoryList(response?.data.content);
-        })
-        .catch(err => {
-          setError('Could not create attachment folder');
-        });
     }
     if (sectionState?.response) {
       setSectionList(sectionState?.response);
     }
+    if (categoryState?.response) {
+      setCategoryList(categoryState?.response?.content);
+    }
   }, [sectionState, categoryState, dispatch]);
-
-  const getCategory = (categoryId: string) => {
-    const searchCategory: any = categoryList.find((temp: any) => temp.itemId === categoryId);
-    return searchCategory?.name ? searchCategory?.name : 'Unknown Category';
-  };
 
   useEffect(() => {
     if (
@@ -94,25 +84,45 @@ const QAISubmissionEditPage = () => {
     }
   }, [qaiSectionSubmission, submissionId, checkData]);
 
-  const showLoading = sectionState.isFetching || submissionState.isFetching;
+  const showLoading = sectionState.isFetching || categoryState.isFetching || submissionState.isFetching;
 
+  const getCategory = (questionId: string) => {
+    var categoryText: any;
+    sectionList.map((temp: any) => {
+      temp.questions.map((q: any) => {
+        if (q.itemId === questionId && categoryList) {
+          categoryList.map((category: any) => {
+            if (category.itemId === q.categoryId) {
+              return (categoryText = category);
+            }
+          });
+        }
+      });
+    });
+    return categoryText?.name;
+  };
   const getSection = (sectionId: string) => {
     const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
     return searchSection?.name ? searchSection?.name : 'Unknown Section';
   };
 
-  const getOrder = (sectionId: string, categoryId: string) => {
-    const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
-    let sectionOrder = 0;
-    let questionOrder = 0;
-    if (categoryId && searchSection !== undefined && searchSection !== null && searchSection?.questions.length > 0) {
-      sectionOrder = searchSection.order;
-      const questionOrders = searchSection.questions.find((temps: any) => temps.itemId === categoryId);
-      questionOrder = questionOrders?.order ? questionOrders?.order : 0;
+  const getQuestions = (questionId: string, dataTt: string) => {
+    var questionText: any;
+    sectionList.map((temp: any) => {
+      temp.questions.map((q: any) => {
+        if (q.itemId === questionId) {
+          return (questionText = q);
+        }
+      });
+    });
+    if (dataTt === 'order') {
+      return questionText?.order;
+    } else if (dataTt === 'points') {
+      return questionText?.points;
+    } else {
+      return questionText?.text;
     }
-    return `${sectionOrder}.${questionOrder}`;
   };
-
   const getSectionRequireStaffAttendance = (sectionId: string) => {
     const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
     return searchSection?.requireStaffAttendance ? searchSection?.requireStaffAttendance : false;
@@ -225,81 +235,79 @@ const QAISubmissionEditPage = () => {
                           <hr className="mb-2 mt-2" />
                           <Fragment>
                             {sectionObj?.answers &&
-                              sectionObj?.answers
-                                .sort((next: any, prev: any) => next.order - prev.order)
-                                .map((question: any, idx: number) => (
-                                  <>
-                                    {idx === 0 && <h1 className="category-name">{getCategory(question.categoryId)}</h1>}
-                                    <table
-                                      style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }}
-                                      className="table-count"
-                                    >
-                                      <tbody>
-                                        <Fragment>
-                                          <tr>
-                                            <td className="col-1">
-                                              {getOrder(sectionObj.sectionId, question.questionId)}
-                                            </td>
-                                            <td className="col-4">{question.notes}</td>
-                                            <td className="col-1">{question.points}</td>
-                                            <td className="col-2 ">
-                                              <Fragment>
-                                                <FormField
-                                                  name={`sections.${index}.answers.${idx}.value`}
-                                                  className="mb-1"
-                                                  as="select"
-                                                >
-                                                  <option value="YES">Yes</option>
-                                                  <option value="NO">No</option>
-                                                </FormField>
-                                              </Fragment>
-                                            </td>
+                              sectionObj?.answers.map((question: any, idx: number) => (
+                                <>
+                                  <h1 className="category-name">{getCategory(question.questionId)}</h1>
+                                  <table
+                                    style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }}
+                                    className="table-count"
+                                  >
+                                    <tbody>
+                                      <Fragment>
+                                        <tr>
+                                          <td className="col-1">
+                                            {index + 1}.{getQuestions(question.questionId, 'order')}
+                                          </td>
+                                          <td className="col-4">{getQuestions(question.questionId, 'text')}</td>
+                                          <td className="col-1">{getQuestions(question.questionId, 'points')}</td>
+                                          <td className="col-2 ">
+                                            <Fragment>
+                                              <FormField
+                                                name={`sections.${index}.answers.${idx}.value`}
+                                                className="mb-1"
+                                                as="select"
+                                              >
+                                                <option value="YES">Yes</option>
+                                                <option value="NO">No</option>
+                                              </FormField>
+                                            </Fragment>
+                                          </td>
 
-                                            <td
-                                              className="col-2"
-                                              onClick={value => {
-                                                checkFolderCreated(sectionObj.sectionId);
+                                          <td
+                                            className="col-2"
+                                            onClick={value => {
+                                              checkFolderCreated(sectionObj.sectionId);
+                                            }}
+                                          >
+                                            <FileUploadButton
+                                              buttonContent={
+                                                <Fragment>
+                                                  <Icon
+                                                    onClick={value => {
+                                                      checkFolderCreated(sectionObj.sectionId);
+                                                    }}
+                                                    name="paperclip"
+                                                  ></Icon>
+                                                  <span>Attach</span>
+                                                </Fragment>
+                                              }
+                                              onCancel={() => {}}
+                                              onConfirm={async value => {
+                                                setTimeout(function() {
+                                                  fileUpload(props, value, index, idx, sectionObj.sectionId);
+                                                }, 5000);
                                               }}
-                                            >
-                                              <FileUploadButton
-                                                buttonContent={
-                                                  <Fragment>
-                                                    <Icon
-                                                      onClick={value => {
-                                                        checkFolderCreated(sectionObj.sectionId);
-                                                      }}
-                                                      name="paperclip"
-                                                    ></Icon>
-                                                    <span>Attach</span>
-                                                  </Fragment>
-                                                }
-                                                onCancel={() => {}}
-                                                onConfirm={async value => {
-                                                  setTimeout(function() {
-                                                    fileUpload(props, value, index, idx, sectionObj.sectionId);
-                                                  }, 5000);
-                                                }}
-                                                accept={['image/*']}
+                                              accept={['image/*']}
+                                            />
+                                          </td>
+                                        </tr>
+                                        {(props.values.sections[index]['answers'][idx]['value'] === 'NO' ||
+                                          question.value === 'NO') && (
+                                          <tr>
+                                            <td colSpan={2}>Notes</td>
+                                            <td colSpan={3}>
+                                              <FormField
+                                                placeholder="notes"
+                                                name={`sections.${index}.answers.${idx}.notes`}
                                               />
                                             </td>
                                           </tr>
-
-                                          {question.value === 'NO' && (
-                                            <tr>
-                                              <td colSpan={2}>Notes</td>
-                                              <td colSpan={3}>
-                                                <FormField
-                                                  placeholder="notes"
-                                                  name={`sections.${index}.answers.${idx}.notes`}
-                                                />
-                                              </td>
-                                            </tr>
-                                          )}
-                                        </Fragment>
-                                      </tbody>
-                                    </table>
-                                  </>
-                                ))}
+                                        )}
+                                      </Fragment>
+                                    </tbody>
+                                  </table>
+                                </>
+                              ))}
                           </Fragment>
                           {sectionObj?.guestAnswers && Object.keys(sectionObj?.guestAnswers).length > 0 && (
                             <>
