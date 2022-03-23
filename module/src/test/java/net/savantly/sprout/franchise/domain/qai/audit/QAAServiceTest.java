@@ -101,15 +101,6 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 		this.categoryRepo.deleteAll();
 		this.qsrepo.deleteAll();
 		
-		QAIQuestionCategory cat = this.categoryRepo.save(getExampleCategory());
-		QAIQuestion q = exampleQuestion();
-		q.setCategory(cat);
-		
-		QAIGuestQuestion gq = this.gqrepo.save(getExampleGuestQuestion());
-		
-		this.qsrepo.save(getExampleSection());
-		this.qrepo.save(q);
-		this.qsrepo.flush();
 	}
 
 	private QAIGuestQuestion getExampleGuestQuestion() {
@@ -163,6 +154,17 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 
 	@Test
 	public void createOne() throws Exception {
+		
+
+		QAIQuestionCategory cat = this.categoryRepo.save(getExampleCategory());
+		QAIQuestion q = exampleQuestion();
+		q.setCategory(cat);
+		
+		QAIGuestQuestion gq = this.gqrepo.save(getExampleGuestQuestion());
+		
+		this.qsrepo.save(getExampleSection());
+		this.qrepo.save(q);
+		this.qsrepo.flush();
 
 		String test = "string";
 		String url = "/api/fm/qaa/submission";
