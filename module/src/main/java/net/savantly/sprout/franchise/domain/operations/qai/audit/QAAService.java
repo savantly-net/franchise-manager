@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import lombok.RequiredArgsConstructor;
+import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreService;
 import net.savantly.sprout.franchise.domain.operations.qai.section.submission.QAISectionSubmissionDto;
 import net.savantly.sprout.franchise.domain.operations.qai.section.submission.QAISubmissionService;
 
@@ -17,6 +18,7 @@ public class QAAService {
 
 	final QAISubmissionService qaiSubmissionService;
 	final QAASubmissionRepository repository;
+	final QAAScoreService scoreService;
 	
 	public Page<QAADto> getPage(Pageable pageable) {
 		return this.repository.findAll(pageable).map(q -> convert(q));
@@ -30,7 +32,10 @@ public class QAAService {
 		Set<String> sectionIds = saveSectionSubmissions(dto);
 		QAASubmission entity = convert(dto);
 		entity.setSectionIds(sectionIds);
-		return convert(this.repository.save(entity));
+		QAASubmission saved = this.repository.save(entity);
+		QAADto result = convert(saved);
+		this.scoreService.createScoreFromSubmission(saved, result.getSections().stream().toList());
+		return result;
 	}
 	
 	public void delete(String id) {

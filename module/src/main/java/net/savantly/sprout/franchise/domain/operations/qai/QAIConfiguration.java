@@ -19,6 +19,9 @@ import net.savantly.sprout.franchise.domain.operations.qai.question.answer.QAIQu
 import net.savantly.sprout.franchise.domain.operations.qai.question.answer.QAIQuestionAnswerService;
 import net.savantly.sprout.franchise.domain.operations.qai.question.category.QAIQuestionCategoryApi;
 import net.savantly.sprout.franchise.domain.operations.qai.question.category.QAIQuestionCategoryRepository;
+import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreCalculator;
+import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreRepository;
+import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreService;
 import net.savantly.sprout.franchise.domain.operations.qai.section.QAISectionApi;
 import net.savantly.sprout.franchise.domain.operations.qai.section.QAISectionRepository;
 import net.savantly.sprout.franchise.domain.operations.qai.section.QAISectionService;
@@ -31,13 +34,27 @@ import net.savantly.sprout.franchise.domain.operations.qai.section.submission.QA
 public class QAIConfiguration {
 
 	@Bean
-	public QAAService qaaSubmissionService(QAISubmissionService submissionService, QAASubmissionRepository submissionRepository) {
-		return new QAAService(submissionService, submissionRepository);
+	public QAAService qaaSubmissionService(QAISubmissionService submissionService, QAASubmissionRepository submissionRepository, QAAScoreService qaaScoreService) {
+		return new QAAService(submissionService, submissionRepository, qaaScoreService);
 	}
 	
 	@Bean
-	public QAAApi qaaApi(QAAService qaaService) {
-		return new QAAApi(qaaService);
+	public QAAScoreCalculator qaaScoreCalculator(
+			QAIQuestionRepository questionRepo, 
+			QAISectionRepository sectionRepo, 
+			QAIGuestQuestionRepository guestQuestionRepo, 
+			QAIQuestionCategoryRepository categoryRepo) {
+		return new QAAScoreCalculator(sectionRepo, questionRepo, guestQuestionRepo, categoryRepo);
+	}
+	
+	@Bean
+	public QAAScoreService qaaScoreService(QAAScoreRepository repo, QAAScoreCalculator qaaScoreCalculator) {
+		return new QAAScoreService(repo, qaaScoreCalculator);
+	}
+	
+	@Bean
+	public QAAApi qaaApi(QAAService qaaService, QAAScoreService qaaScoreService) {
+		return new QAAApi(qaaService, qaaScoreService);
 	}
 	
 	@Bean

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreDto;
+import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreService;
 
 @RestController
 @RequestMapping("/api/fm/qaa/submission")
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class QAAApi {
 
 	final private QAAService service;
+	final private QAAScoreService scoreService;
 
 	@GetMapping
 	@Operation(summary = "Gets a page of the QAA Submissions")
@@ -28,9 +31,15 @@ public class QAAApi {
 	}
 
 	@GetMapping("/{id}")
-	@Operation(summary = "Gets a page of the QAA Submissions")
+	@Operation(summary = "Gets a QAA Submission by id")
 	public QAADto getOneById(@PathVariable("id") String id) {
 		return this.service.getOneById(id);
+	}
+
+	@GetMapping("/{id}/score")
+	@Operation(summary = "Gets a QAA Submission score by id")
+	public QAAScoreDto getScoreBySubmissinId(@PathVariable("id") String id) {
+		return this.scoreService.getScoreBySubmissionId(id);
 	}
 
 	@PostMapping

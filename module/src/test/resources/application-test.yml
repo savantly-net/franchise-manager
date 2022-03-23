@@ -26,6 +26,16 @@ spring:
   data:
     rest:
       default-page-size: 200
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          no-cache: true
+      chain:
+        strategy:
+          content:
+            enabled: true
+            paths: "/**"
 management:
   endpoints:
     web:
