@@ -58,7 +58,9 @@ public class QAAService {
 			.setFsc(dto.getFsc())
 			.setLocationId(dto.getLocationId())
 			.setManagerOnDuty(dto.getManagerOnDuty())
-			.setResponsibleAlcoholCert(dto.getResponsibleAlcoholCert());
+			.setResponsibleAlcoholCert(dto.getResponsibleAlcoholCert())
+			.setTimeStart(dto.getStartTime())
+			.setTimeEnd(dto.getEndTime());
 		dto.getSections().forEach(s -> {
 			if (Objects.nonNull(s.getItemId())) {
 				entity.sectionIds.add(s.getItemId());
@@ -74,7 +76,9 @@ public class QAAService {
 			.setFsc(entity.getFsc())
 			.setLocationId(entity.getLocationId())
 			.setManagerOnDuty(entity.getManagerOnDuty())
-			.setResponsibleAlcoholCert(entity.getResponsibleAlcoholCert());
+			.setResponsibleAlcoholCert(entity.getResponsibleAlcoholCert())
+			.setEndTime(entity.getTimeEnd())
+			.setStartTime(entity.getTimeStart());
 		entity.getSectionIds().forEach(s -> {
 			if (Objects.nonNull(s)) {
 				dto.getSections().add(qaiSubmissionService.findByItemId(s).orElseThrow());

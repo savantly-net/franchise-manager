@@ -1,6 +1,7 @@
 package net.savantly.sprout.franchise.domain.operations.qai.audit;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,6 +20,8 @@ public class QAADto {
 	private String managerOnDuty;
 	private String fsc;
 	private String responsibleAlcoholCert;
+	private LocalTime startTime;
+	private LocalTime endTime;
 
 	private Set<QAISectionSubmissionDto> sections = new HashSet<QAISectionSubmissionDto>();
 }
