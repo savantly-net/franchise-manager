@@ -40,6 +40,7 @@ import net.savantly.sprout.franchise.domain.operations.qai.question.QAIQuestion;
 import net.savantly.sprout.franchise.domain.operations.qai.question.QAIQuestionRepository;
 import net.savantly.sprout.franchise.domain.operations.qai.question.category.QAIQuestionCategory;
 import net.savantly.sprout.franchise.domain.operations.qai.question.category.QAIQuestionCategoryRepository;
+import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreDto;
 import net.savantly.sprout.franchise.domain.operations.qai.section.QAISection;
 import net.savantly.sprout.franchise.domain.operations.qai.section.QAISectionRepository;
 import net.savantly.sprout.franchise.domain.operations.qai.section.submission.QAISectionSubmissionDto;
@@ -189,6 +190,12 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 		
 		Assertions.assertEquals(dto.getDateScored(), resultBody.getDateScored());
 		Assertions.assertEquals(dto.getSections().size(), resultBody.getSections().size());
+		
+		ResponseEntity<QAAScoreDto> response2 = rest.withBasicAuth(user, password)
+				.getForEntity(new URI(String.format("%s/%s/score", url, resultBody.getId())),
+				QAAScoreDto.class);
+		Assertions.assertEquals(HttpStatus.OK, response2.getStatusCode(), "Should get score");
+		Assertions.assertEquals(1, response2.getBody().getOverallScore(), "Should get score");
 	}
 	
 	@Test
