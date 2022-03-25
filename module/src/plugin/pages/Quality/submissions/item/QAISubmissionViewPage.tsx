@@ -106,13 +106,42 @@ const QAISubmissionViewPage = () => {
       {error && <Alert color="warning">{error}</Alert>}
       {item && sectionList && (
         <div>
-          <h4 className="mb-3">Location: {fmLocation?.name}</h4>
-          <h4 className="mb-3">fsc: {item?.fsc}</h4>
-          <h4 className="mb-3">Manager On Duty: {item?.managerOnDuty}</h4>
-          <h4 className="mb-3">Reponsibility Alcohol Certificate for Mgr/Bar staff: {item?.responsibleAlcoholCert}</h4>
-          <h4 className="mb-3">Date Scored: {dateTime(item.dateScored).format('dd YYYY-MM-DD hh:mm A')}</h4>
+          <Table style={{ marginTop: '5px', border: '1px solid #D0D7DE' }} className="table-count">
+            <Thead>
+              <Tr className="trCls">
+                <Th className="col-3">Location</Th>
+                <Th className="col-3">Fsc</Th>
+                <Th className="col-3">Manager On Duty</Th>
+                <Th className="col-3">Date Scored</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr>
+                <Td className="col-3">{fmLocation?.name} </Td>
+                <Td className="col-3">{item?.fsc}</Td>
+                <Td className="col-3">{item?.managerOnDuty}</Td>
+                <Td className="col-3">{dateTime(item.dateScored).format('dd YYYY-MM-DD hh:mm A')}</Td>
+              </Tr>
+            </Tbody>
+          </Table>
+          <Table style={{ marginTop: '15px', border: '1px solid #D0D7DE' }} className="table-count">
+            <Thead>
+              <Tr className="trCls">
+                <Th className="col-3">Start Time</Th>
+                <Th className="col-3">End Time</Th>
+                <Th className="col-6">Reponsibility Alcohol Certificate for Mgr/Bar staff</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr>
+                <Td className="col-3">{item.startTime}</Td>
+                <Td className="col-3">{item.endTime}</Td>
+                <Td className="col-6">{item?.responsibleAlcoholCert}</Td>
+              </Tr>
+            </Tbody>
+          </Table>
           <hr />
-          <div className="mb-2">
+          <div className="mb-2" style={{ marginTop: '15px' }}>
             <h5 className="mb-2">Details</h5>
             {item.staffAttendance && (
               <div>
