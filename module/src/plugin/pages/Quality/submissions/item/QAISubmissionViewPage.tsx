@@ -319,9 +319,8 @@ const QAISubmissionViewPage = () => {
             </div>
           </div>
         </div>
-      )
-      }
-    </Fragment >
+      )}
+    </Fragment>
   );
 };
 

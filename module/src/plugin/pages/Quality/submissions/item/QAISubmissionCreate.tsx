@@ -113,8 +113,8 @@ const QAISubmissionCreate = () => {
                     : false,
                 parent:
                   attachmentFolder !== undefined &&
-                    Object.keys(attachmentFolder).length > 0 &&
-                    attachmentFolder !== undefined
+                  Object.keys(attachmentFolder).length > 0 &&
+                  attachmentFolder !== undefined
                     ? attachmentFolder.name
                     : sectionId,
               },
@@ -341,9 +341,9 @@ const QAISubmissionCreate = () => {
                                                   <span>Attach</span>
                                                 </Fragment>
                                               }
-                                              onCancel={() => { }}
+                                              onCancel={() => {}}
                                               onConfirm={async value => {
-                                                setTimeout(function () {
+                                                setTimeout(function() {
                                                   fileUpload(props, value, index, idx, sectionObj.sectionId);
                                                 }, 5000);
                                               }}
