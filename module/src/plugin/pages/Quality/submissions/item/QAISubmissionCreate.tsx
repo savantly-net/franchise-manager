@@ -304,7 +304,7 @@ const QAISubmissionCreate = () => {
                                       <Fragment>
                                         <tr>
                                           <td className="col-1">
-                                            {sectionObj.order}.{question.order}
+                                            {index + 1}.{question.order}
                                           </td>
                                           <td className="col-4">{question.text}</td>
                                           <td className="col-1">{question.points}</td>

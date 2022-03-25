@@ -1,53 +1,77 @@
 import { BaseEntityService, EntityStateProvider, TenantedEntity, UnpagedEntityState } from '@savantly/sprout-api';
+import { getApiService } from '@savantly/sprout-runtime';
 import { API_URL } from 'plugin/config/appModuleConfiguration';
 
-export interface QAIQuestion extends TenantedEntity {
-  text: string;
-  notes: string;
-  points: number;
-  order: number;
-  categoryId: string;
-  tags: string;
+export interface QAAcategoryScore extends TenantedEntity {
+  categoryName: string;
+  sectionOrder: number;
+  available: number;
+  na: number;
+  required: number;
+  score: number;
+  rating: number;
 }
 
-export interface QAIGuestQuestion extends TenantedEntity {
-  text: string;
-  points: number;
+export interface QAASectionScore extends TenantedEntity {
+  sectionId: string;
+  sectionName: string;
   order: number;
+  categoryScores: QAAcategoryScore[];
 }
 
-export interface QAAScore extends TenantedEntity {
-  name: string;
-  order: number;
-  requireStaffAttendance: boolean;
-  questions: QAIQuestion[];
-  guestQuestions: QAIGuestQuestion[];
+export interface QAAScoresByTag extends TenantedEntity {
+  tag: string;
+  available: number;
+  na: number;
+  required: number;
+  score: number;
+  rating: number;
 }
 
-export type QAAScoreState = UnpagedEntityState<QAAScore>;
+export interface QAASubmissionScore extends TenantedEntity {
+  submissionId: string;
+  overallAvailable: number;
+  overallNA: number;
+  overallRequired: number;
+  overallScore: number;
+  overallRating: number;
+  sections: QAASectionScore[];
+  scoresByTag: QAAScoresByTag[];
+}
 
-class QAAScoreService extends BaseEntityService<QAAScore> {
+export type QAAScoreState = UnpagedEntityState<QAASubmissionScore>;
+
+class QAAScoreService extends BaseEntityService<QAASubmissionScore> {
   constructor() {
     super({
-      baseUrl: `${API_URL}/qai/section`,
+      baseUrl: `${API_URL}/qaa/submission`,
     });
   }
 }
 const qaaScoreService = new QAAScoreService();
 export { qaaScoreService };
 
-export const qaiSectionStateProvider = new EntityStateProvider<QAAScore>({
+export const qaiSectionStateProvider = new EntityStateProvider<QAASubmissionScore>({
   entityService: qaaScoreService,
   initialState: {
     isFetched: false,
     isFetching: false,
     example: {
-      name: 'New QAA Score',
-      order: 0,
-      requireStaffAttendance: false,
-      guestQuestions: [],
-      questions: [],
+      submissionId: 'New QAA Score',
+      overallAvailable: 0,
+      overallNA: 0,
+      overallRequired: 0,
+      overallScore: 0,
+      overallRating: 0,
+      sections: [],
+      scoresByTag: [],
     },
   },
   stateKey: 'qaaScoreState',
 });
+
+export const QAASubmScoreService = {
+  getQAAScore: (submId: string) => {
+    return getApiService().get<QAASubmissionScore[]>(`${API_URL}/qaa/submission/${submId}/score`);
+  },
+};

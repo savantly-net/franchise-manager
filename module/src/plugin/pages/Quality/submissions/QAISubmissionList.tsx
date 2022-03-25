@@ -118,6 +118,7 @@ const IndexPage = () => {
               onClick={() => {
                 navigate(`../${row.id}/score`);
               }}
+              title="score card"
             >
               <Icon name="clipboard-list" />
             </Button>
