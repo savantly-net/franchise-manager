@@ -113,8 +113,8 @@ const QAISubmissionCreate = () => {
                     : false,
                 parent:
                   attachmentFolder !== undefined &&
-                  Object.keys(attachmentFolder).length > 0 &&
-                  attachmentFolder !== undefined
+                    Object.keys(attachmentFolder).length > 0 &&
+                    attachmentFolder !== undefined
                     ? attachmentFolder.name
                     : sectionId,
               },
@@ -247,7 +247,7 @@ const QAISubmissionCreate = () => {
               <>
                 <Fragment>
                   <div className="d-flex mb-3">
-                    <div className="col-4 location-select">
+                    <div className="col-3 location-select">
                       <label>Select Location</label>
                       <LocationSelector
                         initialValue={selectedLocation}
@@ -256,27 +256,32 @@ const QAISubmissionCreate = () => {
                         }}
                       />
                     </div>
-
-                    <div className="col-4">
+                    <div className="col-3">
                       <FormField name="dateScored" type="date" label="Audit Date" />
                     </div>
-
-                    <div className="col-4">
-                      <FormField name="managerOnDuty" type="text" label="Manager On Duty" />
+                    <div className="col-3">
+                      <FormField name={`startTime`} label="Start" type="time" className="" />
+                    </div>
+                    <div className="col-3">
+                      <FormField name={`endTime`} label="End" type="time" className="" />
                     </div>
                   </div>
                   <div className="d-flex mb-3">
-                    <div className="col-4">
+                    <div className="col-3 p-0">
+                      <FormField name="managerOnDuty" type="text" label="Manager On Duty" className="" />
+                    </div>
+                    <div className="col-3">
                       <FormField name="fsc" disabled type="text" label="FSC Conducting" />
                     </div>
-                    <div className="col-4">
+                    <div className="col-3">
                       <FormField name="fsm" type="text" label="Food safety manager on duty" />
                     </div>
-                    <div className="col-4">
+                    <div className="col-3">
                       <FormField
                         name="responsibleAlcoholCert"
                         type="text"
-                        label="Reponsibility Alcohol Certificate for Mgr/Bar staff"
+                        label="Reponsibility Alcohol Certificate"
+                        placeholder="for Mgr/Bar staff"
                       />
                     </div>
                   </div>
@@ -336,9 +341,9 @@ const QAISubmissionCreate = () => {
                                                   <span>Attach</span>
                                                 </Fragment>
                                               }
-                                              onCancel={() => {}}
+                                              onCancel={() => { }}
                                               onConfirm={async value => {
-                                                setTimeout(function() {
+                                                setTimeout(function () {
                                                   fileUpload(props, value, index, idx, sectionObj.sectionId);
                                                 }, 5000);
                                               }}
