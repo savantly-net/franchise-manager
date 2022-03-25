@@ -51,13 +51,13 @@ class QAAScoreService extends BaseEntityService<QAASubmissionScore> {
 const qaaScoreService = new QAAScoreService();
 export { qaaScoreService };
 
-export const qaiSectionStateProvider = new EntityStateProvider<QAASubmissionScore>({
+export const qaaScoreStateProvider = new EntityStateProvider<QAASubmissionScore>({
   entityService: qaaScoreService,
   initialState: {
     isFetched: false,
     isFetching: false,
     example: {
-      submissionId: 'New QAA Score',
+      submissionId: '',
       overallAvailable: 0,
       overallNA: 0,
       overallRequired: 0,

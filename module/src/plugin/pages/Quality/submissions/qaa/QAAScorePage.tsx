@@ -1,133 +1,64 @@
-import { Table, Td, Tr } from '@chakra-ui/react';
-import { getUserContextService } from '@savantly/sprout-runtime';
 import { LoadingIcon } from '@sprout-platform/ui';
 import { AppModuleRootState } from 'plugin/types';
-import React, { Fragment, useEffect, useMemo, useState } from 'react';
+import React, { Fragment, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { Col, Row } from 'reactstrap';
-import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
 import { qaiSectionStateProvider } from '../../sections/entity';
-import { QAISectionSubmission, qaiSubmissionStateProvider } from '../entity';
 import { useQAASubmissionScore } from '../hooks';
 
 const QAAScorePage = () => {
-  const submissionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSubmissions);
   const sectionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSections);
-  const categoryState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiQuestionCategories);
   const dispatch = useDispatch();
-  const userContext = getUserContextService().getUserContext();
+  const params = useParams();
+  const submissionId = params['itemId'];
 
-  const [draftSubmission, setDraftSubmission] = useState({
-    locationId: '',
-    dateScored: '',
-    managerOnDuty: '',
-    fsc: '',
-    responsibleAlcoholCert: '',
-    sections: [],
-  });
+  const [qaaSubmScore, setQaaSubmScore] = useState<any>();
+  const [loadData, setLoadData] = useState(true);
+
+  const [sectionList, setSectionList] = useState<any>();
 
   useMemo(() => {
-    if (!categoryState.isFetched && !categoryState.isFetching) {
-      dispatch(qaiQuestionCategoryStateProvider.loadState());
-      dispatch(qaiSubmissionStateProvider.loadState());
-      if (!sectionState.isFetched && !sectionState.isFetching) {
-        dispatch(qaiSectionStateProvider.loadState());
-      }
+    if (!sectionState.isFetched && !sectionState.isFetching) {
+      dispatch(qaiSectionStateProvider.loadState());
     }
-  }, [sectionState, categoryState, dispatch]);
-
-  useEffect(() => {
     if (sectionState?.response) {
-      let sections: any = [];
-      sectionState?.response.map((item: any, i: number) => {
-        sections[i] = {};
-        sections[i].sectionId = item.itemId;
-        sections[i].name = item.name;
-        sections[i].order = item.order;
-        sections[i].managerOnDuty = '';
-        sections[i].dateScored = '';
-        sections[i].status = 'DRAFT';
-        sections[i].requireStaffAttendance = item.requireStaffAttendance;
-        sections[i].staffAttendance = {};
-
-        let answers: any = [];
-
-        item.questions.map((item1: any, i1: number) => {
-          let test: any = {};
-          test.questionId = item1.itemId;
-          test.sectionId = item1.sectionId;
-          test.categoryId = item1.categoryId;
-          test.order = item1.order;
-          test.points = item1.points;
-          test.value = '';
-          test.text = item1.text;
-          test.notes = item1.notes;
-          test.attachments = [];
-          answers.push(test);
-        });
-        sections[i].answers = answers;
-
-        let guestanswers: any = [];
-        item.guestQuestions.map((item1: any = {}, i1: number) => {
-          if (item1.text) {
-            let tests: any = {};
-            tests.notes = item1.text;
-            tests.attachments = [];
-            tests.answers = [
-              { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
-              { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
-              { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
-            ];
-            guestanswers.push(tests);
-          }
-        });
-        sections[i].guestAnswers = guestanswers;
-      });
-      setDraftSubmission({
-        locationId: '',
-        dateScored: '',
-        managerOnDuty: '',
-        fsc: userContext?.user?.name ? userContext?.user?.name : '',
-        responsibleAlcoholCert: '',
-        sections: sections,
-      });
+      setSectionList(sectionState?.response);
     }
-  }, [sectionState, userContext]);
+  }, [sectionState, dispatch]);
 
-  const showLoading = sectionState.isFetching || submissionState.isFetching;
+  const showLoading = sectionState.isFetching;
 
-  const scoreDisplay = (sections: QAISectionSubmission[]) => {
-    return (
-      <Table>
-        <Tr>
-          <Td>
-            {sections.map(s => {
-              {
-                <p>{s}</p>;
-              }
-            })}
-          </Td>
-        </Tr>
-      </Table>
-    );
+  const fmQaaScore = useQAASubmissionScore(submissionId);
+
+  const getSection = (sectionId: string) => {
+    const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
+    return searchSection?.name ? searchSection?.name : 'Unknown Section';
   };
-  const fmQaaScore = useQAASubmissionScore(`f23fdfdb-8bf8-4b62-999d-1aa4f549453d`);
-  console.log("fmQaaScore===",fmQaaScore);
+
+  useMemo(() => {
+    if (fmQaaScore) {
+      setQaaSubmScore(fmQaaScore);
+      setLoadData(false);
+    }
+  }, [fmQaaScore]);
 
   return (
     <div>
-      {draftSubmission.sections.length > 0 ? (
+      <div>{loadData && <LoadingIcon className="m-auto" />}</div>
+      {qaaSubmScore ? (
         <Fragment>
           <form>
             <>
               <Row>
-                {draftSubmission &&
-                  draftSubmission?.sections.map((sectionObj: any, index: number) => (
+                {qaaSubmScore &&
+                  qaaSubmScore.sections.length > 0 &&
+                  qaaSubmScore?.sections.map((sectionObj: any, index: number) => (
                     <>
                       <Col className="mb-3 col-4">
                         <h1 className="section-name">Section {index + 1}</h1>
                         <hr className="mb-2 mt-2" />
-                        <h1 className="category-name">{sectionObj?.name}</h1>
+                        <h1 className="category-name">{getSection(sectionObj.sectionId)}</h1>
                         <Fragment>
                           <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
                             <thead style={{ backgroundColor: '#9e9e9e', color: '#fff' }}>
@@ -142,16 +73,16 @@ const QAAScorePage = () => {
                                 <td className="col-2">100%</td>
                               </tr>
                             </tfoot>
-                            {sectionObj?.answers &&
-                              sectionObj?.answers
+                            {sectionObj?.categoryScores &&
+                              sectionObj?.categoryScores
                                 .sort((next: any, prev: any) => next.order - prev.order)
                                 .map((question: any, idx: number) => (
                                   <>
                                     <tbody>
                                       <Fragment>
                                         <tr className="trCls">
-                                          <td className="col-4">{question.text}</td>
-                                          <td className="col-1">{question.points}%</td>
+                                          <td className="col-4">{question.categoryName}</td>
+                                          <td className="col-1">{question.rating}%</td>
                                         </tr>
                                       </Fragment>
                                     </tbody>
@@ -185,33 +116,23 @@ const QAAScorePage = () => {
                       </thead>
                       <tbody>
                         <Fragment>
-                          <tr className="trCls">
-                            <td className="col-2">{`Overall`}</td>
-                            <td className="col-1">{`529`}</td>
-                            <td className="col-1">{`0`}</td>
-                            <td className="col-1">{`397.75`}</td>
-                            <td className="col-1">{`529`}</td>
-                            <td className="col-1">{`100`}%</td>
-                            <td className="col-1" style={{ color: 'green', fontWeight: 'bold' }}>{`PASS`}</td>
-                          </tr>
-                          <tr className="trCls">
-                            <td className="col-2">{`Cleanliness`}</td>
-                            <td className="col-1">{`239`}</td>
-                            <td className="col-1">{`0`}</td>
-                            <td className="col-1">{`179.25`}</td>
-                            <td className="col-1">{`178`}</td>
-                            <td className="col-1">{`78`}%</td>
-                            <td className="col-1" style={{ color: 'red', fontWeight: 'bold' }}>{`FAIL`}</td>
-                          </tr>
-                          <tr className="trCls">
-                            <td className="col-2">{`Q-Cat-X`}</td>
-                            <td className="col-1">{`244`}</td>
-                            <td className="col-1">{`0`}</td>
-                            <td className="col-1">{`181`}</td>
-                            <td className="col-1">{`183`}</td>
-                            <td className="col-1">{`82`}%</td>
-                            <td className="col-1" style={{ color: 'green', fontWeight: 'bold' }}>{`PASS`}</td>
-                          </tr>
+                          {qaaSubmScore &&
+                            qaaSubmScore.scoresByTag.length > 0 &&
+                            qaaSubmScore?.scoresByTag.map((tagObj: any, index: number) => (
+                              <tr className="trCls">
+                                <td className="col-2">{tagObj.tag}</td>
+                                <td className="col-1">{tagObj.available}</td>
+                                <td className="col-1">{tagObj.na}</td>
+                                <td className="col-1">{((tagObj.available - tagObj.na) * 0.8).toFixed(1)}</td>
+                                <td className="col-1">{tagObj.score}</td>
+                                <td className="col-1">{tagObj.rating}%</td>
+                                {tagObj.score > (tagObj.available - tagObj.na) * 0.8 ? (
+                                  <td className="col-1" style={{ color: 'green', fontWeight: 'bold' }}>{`PASS`}</td>
+                                ) : (
+                                  <td className="col-1" style={{ color: 'red', fontWeight: 'bold' }}>{`FAIL`}</td>
+                                )}
+                              </tr>
+                            ))}
                         </Fragment>
                       </tbody>
                     </table>
@@ -220,7 +141,6 @@ const QAAScorePage = () => {
               </Row>
             </>
           </form>
-          {scoreDisplay(draftSubmission.sections)}
         </Fragment>
       ) : (
         'No Record available'
