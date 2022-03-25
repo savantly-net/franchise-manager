@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import lombok.RequiredArgsConstructor;
+import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreDto;
 import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreService;
 import net.savantly.sprout.franchise.domain.operations.qai.section.submission.QAISectionSubmissionDto;
 import net.savantly.sprout.franchise.domain.operations.qai.section.submission.QAISubmissionService;
@@ -35,7 +36,8 @@ public class QAAService {
 		entity.setSectionIds(sectionIds);
 		QAASubmission saved = this.repository.save(entity);
 		QAADto result = convert(saved);
-		this.scoreService.createScoreFromSubmission(saved, result.getSections().stream().collect(Collectors.toList()));
+		QAAScoreDto scoreDto = this.scoreService.createScoreFromSubmission(saved, result.getSections().stream().collect(Collectors.toList()));
+		
 		return result;
 	}
 	

@@ -52,8 +52,13 @@ public class QAAScoreCalculator {
 			String sectionId = qaiSectionSubmission.getSectionId();
 			QAISection section = getSection(sectionId);
 			
-			Map<String, QAASectionScore> sectionRubric = 
-					rubricBySection.getOrDefault(sectionId, new HashMap<String, QAASectionScore>());
+			Map<String, QAASectionScore> sectionRubric;
+			if(rubricBySection.containsKey(sectionId)) {
+				sectionRubric = rubricBySection.get(sectionId);
+			} else {
+				sectionRubric = new HashMap<String, QAASectionScore>();
+				rubricBySection.put(sectionId, sectionRubric);
+			}
 			
 			for (QAIQuestionAnswerDto answer : qaiSectionSubmission.getAnswers()) {
 				QAIQuestion question = getQuestionById(answer.getQuestionId());
@@ -63,7 +68,14 @@ public class QAAScoreCalculator {
 				// get score object by category id
 				String categoryId = question.getCategory().getItemId();
 				QAIQuestionCategory category = getCategory(categoryId);
-				QAASectionScore categoryRubric = sectionRubric.getOrDefault(categoryId, new QAASectionScore());
+				
+				QAASectionScore categoryRubric;
+				if (sectionRubric.containsKey(categoryId)) {
+					categoryRubric = sectionRubric.get(categoryId);
+				} else {
+					categoryRubric = new QAASectionScore();
+					sectionRubric.put(categoryId, categoryRubric);
+				}
 				categoryRubric
 					.setCategoryId(categoryId)
 					.setSectionId(sectionId)
@@ -86,7 +98,14 @@ public class QAAScoreCalculator {
 					String[] tags = question.getTags().split(",");
 					for (int t = 0; t < tags.length; t++) {
 						String tag = tags[t].trim();
-						QAAScoreByTag tagRubric = rubricByTag.getOrDefault(tag, new QAAScoreByTag());
+						QAAScoreByTag tagRubric;
+						if (rubricByTag.containsKey(tag)) {
+							tagRubric = rubricByTag.get(tag);
+						} else {
+							tagRubric = new QAAScoreByTag();
+							rubricByTag.put(tag, tagRubric);
+						}
+						
 						tagRubric.setTag(tag)
 							.setSubmissionId(submissionId);
 						tagRubric.addAvailablePoints(points);
@@ -104,7 +123,14 @@ public class QAAScoreCalculator {
 					QAIGuestQuestion question = getGuestQuestionById(answer.getGuestQuestionId());
 					long points = question.getPoints();
 					available += points;
-					QAASectionScore categoryRubric = sectionRubric.getOrDefault(GUEST_CATEGORY, new QAASectionScore());
+					
+					QAASectionScore categoryRubric;
+					if (sectionRubric.containsKey(GUEST_CATEGORY)) {
+						categoryRubric = sectionRubric.get(GUEST_CATEGORY);
+					} else {
+						categoryRubric = new QAASectionScore();
+						sectionRubric.put(GUEST_CATEGORY, categoryRubric);
+					}
 
 					categoryRubric.setCategoryId(GUEST_CATEGORY)
 						.setSectionId(sectionId)

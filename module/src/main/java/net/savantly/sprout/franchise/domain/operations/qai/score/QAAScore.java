@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -66,12 +67,12 @@ public class QAAScore {
 	}
 
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "submission_id")
 	private Set<QAASectionScore> sections = new HashSet<>();
 
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "submission_id")
 	private Set<QAAScoreByTag> scoresByTag = new HashSet<>(); 
 }
