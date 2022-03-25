@@ -8,6 +8,7 @@ import { Col, Row } from 'reactstrap';
 import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
 import { qaiSectionStateProvider } from '../../sections/entity';
 import { QAISectionSubmission, qaiSubmissionStateProvider } from '../entity';
+import { useQAASubmissionScore } from '../hooks';
 
 const QAAScorePage = () => {
   const submissionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSubmissions);
@@ -110,6 +111,8 @@ const QAAScorePage = () => {
       </Table>
     );
   };
+  const fmQaaScore = useQAASubmissionScore(`f23fdfdb-8bf8-4b62-999d-1aa4f549453d`);
+  console.log("fmQaaScore===",fmQaaScore);
 
   return (
     <div>
