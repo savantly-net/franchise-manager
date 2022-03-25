@@ -41,14 +41,6 @@ const QAISubmissionCreate = () => {
     if (!categoryState.isFetched && !categoryState.isFetching) {
       dispatch(qaiQuestionCategoryStateProvider.loadState());
       dispatch(qaiSubmissionStateProvider.loadState());
-      // qaiQuestionCategoryStateProvider.props.entityService
-      //   .load()
-      //   .then((response: any) => {
-      //     setCategoryList(response?.data.content);
-      //   })
-      //   .catch(err => {
-      //     setError('Could not create attachment folder');
-      //   });
       if (!sectionState.isFetched && !sectionState.isFetching) {
         dispatch(qaiSectionStateProvider.loadState());
       }
