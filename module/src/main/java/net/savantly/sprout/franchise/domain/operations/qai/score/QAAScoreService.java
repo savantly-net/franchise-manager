@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import net.savantly.sprout.franchise.domain.operations.qai.audit.QAASubmission;
@@ -47,7 +47,14 @@ public class QAAScoreService {
 		
 		Map<String, QAASectionScoreDto> dto = new HashMap<String, QAASectionScoreDto>();
 		for (QAASectionScore qaaSectionScore : sections) {
-			QAASectionScoreDto sectionDto = dto.getOrDefault(qaaSectionScore.getSectionId(), new QAASectionScoreDto());
+			QAASectionScoreDto sectionDto;
+			if (dto.containsKey(qaaSectionScore.getSectionId())) {
+				sectionDto = dto.get(qaaSectionScore.getSectionId());
+			} else {
+				sectionDto = new QAASectionScoreDto();
+				dto.put(qaaSectionScore.getSectionId(), sectionDto);
+			}
+			
 			sectionDto.getCategoryScores().add(convert(qaaSectionScore));
 		}
 		for (Entry<String, QAASectionScoreDto> v : dto.entrySet()) {

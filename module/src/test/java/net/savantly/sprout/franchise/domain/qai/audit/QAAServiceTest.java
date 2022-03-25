@@ -159,6 +159,7 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 
 		QAIQuestionCategory cat = this.categoryRepo.save(getExampleCategory());
 		QAIQuestion q = exampleQuestion();
+		q.setTags("tag");
 		q.setCategory(cat);
 		
 		QAIGuestQuestion gq = this.gqrepo.save(getExampleGuestQuestion());
@@ -196,6 +197,7 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 				QAAScoreDto.class);
 		Assertions.assertEquals(HttpStatus.OK, response2.getStatusCode(), "Should get score");
 		Assertions.assertEquals(1, response2.getBody().getOverallScore(), "Should get score");
+		Assertions.assertEquals(1, response2.getBody().getSections().size(), "Should get score");
 	}
 	
 	@Test
