@@ -38,7 +38,6 @@ public class QAASectionScore {
 	@Column(name = "section_order")
 	private long order;
 	
-	@Id
 	@Column(name= "section_name")
 	private String sectionName;
 	

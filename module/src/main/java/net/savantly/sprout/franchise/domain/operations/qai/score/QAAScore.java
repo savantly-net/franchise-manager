@@ -6,12 +6,15 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -63,13 +66,12 @@ public class QAAScore {
 	}
 
 
-	@ElementCollection
-	@CollectionTable(name = "fm_qaa_score_sections", joinColumns = { @JoinColumn(name = "submission_id")})
-	@Column(name="section_id")
+	@OneToMany
+	@JoinColumn(name = "submission_id")
 	private Set<QAASectionScore> sections = new HashSet<>();
 
-	@ElementCollection
-	@CollectionTable(name = "fm_qaa_score_tags", joinColumns = { @JoinColumn(name = "submission_id")})
-	@Column(name="tag")
+
+	@OneToMany
+	@JoinColumn(name = "submission_id")
 	private Set<QAAScoreByTag> scoresByTag = new HashSet<>(); 
 }
