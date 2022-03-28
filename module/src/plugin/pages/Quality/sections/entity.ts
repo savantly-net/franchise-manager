@@ -42,7 +42,7 @@ export const qaiSectionStateProvider = new EntityStateProvider<QAISection>({
     isFetched: false,
     isFetching: false,
     example: {
-      name: 'New QAI Section',
+      name: 'New QAA Section',
       order: 0,
       requireStaffAttendance: false,
       guestQuestions: [],
