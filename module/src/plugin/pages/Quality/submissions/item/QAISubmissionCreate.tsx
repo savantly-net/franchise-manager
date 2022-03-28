@@ -41,14 +41,6 @@ const QAISubmissionCreate = () => {
     if (!categoryState.isFetched && !categoryState.isFetching) {
       dispatch(qaiQuestionCategoryStateProvider.loadState());
       dispatch(qaiSubmissionStateProvider.loadState());
-      // qaiQuestionCategoryStateProvider.props.entityService
-      //   .load()
-      //   .then((response: any) => {
-      //     setCategoryList(response?.data.content);
-      //   })
-      //   .catch(err => {
-      //     setError('Could not create attachment folder');
-      //   });
       if (!sectionState.isFetched && !sectionState.isFetching) {
         dispatch(qaiSectionStateProvider.loadState());
       }
@@ -309,7 +301,7 @@ const QAISubmissionCreate = () => {
                                       <Fragment>
                                         <tr>
                                           <td className="col-1">
-                                            {sectionObj.order}.{question.order}
+                                            {index + 1}.{question.order}
                                           </td>
                                           <td className="col-4">{question.text}</td>
                                           <td className="col-1">{question.points}</td>
