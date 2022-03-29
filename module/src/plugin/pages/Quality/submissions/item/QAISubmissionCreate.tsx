@@ -201,7 +201,7 @@ const QAISubmissionCreate = () => {
       </Table>
     );
   };
-
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<any>();
   return (
     <div>
       {error && <Alert color="warning">{error}</Alert>}
@@ -335,12 +335,21 @@ const QAISubmissionCreate = () => {
                                               }
                                               onCancel={() => {}}
                                               onConfirm={async value => {
+                                                let reader = new FileReader();
+                                                let file = value.files[0];
+                                                reader.onloadend = () => {
+                                                  setImagePreviewUrl(reader.result);
+                                                };
+                                                reader.readAsDataURL(file);
                                                 setTimeout(function() {
                                                   fileUpload(props, value, index, idx, sectionObj.sectionId);
                                                 }, 5000);
                                               }}
                                               accept={['image/*']}
                                             />
+                                          </td>
+                                          <td className="col-2">
+                                            <img src={imagePreviewUrl} height="30px" width="30px" />
                                           </td>
                                         </tr>
 

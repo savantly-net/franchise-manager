@@ -5,15 +5,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Col, Row } from 'reactstrap';
 import { qaiSectionStateProvider } from '../../sections/entity';
+import { qaiSubmissionStateProvider } from '../entity';
 import { useQAASubmissionScore } from '../hooks';
 
 const QAAScorePage = () => {
   const sectionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSections);
+  const submissionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSubmissions);
   const dispatch = useDispatch();
   const params = useParams();
   const submissionId = params['itemId'];
 
   const [qaaSubmScore, setQaaSubmScore] = useState<any>();
+  const [qaaSubmission, setqaaSubmission] = useState<any>();
   const [loadData, setLoadData] = useState(true);
 
   const [sectionList, setSectionList] = useState<any>();
@@ -22,12 +25,18 @@ const QAAScorePage = () => {
     if (!sectionState.isFetched && !sectionState.isFetching) {
       dispatch(qaiSectionStateProvider.loadState());
     }
+    if (!submissionState.isFetched && !submissionState.isFetching) {
+      dispatch(qaiSubmissionStateProvider.loadState());
+    }
     if (sectionState?.response) {
       setSectionList(sectionState?.response);
     }
-  }, [sectionState, dispatch]);
+    if (submissionState?.response) {
+      setqaaSubmission(submissionState?.response);
+    }
+  }, [sectionState, submissionState, dispatch]);
 
-  const showLoading = sectionState.isFetching;
+  const showLoading = sectionState.isFetching || submissionState.isFetching;
 
   const fmQaaScore = useQAASubmissionScore(submissionId);
 
@@ -35,7 +44,11 @@ const QAAScorePage = () => {
     const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
     return searchSection?.name ? searchSection?.name : 'Unknown Section';
   };
-
+  const getQuestionText = (questionId: string, sectionId: string) => {
+    const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
+    const searchQuestion: any = searchSection.questions.find((temp: any) => temp.itemId === questionId);
+    return searchQuestion?.text ? searchQuestion?.text : 'NA';
+  };
   useMemo(() => {
     if (fmQaaScore) {
       setQaaSubmScore(fmQaaScore);
@@ -138,6 +151,53 @@ const QAAScorePage = () => {
                     </table>
                   </Fragment>
                 </div>
+              </Row>
+              <Row>
+                <>
+                  <Col className="mb-3 col-4">
+                    <h1 className="category-name" style={{ fontWeight: 'bold' }}>Question</h1>
+                    <Fragment>
+                      <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
+                        <thead style={{ backgroundColor: '#9e9e9e', color: '#fff' }}>
+                          <tr className="trCls">
+                            <th className="col-4">Question</th>
+                            <th className="col-2">Notes</th>
+                          </tr>
+                        </thead>
+
+                        <>
+                          <tbody>
+                            <Fragment>
+                              {qaaSubmission &&
+                                qaaSubmission.content.length > 0 &&
+                                qaaSubmission?.content.map(
+                                  (submissionObj: any, index: number) =>
+                                    submissionObj?.sections &&
+                                    submissionObj?.sections
+                                      .sort((next: any, prev: any) => next.order - prev.order)
+                                      .map(
+                                        (question: any, idx: number) =>
+                                          question['answers'][idx]['value'] === 'NO' && (
+                                            <tr className="trCls">
+                                              <td className="col-4">
+                                                {getQuestionText(
+                                                  question['answers'][idx].questionId,
+                                                  question.sectionId
+                                                )}
+                                              </td>
+                                              <td className="col-1">{question['answers'][idx]['notes']}</td>
+                                            </tr>
+                                          )
+                                      )
+                                )}
+                            </Fragment>
+                          </tbody>
+                        </>
+                      </table>
+                    </Fragment>
+                  </Col>
+                </>
+                <div>{showLoading && <LoadingIcon className="m-auto" />}</div>
               </Row>
             </>
           </form>
