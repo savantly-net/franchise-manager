@@ -300,12 +300,12 @@ const QAISubmissionEditPage = () => {
                                             {props.values.sections[index]['answers'][idx]['attachments'].length > 0 && (
                                               <img
                                                 src={`http://localhost:3001${props.values.sections[index]['answers'][idx]['attachments'][idx]['downloadUrl']}`}
-                                                height="30px"
-                                                width="30px"
+                                                height="40px"
+                                                width="50px"
                                               />
                                             )}
                                             {imagePreviewUrl && (
-                                              <img src={imagePreviewUrl} height="30px" width="30px" />
+                                              <img src={imagePreviewUrl} height="40px" width="50px" />
                                             )}
                                           </td>
                                         </tr>

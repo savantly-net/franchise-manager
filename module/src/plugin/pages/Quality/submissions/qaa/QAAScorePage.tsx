@@ -7,6 +7,8 @@ import { Col, Row } from 'reactstrap';
 import { qaiSectionStateProvider } from '../../sections/entity';
 import { qaiSubmissionStateProvider } from '../entity';
 import { useQAASubmissionScore } from '../hooks';
+// import Tabs from '@material-ui/core/Tabs';
+// import Tab from '@material-ui/core/Tab';
 
 const QAAScorePage = () => {
   const sectionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSections);
@@ -45,6 +47,7 @@ const QAAScorePage = () => {
     return searchSection?.name ? searchSection?.name : 'Unknown Section';
   };
   const getQuestionText = (questionId: string, sectionId: string) => {
+    console.log('sectionList', qaaSubmission);
     const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
     const searchQuestion: any = searchSection.questions.find((temp: any) => temp.itemId === questionId);
     return searchQuestion?.text ? searchQuestion?.text : 'NA';
@@ -155,7 +158,9 @@ const QAAScorePage = () => {
               <Row>
                 <>
                   <Col className="mb-3 col-4">
-                    <h1 className="category-name" style={{ fontWeight: 'bold' }}>Question</h1>
+                    <h1 className="category-name" style={{ fontWeight: 'bold' }}>
+                      Question
+                    </h1>
                     <Fragment>
                       <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
                         <thead style={{ backgroundColor: '#9e9e9e', color: '#fff' }}>
@@ -172,21 +177,23 @@ const QAAScorePage = () => {
                                 qaaSubmission.content.length > 0 &&
                                 qaaSubmission?.content.map(
                                   (submissionObj: any, index: number) =>
+                                    submissionObj?.id === submissionId &&
                                     submissionObj?.sections &&
                                     submissionObj?.sections
                                       .sort((next: any, prev: any) => next.order - prev.order)
                                       .map(
                                         (question: any, idx: number) =>
-                                          question['answers'][idx]['value'] === 'NO' && (
-                                            <tr className="trCls">
-                                              <td className="col-4">
-                                                {getQuestionText(
-                                                  question['answers'][idx].questionId,
-                                                  question.sectionId
-                                                )}
-                                              </td>
-                                              <td className="col-1">{question['answers'][idx]['notes']}</td>
-                                            </tr>
+                                          question?.answers &&
+                                          question?.answers.map(
+                                            (answer: any, idxa: number) =>
+                                              answer.value === 'NO' && (
+                                                <tr className="trCls">
+                                                  <td className="col-4">
+                                                    {getQuestionText(answer.questionId, question.sectionId)}
+                                                  </td>
+                                                  <td className="col-1">{answer['notes']}</td>
+                                                </tr>
+                                              )
                                           )
                                       )
                                 )}
@@ -197,6 +204,17 @@ const QAAScorePage = () => {
                     </Fragment>
                   </Col>
                 </>
+                {/* <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                  <Tab label="Item One" {...a11yProps(0)} />
+                  <Tab label="Item Two" {...a11yProps(1)} />
+                  <Tab label="Item Three" {...a11yProps(2)} />
+                </Tabs>
+                <TabPanel value={value} index={0}>
+                  Item One
+                </TabPanel>
+                <TabPanel value={value} index={1}>
+                  Item Two
+                </TabPanel> */}
                 <div>{showLoading && <LoadingIcon className="m-auto" />}</div>
               </Row>
             </>

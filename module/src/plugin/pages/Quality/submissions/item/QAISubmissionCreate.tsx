@@ -349,7 +349,7 @@ const QAISubmissionCreate = () => {
                                             />
                                           </td>
                                           <td className="col-2">
-                                            <img src={imagePreviewUrl} height="30px" width="30px" />
+                                            <img src={imagePreviewUrl} height="40px" width="50px" />
                                           </td>
                                         </tr>
 
