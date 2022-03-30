@@ -14,32 +14,13 @@ import { qaiQuestionCategoryStateProvider } from '../../categories/entity';
 import { qaiSectionStateProvider } from '../../sections/entity';
 import { QAISectionSubmission, qaiSubmissionService, qaiSubmissionStateProvider } from '../entity';
 
-const storageKey = 'QAASectionSubmissionData';
-const alertUser = (e: any, newValue: any) => {
-  localStorage.setItem(storageKey, JSON.stringify(newValue));
-  e.preventDefault();
-  e.returnValue = '';
-};
-const setQAASectionSubmFun = (data: any) => {
-  window.addEventListener('beforeunload', (e: any) => alertUser(e, data));
-  useEffect(() => {
-    return () => {
-      window.removeEventListener('beforeunload', (e: any) => alertUser(e, data));
-      localStorage.setItem(storageKey, JSON.stringify(data));
-    };
-  }, [data]);
-};
-
-const getDataLocally = () => {
-  const dataObj = localStorage.getItem(storageKey);
-  return JSON.parse(dataObj ? dataObj : '');
-};
-
 const QAISubmissionCreate = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const submissionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSubmissions);
   const sectionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSections);
   const categoryState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiQuestionCategories);
-  const dispatch = useDispatch();
   const [selectedLocation, setSelectedLocation] = useState('');
   const [error, setError] = useState('');
   const fileService = getFileService();
@@ -48,17 +29,50 @@ const QAISubmissionCreate = () => {
   const fmConfig = useFMConfig();
 
   const [categoryList, setCategoryList] = useState<any>();
+
+  let storageKey = 'QAASectionSubmissionData';
+  let removeKey = '';
+  const alertUser = (e: any, newValue: any) => {
+    localStorage.setItem(storageKey, JSON.stringify(newValue));
+    if (removeKey) {
+      localStorage.removeItem(storageKey);
+    }
+    e.preventDefault();
+    e.returnValue = '';
+  };
+  const SetQAASectionSubmFun = (data: any) => {
+    window.addEventListener('beforeunload', (e: any) => alertUser(e, data));
+    useEffect(() => {
+      return () => {
+        window.removeEventListener('beforeunload', (e: any) => alertUser(e, data));
+        if (removeKey) {
+          localStorage.removeItem(storageKey);
+        } else if (data) {
+          localStorage.setItem(storageKey, JSON.stringify(data));
+        }
+      };
+    }, [data]);
+  };
+
   const [draftSubmission, setDraftSubmission] = useState({
     locationId: '',
     dateScored: '',
+    startTime: '',
+    endTime: '',
     managerOnDuty: '',
     fsc: '',
+    fsm: '',
     responsibleAlcoholCert: '',
     sections: [],
   });
 
-  const navigate = useNavigate();
   useMemo(() => {
+    const getDataLocally = () => {
+      const dataObj = localStorage.getItem(storageKey);
+      if (dataObj) {
+        return JSON.parse(dataObj);
+      }
+    };
     if (!categoryState.isFetched && !categoryState.isFetching) {
       dispatch(qaiQuestionCategoryStateProvider.loadState());
       dispatch(qaiSubmissionStateProvider.loadState());
@@ -69,8 +83,48 @@ const QAISubmissionCreate = () => {
     if (categoryState?.response) {
       setCategoryList(categoryState?.response?.content);
     }
-    setDraftSubmission(getDataLocally());
-  }, [sectionState, categoryState, dispatch]);
+    if (sectionState?.response && getDataLocally()) {
+      sectionState?.response.map((section, i) => {
+        if (getDataLocally().sections.length > 0) {
+          const sectiondata: any = getDataLocally().sections.filter(
+            (item: any, i: number) => section.itemId === item.sectionId
+          );
+          if (sectiondata.length > 0) {
+            const questionId = section.questions.map((item: any, i: number) => item.itemId);
+            if (questionId.toString()) {
+              const answersdata = sectiondata[i].answers.filter(
+                (item: any, i: number) => item.questionId === questionId.toString()
+              );
+              if (answersdata.length > 0) {
+                getDataLocally().sections[i].answers = { ...answersdata };
+              } else {
+                let index = sectiondata[i].answers.indexOf(answersdata[0]);
+                if (index > -1) {
+                  index = sectiondata[i].answers.splice(index, 1);
+                }
+              }
+            }
+          } else {
+            let index = getDataLocally().sections.indexOf(sectiondata[0]);
+            if (index > -1) {
+              index = getDataLocally().sections.splice(index, 1);
+            }
+          }
+          setDraftSubmission({
+            locationId: getDataLocally().locationId,
+            dateScored: getDataLocally().dateScored,
+            startTime: getDataLocally().startTime,
+            endTime: getDataLocally().endTime,
+            managerOnDuty: getDataLocally().managerOnDuty,
+            fsc: getDataLocally().fsc,
+            fsm: getDataLocally().fsm,
+            responsibleAlcoholCert: getDataLocally().responsibleAlcoholCert,
+            sections: sectiondata,
+          });
+        }
+      });
+    }
+  }, [sectionState, categoryState, storageKey, dispatch]);
 
   const showLoading = sectionState.isFetching || categoryState.isFetching || submissionState.isFetching;
 
@@ -200,8 +254,11 @@ const QAISubmissionCreate = () => {
       setDraftSubmission({
         locationId: selectedLocation,
         dateScored: '',
+        startTime: '',
+        endTime: '',
         managerOnDuty: '',
         fsc: userContext?.user?.name ? userContext?.user?.name : '',
+        fsm: '',
         responsibleAlcoholCert: '',
         sections: sections,
       });
@@ -232,6 +289,7 @@ const QAISubmissionCreate = () => {
           <Form
             initialValues={draftSubmission}
             onSubmit={async (values: QAISectionSubmission, { resetForm }) => {
+              removeKey = 'removeItem';
               setError('');
               values.locationId = selectedLocation;
               values.dateScored = dateTimeForTimeZone(values.dateScored).toISOString();
@@ -252,14 +310,13 @@ const QAISubmissionCreate = () => {
                 .catch(err => {
                   setError(err.message || 'There was a problem saving the content. Check the logs.');
                 });
-              localStorage.removeItem(storageKey);
             }}
             onCancel={() => {
               console.log('Click on Cancel Button');
             }}
           >
             {props => (
-              setQAASectionSubmFun(props.values),
+              SetQAASectionSubmFun(props.values),
               (
                 <>
                   <Fragment>

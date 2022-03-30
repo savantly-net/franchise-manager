@@ -20,6 +20,7 @@ export const LocationSelector = ({ initialValue, onChange }: LocationSelectorPro
         setSelectedLocation(updated);
         onChange(updated);
       }}
+      required
     >
       <option></option>
       {fmLocations &&
