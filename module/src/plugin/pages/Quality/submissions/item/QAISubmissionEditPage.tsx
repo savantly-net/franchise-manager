@@ -194,7 +194,7 @@ const QAISubmissionEditPage = () => {
       }
     }
   };
-
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<any>();
   return (
     <div>
       {error && <Alert color="warning">{error}</Alert>}
@@ -223,7 +223,7 @@ const QAISubmissionEditPage = () => {
                 console.log('Click on Cancel Button');
               }}
             >
-              {props => (
+              {(props: any) => (
                 <>
                   {draftSubmission?.sections &&
                     draftSubmission?.sections.map((sectionObj: any, index: number) => (
@@ -283,12 +283,30 @@ const QAISubmissionEditPage = () => {
                                               }
                                               onCancel={() => {}}
                                               onConfirm={async value => {
+                                                let reader = new FileReader();
+                                                let file = value.files[0];
+                                                reader.onloadend = () => {
+                                                  setImagePreviewUrl(reader.result);
+                                                };
+                                                reader.readAsDataURL(file);
                                                 setTimeout(function() {
                                                   fileUpload(props, value, index, idx, sectionObj.sectionId);
                                                 }, 5000);
                                               }}
                                               accept={['image/*']}
                                             />
+                                          </td>
+                                          <td className="col-2">
+                                            {props.values.sections[index]['answers'][idx]['attachments'].length > 0 && (
+                                              <img
+                                                src={`http://localhost:3001${props.values.sections[index]['answers'][idx]['attachments'][idx]['downloadUrl']}`}
+                                                height="40px"
+                                                width="50px"
+                                              />
+                                            )}
+                                            {imagePreviewUrl && (
+                                              <img src={imagePreviewUrl} height="40px" width="50px" />
+                                            )}
                                           </td>
                                         </tr>
                                         {(props.values.sections[index]['answers'][idx]['value'] === 'NO' ||

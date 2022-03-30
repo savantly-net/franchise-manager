@@ -280,7 +280,7 @@ const QAISubmissionCreate = () => {
       </Table>
     );
   };
-
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<any>();
   return (
     <div>
       {error && <Alert color="warning">{error}</Alert>}
@@ -400,7 +400,6 @@ const QAISubmissionCreate = () => {
                                                   name={`sections.${index}.answers.${idx}.value`}
                                                   className="mb-1"
                                                   as="select"
-                                                  required="required"
                                                 >
                                                   <option></option>
                                                   <option value="YES">Yes</option>
@@ -425,6 +424,12 @@ const QAISubmissionCreate = () => {
                                                 }
                                                 onCancel={() => {}}
                                                 onConfirm={async value => {
+                                                  let reader = new FileReader();
+                                                  let file = value.files[0];
+                                                  reader.onloadend = () => {
+                                                    setImagePreviewUrl(reader.result);
+                                                  };
+                                                  reader.readAsDataURL(file);
                                                   setTimeout(function() {
                                                     fileUpload(props, value, index, idx, sectionObj.sectionId);
                                                   }, 5000);
@@ -432,8 +437,10 @@ const QAISubmissionCreate = () => {
                                                 accept={['image/*']}
                                               />
                                             </td>
+                                            <td className="col-2">
+                                              <img src={imagePreviewUrl} height="40px" width="50px" />
+                                            </td>
                                           </tr>
-
                                           {props.values.sections[index]['answers'][idx]['value'] === 'NO' && (
                                             <tr>
                                               <td colSpan={2}>Notes</td>
