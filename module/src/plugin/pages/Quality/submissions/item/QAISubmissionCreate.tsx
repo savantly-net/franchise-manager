@@ -239,8 +239,8 @@ const QAISubmissionCreate = () => {
                     : false,
                 parent:
                   attachmentFolder !== undefined &&
-                    Object.keys(attachmentFolder).length > 0 &&
-                    attachmentFolder !== undefined
+                  Object.keys(attachmentFolder).length > 0 &&
+                  attachmentFolder !== undefined
                     ? attachmentFolder.name
                     : sectionId,
               },
@@ -289,7 +289,7 @@ const QAISubmissionCreate = () => {
       };
       setImageUrl(images);
     }
-  }, [imagePreviewUrl]);
+  }, [imagePreviewUrl, imageUrl]);
   return (
     <div>
       {error && <Alert color="warning">{error}</Alert>}
@@ -431,7 +431,7 @@ const QAISubmissionCreate = () => {
                                                     <span>Attach</span>
                                                   </Fragment>
                                                 }
-                                                onCancel={() => { }}
+                                                onCancel={() => {}}
                                                 onConfirm={async value => {
                                                   let reader = new FileReader();
                                                   let file = value.files[0];
@@ -442,7 +442,7 @@ const QAISubmissionCreate = () => {
                                                     });
                                                   };
                                                   reader.readAsDataURL(file);
-                                                  setTimeout(function () {
+                                                  setTimeout(function() {
                                                     fileUpload(props, value, index, idx, question.questionId);
                                                   }, 5000);
                                                 }}
@@ -455,8 +455,8 @@ const QAISubmissionCreate = () => {
                                                   imageUrl[question.questionId]
                                                     ? imageUrl[question.questionId]
                                                     : question.attachments.length > 0
-                                                      ? `${window.location.origin}${question.attachments[0]['downloadUrl']}`
-                                                      : ''
+                                                    ? `${window.location.origin}${question.attachments[0]['downloadUrl']}`
+                                                    : ''
                                                 }
                                                 height="40px"
                                                 width="50px"

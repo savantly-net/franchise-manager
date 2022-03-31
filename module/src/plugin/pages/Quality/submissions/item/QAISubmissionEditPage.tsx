@@ -173,8 +173,8 @@ const QAISubmissionEditPage = () => {
                     : false,
                 parent:
                   attachmentFolder !== undefined &&
-                    Object.keys(attachmentFolder).length > 0 &&
-                    attachmentFolder !== undefined
+                  Object.keys(attachmentFolder).length > 0 &&
+                  attachmentFolder !== undefined
                     ? attachmentFolder.name
                     : sectionId,
               },
@@ -207,7 +207,7 @@ const QAISubmissionEditPage = () => {
       };
       setImageUrl(images);
     }
-  }, [imagePreviewUrl]);
+  }, [imagePreviewUrl, imageUrl]);
   return (
     <div>
       {error && <Alert color="warning">{error}</Alert>}
@@ -294,7 +294,7 @@ const QAISubmissionEditPage = () => {
                                                   <span>Attach</span>
                                                 </Fragment>
                                               }
-                                              onCancel={() => { }}
+                                              onCancel={() => {}}
                                               onConfirm={async value => {
                                                 let reader = new FileReader();
                                                 let file = value.files[0];
@@ -305,7 +305,7 @@ const QAISubmissionEditPage = () => {
                                                   });
                                                 };
                                                 reader.readAsDataURL(file);
-                                                setTimeout(function () {
+                                                setTimeout(function() {
                                                   fileUpload(props, value, index, idx, question.questionId);
                                                 }, 5000);
                                               }}
@@ -318,8 +318,8 @@ const QAISubmissionEditPage = () => {
                                                 imageUrl[question.questionId]
                                                   ? imageUrl[question.questionId]
                                                   : question.attachments.length > 0
-                                                    ? `${window.location.origin}${question.attachments[0]['downloadUrl']}`
-                                                    : ''
+                                                  ? `${window.location.origin}${question.attachments[0]['downloadUrl']}`
+                                                  : ''
                                               }
                                               height="40px"
                                               width="50px"
@@ -328,16 +328,16 @@ const QAISubmissionEditPage = () => {
                                         </tr>
                                         {(props.values.sections[index]['answers'][idx]['value'] === 'NO' ||
                                           question.value === 'NO') && (
-                                            <tr>
-                                              <td colSpan={2}>Notes</td>
-                                              <td colSpan={3}>
-                                                <FormField
-                                                  placeholder="notes"
-                                                  name={`sections.${index}.answers.${idx}.notes`}
-                                                />
-                                              </td>
-                                            </tr>
-                                          )}
+                                          <tr>
+                                            <td colSpan={2}>Notes</td>
+                                            <td colSpan={3}>
+                                              <FormField
+                                                placeholder="notes"
+                                                name={`sections.${index}.answers.${idx}.notes`}
+                                              />
+                                            </td>
+                                          </tr>
+                                        )}
                                       </Fragment>
                                     </tbody>
                                   </table>
