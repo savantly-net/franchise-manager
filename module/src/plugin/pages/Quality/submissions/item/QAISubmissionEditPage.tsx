@@ -195,6 +195,8 @@ const QAISubmissionEditPage = () => {
     }
   };
 
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<any>({});
+
   return (
     <div>
       {error && <Alert color="warning">{error}</Alert>}
@@ -223,7 +225,7 @@ const QAISubmissionEditPage = () => {
                 console.log('Click on Cancel Button');
               }}
             >
-              {props => (
+              {(props: any) => (
                 <>
                   {draftSubmission?.sections &&
                     draftSubmission?.sections.map((sectionObj: any, index: number) => (
@@ -266,7 +268,7 @@ const QAISubmissionEditPage = () => {
                                           <td
                                             className="col-2"
                                             onClick={value => {
-                                              checkFolderCreated(sectionObj.sectionId);
+                                              checkFolderCreated(question.questionId);
                                             }}
                                           >
                                             <FileUploadButton
@@ -274,7 +276,7 @@ const QAISubmissionEditPage = () => {
                                                 <Fragment>
                                                   <Icon
                                                     onClick={value => {
-                                                      checkFolderCreated(sectionObj.sectionId);
+                                                      checkFolderCreated(question.questionId);
                                                     }}
                                                     name="paperclip"
                                                   ></Icon>
@@ -283,11 +285,33 @@ const QAISubmissionEditPage = () => {
                                               }
                                               onCancel={() => {}}
                                               onConfirm={async value => {
+                                                let reader = new FileReader();
+                                                let file = value.files[0];
+                                                reader.onloadend = () => {
+                                                  setImagePreviewUrl({
+                                                    ...imagePreviewUrl,
+                                                    [question.questionId]: reader.result,
+                                                  });
+                                                };
+                                                reader.readAsDataURL(file);
                                                 setTimeout(function() {
-                                                  fileUpload(props, value, index, idx, sectionObj.sectionId);
+                                                  fileUpload(props, value, index, idx, question.questionId);
                                                 }, 5000);
                                               }}
                                               accept={['image/*']}
+                                            />
+                                          </td>
+                                          <td className="col-2">
+                                            <img
+                                              src={
+                                                imagePreviewUrl[question.questionId]
+                                                  ? imagePreviewUrl[question.questionId]
+                                                  : question.attachments.length > 0
+                                                  ? `${window.location.origin}${question.attachments[0]['downloadUrl']}`
+                                                  : ''
+                                              }
+                                              height="40px"
+                                              width="50px"
                                             />
                                           </td>
                                         </tr>

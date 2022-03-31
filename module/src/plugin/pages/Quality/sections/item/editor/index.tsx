@@ -99,10 +99,10 @@ const QuestionEditor = (props: FormikProps<QAISection>) => {
                         </FormField>
                       </Td>
                       <Td>
-                        <Field name={`questions.${index}.tags`} component={FormikTextInput} />
+                        <Field name={`questions.${index}.tags`} p={1} component={FormikTextInput} />
                       </Td>
                       <Td>
-                        <Field name={`questions.${index}.points`} component={FormikTextInput} />
+                        <Field name={`questions.${index}.points`} p={1} component={FormikTextInput} />
                       </Td>
                       <Td isNumeric>
                         <IconButton

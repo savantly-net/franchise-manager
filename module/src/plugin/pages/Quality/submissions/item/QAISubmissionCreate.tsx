@@ -15,10 +15,12 @@ import { qaiSectionStateProvider } from '../../sections/entity';
 import { QAISectionSubmission, qaiSubmissionService, qaiSubmissionStateProvider } from '../entity';
 
 const QAISubmissionCreate = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const submissionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSubmissions);
   const sectionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSections);
   const categoryState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiQuestionCategories);
-  const dispatch = useDispatch();
   const [selectedLocation, setSelectedLocation] = useState('');
   const [error, setError] = useState('');
   const fileService = getFileService();
@@ -27,16 +29,26 @@ const QAISubmissionCreate = () => {
   const fmConfig = useFMConfig();
 
   const [categoryList, setCategoryList] = useState<any>();
+
+  let storageKey = 'QAASectionSubmissionData';
+  let removeKey = '';
+
+  // const SetQAASectionSubmFun = (data: any) => {
+
+  // };
+
   const [draftSubmission, setDraftSubmission] = useState({
     locationId: '',
     dateScored: '',
+    startTime: '',
+    endTime: '',
     managerOnDuty: '',
     fsc: '',
+    fsm: '',
     responsibleAlcoholCert: '',
     sections: [],
   });
 
-  const navigate = useNavigate();
   useMemo(() => {
     if (!categoryState.isFetched && !categoryState.isFetching) {
       dispatch(qaiQuestionCategoryStateProvider.loadState());
@@ -127,8 +139,189 @@ const QAISubmissionCreate = () => {
     }
   };
 
-  useEffect(() => {
-    if (sectionState?.response) {
+  const scoreDisplay = (sections: QAISectionSubmission[]) => {
+    return (
+      <Table>
+        <Tr>
+          <Td>
+            {sections.map(s => {
+              {
+                <p>{s}</p>;
+              }
+            })}
+          </Td>
+        </Tr>
+      </Table>
+    );
+  };
+
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<any>({});
+
+  useMemo(() => {
+    const getDataLocally = () => {
+      const dataObj = localStorage.getItem(storageKey);
+      if (dataObj) {
+        return JSON.parse(dataObj);
+      }
+    };
+    if (sectionState?.response && sectionState?.response.length > 0 && getDataLocally()) {
+      sectionState?.response.map((section, i) => {
+        if (getDataLocally().sections.length > 0) {
+          const sectiondata: any = getDataLocally().sections.filter(
+            (item: any, i: number) => section.itemId === item.sectionId
+          );
+          if (sectiondata.length > 0) {
+            const questionId = section.questions.map((item: any, i: number) => item.itemId);
+            if (questionId.toString()) {
+              const answersdata = sectiondata[i].answers.filter(
+                (item: any, i: number) => item.questionId === questionId.toString()
+              );
+              if (answersdata.length > 0) {
+                getDataLocally().sections[i].answers = { ...answersdata };
+              } else {
+                let index = sectiondata[i].answers.indexOf(answersdata[0]);
+                if (index > -1) {
+                  index = sectiondata[i].answers.splice(index, 1);
+                }
+              }
+            }
+            setDraftSubmission({
+              locationId: getDataLocally().locationId,
+              dateScored: getDataLocally().dateScored,
+              startTime: getDataLocally().startTime,
+              endTime: getDataLocally().endTime,
+              managerOnDuty: getDataLocally().managerOnDuty,
+              fsc: getDataLocally().fsc,
+              fsm: getDataLocally().fsm,
+              responsibleAlcoholCert: getDataLocally().responsibleAlcoholCert,
+              sections: sectiondata,
+            });
+          } else {
+            let index = getDataLocally().sections.indexOf(sectiondata[0]);
+            if (index > -1) {
+              index = getDataLocally().sections.splice(index, 1);
+            }
+            let sections: any = [];
+            sectionState?.response &&
+              sectionState?.response.map((item: any, i: number) => {
+                sections[i] = {};
+                sections[i].sectionId = item.itemId;
+                sections[i].locationId = selectedLocation;
+                sections[i].name = item.name;
+                sections[i].order = item.order;
+                sections[i].managerOnDuty = '';
+                sections[i].dateScored = '';
+                sections[i].status = 'DRAFT';
+                sections[i].requireStaffAttendance = item.requireStaffAttendance;
+                sections[i].staffAttendance = {};
+
+                let answers: any = [];
+
+                item.questions.map((item1: any, i1: number) => {
+                  let test: any = {};
+                  test.questionId = item1.itemId;
+                  test.sectionId = item1.sectionId;
+                  test.categoryId = item1.categoryId;
+                  test.order = item1.order;
+                  test.points = item1.points;
+                  test.value = '';
+                  test.text = item1.text;
+                  test.notes = item1.notes;
+                  test.attachments = [];
+                  answers.push(test);
+                });
+                sections[i].answers = answers;
+
+                let guestanswers: any = [];
+                item.guestQuestions.map((item1: any = {}, i1: number) => {
+                  if (item1.text) {
+                    let tests: any = {};
+                    tests.notes = item1.text;
+                    tests.attachments = [];
+                    tests.answers = [
+                      { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
+                      { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
+                      { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
+                    ];
+                    guestanswers.push(tests);
+                  }
+                });
+                sections[i].guestAnswers = guestanswers;
+              });
+            setDraftSubmission({
+              locationId: selectedLocation,
+              dateScored: '',
+              startTime: '',
+              endTime: '',
+              managerOnDuty: '',
+              fsc: userContext?.user?.name ? userContext?.user?.name : '',
+              fsm: '',
+              responsibleAlcoholCert: '',
+              sections: sections,
+            });
+          }
+        } else {
+          let sections: any = [];
+          sectionState.response &&
+            sectionState?.response.map((item: any, i: number) => {
+              sections[i] = {};
+              sections[i].sectionId = item.itemId;
+              sections[i].locationId = selectedLocation;
+              sections[i].name = item.name;
+              sections[i].order = item.order;
+              sections[i].managerOnDuty = '';
+              sections[i].dateScored = '';
+              sections[i].status = 'DRAFT';
+              sections[i].requireStaffAttendance = item.requireStaffAttendance;
+              sections[i].staffAttendance = {};
+
+              let answers: any = [];
+
+              item.questions.map((item1: any, i1: number) => {
+                let test: any = {};
+                test.questionId = item1.itemId;
+                test.sectionId = item1.sectionId;
+                test.categoryId = item1.categoryId;
+                test.order = item1.order;
+                test.points = item1.points;
+                test.value = '';
+                test.text = item1.text;
+                test.notes = item1.notes;
+                test.attachments = [];
+                answers.push(test);
+              });
+              sections[i].answers = answers;
+
+              let guestanswers: any = [];
+              item.guestQuestions.map((item1: any = {}, i1: number) => {
+                if (item1.text) {
+                  let tests: any = {};
+                  tests.notes = item1.text;
+                  tests.attachments = [];
+                  tests.answers = [
+                    { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
+                    { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
+                    { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
+                  ];
+                  guestanswers.push(tests);
+                }
+              });
+              sections[i].guestAnswers = guestanswers;
+            });
+          setDraftSubmission({
+            locationId: selectedLocation,
+            dateScored: '',
+            startTime: '',
+            endTime: '',
+            managerOnDuty: '',
+            fsc: userContext?.user?.name ? userContext?.user?.name : '',
+            fsm: '',
+            responsibleAlcoholCert: '',
+            sections: sections,
+          });
+        }
+      });
+    } else if (sectionState?.response) {
       let sections: any = [];
       sectionState?.response.map((item: any, i: number) => {
         sections[i] = {};
@@ -178,30 +371,39 @@ const QAISubmissionCreate = () => {
       setDraftSubmission({
         locationId: selectedLocation,
         dateScored: '',
+        startTime: '',
+        endTime: '',
         managerOnDuty: '',
         fsc: userContext?.user?.name ? userContext?.user?.name : '',
+        fsm: '',
         responsibleAlcoholCert: '',
         sections: sections,
       });
     }
-  }, [sectionState, selectedLocation, userContext]);
+  }, [sectionState, selectedLocation, userContext, storageKey]);
 
-  const scoreDisplay = (sections: QAISectionSubmission[]) => {
-    return (
-      <Table>
-        <Tr>
-          <Td>
-            {sections.map(s => {
-              {
-                <p>{s}</p>;
-              }
-            })}
-          </Td>
-        </Tr>
-      </Table>
-    );
-  };
-
+  const [dataProps, setDataProps] = useState<any>();
+  useEffect(() => {
+    const alertUser = (e: any, newValue: any) => {
+      if (newValue) {
+        localStorage.setItem(storageKey, JSON.stringify(newValue));
+      }
+      if (removeKey) {
+        localStorage.removeItem(storageKey);
+      }
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    if (dataProps) {
+      window.addEventListener('beforeunload', (e: any) => alertUser(e, dataProps));
+      window.removeEventListener('beforeunload', (e: any) => alertUser(e, dataProps));
+      if (removeKey) {
+        localStorage.removeItem(storageKey);
+      } else {
+        localStorage.setItem(storageKey, JSON.stringify(dataProps));
+      }
+    }
+  }, [dataProps, removeKey, storageKey]);
   return (
     <div>
       {error && <Alert color="warning">{error}</Alert>}
@@ -210,6 +412,7 @@ const QAISubmissionCreate = () => {
           <Form
             initialValues={draftSubmission}
             onSubmit={async (values: QAISectionSubmission, { resetForm }) => {
+              removeKey = 'removeItem';
               setError('');
               values.locationId = selectedLocation;
               values.dateScored = dateTimeForTimeZone(values.dateScored).toISOString();
@@ -235,12 +438,12 @@ const QAISubmissionCreate = () => {
               console.log('Click on Cancel Button');
             }}
           >
-            {props => (
+            {(props: any) => (
               <>
                 <Fragment>
                   <div className="d-flex mb-3">
                     <div className="col-3 location-select">
-                      <label>Select Location</label>
+                      <label>Select Location{setDataProps(props.values)}</label>
                       <LocationSelector
                         initialValue={selectedLocation}
                         onChange={value => {
@@ -249,24 +452,30 @@ const QAISubmissionCreate = () => {
                       />
                     </div>
                     <div className="col-3">
-                      <FormField name="dateScored" type="date" label="Audit Date" />
+                      <FormField name="dateScored" type="date" label="Audit Date" required="required" />
                     </div>
                     <div className="col-3">
-                      <FormField name={`startTime`} label="Start" type="time" className="" />
+                      <FormField name={`startTime`} label="Start" type="time" className="" required="required" />
                     </div>
                     <div className="col-3">
-                      <FormField name={`endTime`} label="End" type="time" className="" />
+                      <FormField name={`endTime`} label="End" type="time" className="" required="required" />
                     </div>
                   </div>
                   <div className="d-flex mb-3">
                     <div className="col-3 p-0">
-                      <FormField name="managerOnDuty" type="text" label="Manager On Duty" className="" />
+                      <FormField
+                        name="managerOnDuty"
+                        type="text"
+                        label="Manager On Duty"
+                        className=""
+                        required="required"
+                      />
                     </div>
                     <div className="col-3">
-                      <FormField name="fsc" disabled type="text" label="FSC Conducting" />
+                      <FormField name="fsc" disabled type="text" label="FSC Conducting" required="required" />
                     </div>
                     <div className="col-3">
-                      <FormField name="fsm" type="text" label="Food safety manager on duty" />
+                      <FormField name="fsm" type="text" label="Food safety manager on duty" required="required" />
                     </div>
                     <div className="col-3">
                       <FormField
@@ -274,6 +483,7 @@ const QAISubmissionCreate = () => {
                         type="text"
                         label="Reponsibility Alcohol Certificate"
                         placeholder="for Mgr/Bar staff"
+                        required="required"
                       />
                     </div>
                   </div>
@@ -326,7 +536,7 @@ const QAISubmissionCreate = () => {
                                                 <Fragment>
                                                   <Icon
                                                     onClick={value => {
-                                                      checkFolderCreated(sectionObj.sectionId);
+                                                      checkFolderCreated(question.questionId);
                                                     }}
                                                     name="paperclip"
                                                   ></Icon>
@@ -335,21 +545,43 @@ const QAISubmissionCreate = () => {
                                               }
                                               onCancel={() => {}}
                                               onConfirm={async value => {
+                                                let reader = new FileReader();
+                                                let file = value.files[0];
+                                                reader.onloadend = () => {
+                                                  setImagePreviewUrl({
+                                                    ...imagePreviewUrl,
+                                                    [question.questionId]: reader.result,
+                                                  });
+                                                };
+                                                reader.readAsDataURL(file);
                                                 setTimeout(function() {
-                                                  fileUpload(props, value, index, idx, sectionObj.sectionId);
+                                                  fileUpload(props, value, index, idx, question.questionId);
                                                 }, 5000);
                                               }}
                                               accept={['image/*']}
                                             />
                                           </td>
+                                          <td className="col-2">
+                                            <img
+                                              src={
+                                                imagePreviewUrl[question.questionId]
+                                                  ? imagePreviewUrl[question.questionId]
+                                                  : question.attachments.length > 0
+                                                  ? `${window.location.origin}${question.attachments[0]['downloadUrl']}`
+                                                  : ''
+                                              }
+                                              height="40px"
+                                              width="50px"
+                                            />
+                                          </td>
                                         </tr>
-
                                         {props.values.sections[index]['answers'][idx]['value'] === 'NO' && (
                                           <tr>
                                             <td colSpan={2}>Notes</td>
                                             <td colSpan={3}>
                                               <FormField
                                                 placeholder="notes"
+                                                required="required"
                                                 name={`sections.${index}.answers.${idx}.notes`}
                                               />
                                             </td>
@@ -390,6 +622,7 @@ const QAISubmissionCreate = () => {
                                                         name={`sections.${index}.guestAnswers.${idGusts}.answers.${idGust}.value`}
                                                         className="mb-1"
                                                         as="select"
+                                                        required="required"
                                                       >
                                                         <option></option>
                                                         <option value="YES">Yes</option>
@@ -415,33 +648,48 @@ const QAISubmissionCreate = () => {
                           <p className="ml-3">Staff Attendance</p>
                           <div className="d-flex mb-3">
                             <div className="col-4">
-                              <FormField placeholder="Cashiers" name={`sections.${index}.staffAttendance.Cashiers`} />
+                              <FormField
+                                placeholder="Cashiers"
+                                name={`sections.${index}.staffAttendance.Cashiers`}
+                                required="required"
+                              />
                             </div>
                             <div className="col-4">
                               <FormField
                                 placeholder="Bartenders"
                                 name={`sections.${index}.staffAttendance.Bartenders`}
+                                required="required"
                               />
                             </div>
                             <div className="col-4">
                               <FormField
                                 placeholder="Line Cooks"
                                 name={`sections.${index}.staffAttendance.Line Cooks`}
+                                required="required"
                               />
                             </div>
                           </div>
                           <div className="d-flex ">
                             <div className="col-4">
-                              <FormField placeholder="Prep" name={`sections.${index}.staffAttendance.Prep`} />
+                              <FormField
+                                placeholder="Prep"
+                                name={`sections.${index}.staffAttendance.Prep`}
+                                required="required"
+                              />
                             </div>
                             <div className="col-4">
                               <FormField
                                 placeholder="Dish/Busser"
                                 name={`sections.${index}.staffAttendance.Dish/Busser`}
+                                required="required"
                               />
                             </div>
                             <div className="col-4">
-                              <FormField placeholder="Expo" name={`sections.${index}.staffAttendance.Expo`} />
+                              <FormField
+                                placeholder="Expo"
+                                name={`sections.${index}.staffAttendance.Expo`}
+                                required="required"
+                              />
                             </div>
                           </div>
                         </>
