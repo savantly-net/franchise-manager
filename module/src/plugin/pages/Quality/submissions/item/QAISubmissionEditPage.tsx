@@ -194,20 +194,9 @@ const QAISubmissionEditPage = () => {
       }
     }
   };
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<any>({
-    image: '',
-    id: '',
-  });
-  const [imageUrl, setImageUrl] = useState<any>({});
-  useEffect(() => {
-    if (imagePreviewUrl) {
-      let images = {
-        ...imageUrl,
-        [imagePreviewUrl.id]: imagePreviewUrl.image,
-      };
-      setImageUrl(images);
-    }
-  }, [imagePreviewUrl, imageUrl]);
+
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<any>({});
+
   return (
     <div>
       {error && <Alert color="warning">{error}</Alert>}
@@ -300,8 +289,8 @@ const QAISubmissionEditPage = () => {
                                                 let file = value.files[0];
                                                 reader.onloadend = () => {
                                                   setImagePreviewUrl({
-                                                    image: reader.result,
-                                                    id: question.questionId,
+                                                    ...imagePreviewUrl,
+                                                    [question.questionId]: reader.result,
                                                   });
                                                 };
                                                 reader.readAsDataURL(file);
@@ -315,8 +304,8 @@ const QAISubmissionEditPage = () => {
                                           <td className="col-2">
                                             <img
                                               src={
-                                                imageUrl[question.questionId]
-                                                  ? imageUrl[question.questionId]
+                                                imagePreviewUrl[question.questionId]
+                                                  ? imagePreviewUrl[question.questionId]
                                                   : question.attachments.length > 0
                                                   ? `${window.location.origin}${question.attachments[0]['downloadUrl']}`
                                                   : ''

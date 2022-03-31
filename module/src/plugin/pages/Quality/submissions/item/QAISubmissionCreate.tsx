@@ -155,29 +155,7 @@ const QAISubmissionCreate = () => {
     );
   };
 
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<any>({
-    image: '',
-    id: '',
-  });
-
-  const [imageUrl, setImageUrl] = useState<any>({});
-
-  useEffect(() => {
-    if (imagePreviewUrl.id && imageUrl) {
-      let images = imageUrl;
-      if (imageUrl[imagePreviewUrl.id]) {
-        images = {
-          ...imageUrl,
-          [imagePreviewUrl.id]: imagePreviewUrl.image,
-        };
-      } else {
-        images = {
-          [imagePreviewUrl.id]: imagePreviewUrl.image,
-        };
-      }
-      setImageUrl(images);
-    }
-  }, [imagePreviewUrl, imageUrl]);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<any>({});
 
   useMemo(() => {
     const getDataLocally = () => {
@@ -207,22 +185,139 @@ const QAISubmissionCreate = () => {
                 }
               }
             }
+            setDraftSubmission({
+              locationId: getDataLocally().locationId,
+              dateScored: getDataLocally().dateScored,
+              startTime: getDataLocally().startTime,
+              endTime: getDataLocally().endTime,
+              managerOnDuty: getDataLocally().managerOnDuty,
+              fsc: getDataLocally().fsc,
+              fsm: getDataLocally().fsm,
+              responsibleAlcoholCert: getDataLocally().responsibleAlcoholCert,
+              sections: sectiondata,
+            });
           } else {
             let index = getDataLocally().sections.indexOf(sectiondata[0]);
             if (index > -1) {
               index = getDataLocally().sections.splice(index, 1);
             }
+            let sections: any = [];
+            sectionState?.response &&
+              sectionState?.response.map((item: any, i: number) => {
+                sections[i] = {};
+                sections[i].sectionId = item.itemId;
+                sections[i].locationId = selectedLocation;
+                sections[i].name = item.name;
+                sections[i].order = item.order;
+                sections[i].managerOnDuty = '';
+                sections[i].dateScored = '';
+                sections[i].status = 'DRAFT';
+                sections[i].requireStaffAttendance = item.requireStaffAttendance;
+                sections[i].staffAttendance = {};
+
+                let answers: any = [];
+
+                item.questions.map((item1: any, i1: number) => {
+                  let test: any = {};
+                  test.questionId = item1.itemId;
+                  test.sectionId = item1.sectionId;
+                  test.categoryId = item1.categoryId;
+                  test.order = item1.order;
+                  test.points = item1.points;
+                  test.value = '';
+                  test.text = item1.text;
+                  test.notes = item1.notes;
+                  test.attachments = [];
+                  answers.push(test);
+                });
+                sections[i].answers = answers;
+
+                let guestanswers: any = [];
+                item.guestQuestions.map((item1: any = {}, i1: number) => {
+                  if (item1.text) {
+                    let tests: any = {};
+                    tests.notes = item1.text;
+                    tests.attachments = [];
+                    tests.answers = [
+                      { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
+                      { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
+                      { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
+                    ];
+                    guestanswers.push(tests);
+                  }
+                });
+                sections[i].guestAnswers = guestanswers;
+              });
+            setDraftSubmission({
+              locationId: selectedLocation,
+              dateScored: '',
+              startTime: '',
+              endTime: '',
+              managerOnDuty: '',
+              fsc: userContext?.user?.name ? userContext?.user?.name : '',
+              fsm: '',
+              responsibleAlcoholCert: '',
+              sections: sections,
+            });
           }
+        } else {
+          let sections: any = [];
+          sectionState.response &&
+            sectionState?.response.map((item: any, i: number) => {
+              sections[i] = {};
+              sections[i].sectionId = item.itemId;
+              sections[i].locationId = selectedLocation;
+              sections[i].name = item.name;
+              sections[i].order = item.order;
+              sections[i].managerOnDuty = '';
+              sections[i].dateScored = '';
+              sections[i].status = 'DRAFT';
+              sections[i].requireStaffAttendance = item.requireStaffAttendance;
+              sections[i].staffAttendance = {};
+
+              let answers: any = [];
+
+              item.questions.map((item1: any, i1: number) => {
+                let test: any = {};
+                test.questionId = item1.itemId;
+                test.sectionId = item1.sectionId;
+                test.categoryId = item1.categoryId;
+                test.order = item1.order;
+                test.points = item1.points;
+                test.value = '';
+                test.text = item1.text;
+                test.notes = item1.notes;
+                test.attachments = [];
+                answers.push(test);
+              });
+              sections[i].answers = answers;
+
+              let guestanswers: any = [];
+              item.guestQuestions.map((item1: any = {}, i1: number) => {
+                if (item1.text) {
+                  let tests: any = {};
+                  tests.notes = item1.text;
+                  tests.attachments = [];
+                  tests.answers = [
+                    { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
+                    { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
+                    { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
+                  ];
+                  guestanswers.push(tests);
+                }
+              });
+              sections[i].guestAnswers = guestanswers;
+            });
           setDraftSubmission({
-            locationId: getDataLocally().locationId,
-            dateScored: getDataLocally().dateScored,
-            startTime: getDataLocally().startTime,
-            endTime: getDataLocally().endTime,
-            managerOnDuty: getDataLocally().managerOnDuty,
-            fsc: getDataLocally().fsc,
-            fsm: getDataLocally().fsm,
-            responsibleAlcoholCert: getDataLocally().responsibleAlcoholCert,
-            sections: sectiondata,
+            locationId: selectedLocation,
+            dateScored: '',
+            startTime: '',
+            endTime: '',
+            managerOnDuty: '',
+            fsc: userContext?.user?.name ? userContext?.user?.name : '',
+            fsm: '',
+            responsibleAlcoholCert: '',
+            sections: sections,
           });
         }
       });
@@ -454,8 +549,8 @@ const QAISubmissionCreate = () => {
                                                 let file = value.files[0];
                                                 reader.onloadend = () => {
                                                   setImagePreviewUrl({
-                                                    image: reader.result,
-                                                    id: question.questionId,
+                                                    ...imagePreviewUrl,
+                                                    [question.questionId]: reader.result,
                                                   });
                                                 };
                                                 reader.readAsDataURL(file);
@@ -469,8 +564,8 @@ const QAISubmissionCreate = () => {
                                           <td className="col-2">
                                             <img
                                               src={
-                                                imageUrl[question.questionId]
-                                                  ? imageUrl[question.questionId]
+                                                imagePreviewUrl[question.questionId]
+                                                  ? imagePreviewUrl[question.questionId]
                                                   : question.attachments.length > 0
                                                   ? `${window.location.origin}${question.attachments[0]['downloadUrl']}`
                                                   : ''
