@@ -123,88 +123,7 @@ const QAISubmissionCreate = () => {
           });
         }
       });
-    }
-  }, [sectionState, categoryState, storageKey, dispatch]);
-
-  const showLoading = sectionState.isFetching || categoryState.isFetching || submissionState.isFetching;
-
-  const getCategory = (categoryId: string) => {
-    let searchCategory: any;
-    if (categoryList) {
-      searchCategory = categoryList.find((temp: any) => temp.itemId === categoryId);
-    }
-    return searchCategory?.name ? searchCategory?.name : 'Unknown Category';
-  };
-
-  const checkFolderCreated = (itemId: string) => {
-    if (fmConfig && fmConfig?.rootFolder) {
-      fileService
-        .getFilesByPath(fmConfig.rootFolder.id)
-        .then(response => {
-          const found = response.data.children.filter(f => f.name === itemId);
-          if (found && found.length > 0) {
-            setAttachmentFolder(found[0]);
-          } else {
-            fileService
-              .createFile({
-                name: itemId,
-                isDir: true,
-                parent: fmConfig.rootFolder.id,
-              })
-              .then(response => {
-                setAttachmentFolder(response.data);
-              })
-              .catch(err => {
-                setError(err.message || 'Could not create attachment folder');
-              });
-          }
-        })
-        .catch(err => {
-          setError(err.message || 'Could not retrieve attachment folders');
-        });
-    }
-  };
-
-  const fileUpload = async (props: any, value: any, sectionidx: number, idx: number, sectionId: string) => {
-    if (value.files) {
-      const fileUploads: Array<Promise<AxiosResponse<FileMetaData>>> = [];
-      for (let index = 0; index < value.files.length; index++) {
-        const file = value.files[index];
-        try {
-          await fileUploads.push(
-            fileService.uploadFile(
-              {
-                name: file.name,
-                isDir:
-                  attachmentFolder !== undefined && Object.keys(attachmentFolder).length > 0
-                    ? attachmentFolder.isDir
-                    : false,
-                parent:
-                  attachmentFolder !== undefined &&
-                  Object.keys(attachmentFolder).length > 0 &&
-                  attachmentFolder !== undefined
-                    ? attachmentFolder.name
-                    : sectionId,
-              },
-              file
-            )
-          );
-        } catch (e) {
-          setError('error' + e);
-        }
-        Promise.all(fileUploads).then(responses => {
-          const newFiles = responses.map(f => {
-            return f.data as FileItem;
-          });
-          const attachments = [...draftSubmission.sections[sectionidx]['answers'][idx]['attachments'], ...newFiles];
-          props.setFieldValue(`sections.${sectionidx}.answers.${idx}.attachments`, attachments);
-        });
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (sectionState?.response) {
+    } else if (sectionState?.response) {
       let sections: any = [];
       sectionState?.response.map((item: any, i: number) => {
         sections[i] = {};
@@ -263,7 +182,84 @@ const QAISubmissionCreate = () => {
         sections: sections,
       });
     }
-  }, [sectionState, selectedLocation, userContext]);
+  }, [sectionState, categoryState, selectedLocation, userContext, storageKey, dispatch]);
+
+  const showLoading = sectionState.isFetching || categoryState.isFetching || submissionState.isFetching;
+
+  const getCategory = (categoryId: string) => {
+    let searchCategory: any;
+    if (categoryList) {
+      searchCategory = categoryList.find((temp: any) => temp.itemId === categoryId);
+    }
+    return searchCategory?.name ? searchCategory?.name : 'Unknown Category';
+  };
+
+  const checkFolderCreated = (itemId: string) => {
+    if (fmConfig && fmConfig?.rootFolder) {
+      fileService
+        .getFilesByPath(fmConfig.rootFolder.id)
+        .then(response => {
+          const found = response.data.children.filter(f => f.name === itemId);
+          if (found && found.length > 0) {
+            setAttachmentFolder(found[0]);
+          } else {
+            fileService
+              .createFile({
+                name: itemId,
+                isDir: true,
+                parent: fmConfig.rootFolder.id,
+              })
+              .then(response => {
+                setAttachmentFolder(response.data);
+              })
+              .catch(err => {
+                setError(err.message || 'Could not create attachment folder');
+              });
+          }
+        })
+        .catch(err => {
+          setError(err.message || 'Could not retrieve attachment folders');
+        });
+    }
+  };
+
+  const fileUpload = async (props: any, value: any, sectionidx: number, idx: number, sectionId: string) => {
+    if (value.files) {
+      const fileUploads: Array<Promise<AxiosResponse<FileMetaData>>> = [];
+      for (let index = 0; index < value.files.length; index++) {
+        const file = value.files[index];
+        try {
+          await fileUploads.push(
+            fileService.uploadFile(
+              {
+                name: file.name,
+                isDir:
+                  attachmentFolder !== undefined && Object.keys(attachmentFolder).length > 0
+                    ? attachmentFolder.isDir
+                    : false,
+                parent:
+                  attachmentFolder !== undefined &&
+                    Object.keys(attachmentFolder).length > 0 &&
+                    attachmentFolder !== undefined
+                    ? attachmentFolder.name
+                    : sectionId,
+              },
+              file
+            )
+          );
+        } catch (e) {
+          setError('error' + e);
+        }
+        Promise.all(fileUploads).then(responses => {
+          const newFiles = responses.map(f => {
+            return f.data as FileItem;
+          });
+          const attachments = [...draftSubmission.sections[sectionidx]['answers'][idx]['attachments'], ...newFiles];
+          props.setFieldValue(`sections.${sectionidx}.answers.${idx}.attachments`, attachments);
+        });
+      }
+    }
+  };
 
   const scoreDisplay = (sections: QAISectionSubmission[]) => {
     return (
@@ -280,7 +276,20 @@ const QAISubmissionCreate = () => {
       </Table>
     );
   };
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<any>();
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<any>({
+    image: '',
+    id: '',
+  });
+  const [imageUrl, setImageUrl] = useState<any>({});
+  useEffect(() => {
+    if (imagePreviewUrl) {
+      let images = {
+        ...imageUrl,
+        [imagePreviewUrl.id]: imagePreviewUrl.image,
+      };
+      setImageUrl(images);
+    }
+  }, [imagePreviewUrl]);
   return (
     <div>
       {error && <Alert color="warning">{error}</Alert>}
@@ -415,30 +424,43 @@ const QAISubmissionCreate = () => {
                                                   <Fragment>
                                                     <Icon
                                                       onClick={value => {
-                                                        checkFolderCreated(sectionObj.sectionId);
+                                                        checkFolderCreated(question.questionId);
                                                       }}
                                                       name="paperclip"
                                                     ></Icon>
                                                     <span>Attach</span>
                                                   </Fragment>
                                                 }
-                                                onCancel={() => {}}
+                                                onCancel={() => { }}
                                                 onConfirm={async value => {
                                                   let reader = new FileReader();
                                                   let file = value.files[0];
                                                   reader.onloadend = () => {
-                                                    setImagePreviewUrl(reader.result);
+                                                    setImagePreviewUrl({
+                                                      image: reader.result,
+                                                      id: question.questionId,
+                                                    });
                                                   };
                                                   reader.readAsDataURL(file);
-                                                  setTimeout(function() {
-                                                    fileUpload(props, value, index, idx, sectionObj.sectionId);
+                                                  setTimeout(function () {
+                                                    fileUpload(props, value, index, idx, question.questionId);
                                                   }, 5000);
                                                 }}
                                                 accept={['image/*']}
                                               />
                                             </td>
                                             <td className="col-2">
-                                              <img src={imagePreviewUrl} height="40px" width="50px" />
+                                              <img
+                                                src={
+                                                  imageUrl[question.questionId]
+                                                    ? imageUrl[question.questionId]
+                                                    : question.attachments.length > 0
+                                                      ? `${window.location.origin}${question.attachments[0]['downloadUrl']}`
+                                                      : ''
+                                                }
+                                                height="40px"
+                                                width="50px"
+                                              />
                                             </td>
                                           </tr>
                                           {props.values.sections[index]['answers'][idx]['value'] === 'NO' && (

@@ -173,8 +173,8 @@ const QAISubmissionEditPage = () => {
                     : false,
                 parent:
                   attachmentFolder !== undefined &&
-                  Object.keys(attachmentFolder).length > 0 &&
-                  attachmentFolder !== undefined
+                    Object.keys(attachmentFolder).length > 0 &&
+                    attachmentFolder !== undefined
                     ? attachmentFolder.name
                     : sectionId,
               },
@@ -194,7 +194,20 @@ const QAISubmissionEditPage = () => {
       }
     }
   };
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<any>();
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<any>({
+    image: '',
+    id: '',
+  });
+  const [imageUrl, setImageUrl] = useState<any>({});
+  useEffect(() => {
+    if (imagePreviewUrl) {
+      let images = {
+        ...imageUrl,
+        [imagePreviewUrl.id]: imagePreviewUrl.image,
+      };
+      setImageUrl(images);
+    }
+  }, [imagePreviewUrl]);
   return (
     <div>
       {error && <Alert color="warning">{error}</Alert>}
@@ -266,7 +279,7 @@ const QAISubmissionEditPage = () => {
                                           <td
                                             className="col-2"
                                             onClick={value => {
-                                              checkFolderCreated(sectionObj.sectionId);
+                                              checkFolderCreated(question.questionId);
                                             }}
                                           >
                                             <FileUploadButton
@@ -274,53 +287,57 @@ const QAISubmissionEditPage = () => {
                                                 <Fragment>
                                                   <Icon
                                                     onClick={value => {
-                                                      checkFolderCreated(sectionObj.sectionId);
+                                                      checkFolderCreated(question.questionId);
                                                     }}
                                                     name="paperclip"
                                                   ></Icon>
                                                   <span>Attach</span>
                                                 </Fragment>
                                               }
-                                              onCancel={() => {}}
+                                              onCancel={() => { }}
                                               onConfirm={async value => {
                                                 let reader = new FileReader();
                                                 let file = value.files[0];
                                                 reader.onloadend = () => {
-                                                  setImagePreviewUrl(reader.result);
+                                                  setImagePreviewUrl({
+                                                    image: reader.result,
+                                                    id: question.questionId,
+                                                  });
                                                 };
                                                 reader.readAsDataURL(file);
-                                                setTimeout(function() {
-                                                  fileUpload(props, value, index, idx, sectionObj.sectionId);
+                                                setTimeout(function () {
+                                                  fileUpload(props, value, index, idx, question.questionId);
                                                 }, 5000);
                                               }}
                                               accept={['image/*']}
                                             />
                                           </td>
                                           <td className="col-2">
-                                            {props.values.sections[index]['answers'][idx]['attachments'].length > 0 && (
-                                              <img
-                                                src={`http://localhost:3001${props.values.sections[index]['answers'][idx]['attachments'][idx]['downloadUrl']}`}
-                                                height="40px"
-                                                width="50px"
-                                              />
-                                            )}
-                                            {imagePreviewUrl && (
-                                              <img src={imagePreviewUrl} height="40px" width="50px" />
-                                            )}
+                                            <img
+                                              src={
+                                                imageUrl[question.questionId]
+                                                  ? imageUrl[question.questionId]
+                                                  : question.attachments.length > 0
+                                                    ? `${window.location.origin}${question.attachments[0]['downloadUrl']}`
+                                                    : ''
+                                              }
+                                              height="40px"
+                                              width="50px"
+                                            />
                                           </td>
                                         </tr>
                                         {(props.values.sections[index]['answers'][idx]['value'] === 'NO' ||
                                           question.value === 'NO') && (
-                                          <tr>
-                                            <td colSpan={2}>Notes</td>
-                                            <td colSpan={3}>
-                                              <FormField
-                                                placeholder="notes"
-                                                name={`sections.${index}.answers.${idx}.notes`}
-                                              />
-                                            </td>
-                                          </tr>
-                                        )}
+                                            <tr>
+                                              <td colSpan={2}>Notes</td>
+                                              <td colSpan={3}>
+                                                <FormField
+                                                  placeholder="notes"
+                                                  name={`sections.${index}.answers.${idx}.notes`}
+                                                />
+                                              </td>
+                                            </tr>
+                                          )}
                                       </Fragment>
                                     </tbody>
                                   </table>
