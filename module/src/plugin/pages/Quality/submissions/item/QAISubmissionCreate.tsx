@@ -406,7 +406,8 @@ const QAISubmissionCreate = () => {
                                       <Fragment>
                                         <tr>
                                           <td className="col-1">
-                                            {index + 1}.{question.order}
+                                            <p>{index + 1}.{question.order}</p>
+                                            <p>{question.tags}</p>
                                           </td>
                                           <td className="col-4">{question.text}</td>
                                           <td className="col-1">{question.points}</td>
