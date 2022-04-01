@@ -30,7 +30,7 @@ public class QAISectionService {
 
 	@PreAuthorize("hasAuthority('FM_QAI_READ') or hasAuthority('ADMIN')")
 	public List<QAISectionDto> findAll() {
-		return repository.findAll().stream().sorted(Comparator.comparingInt(QAISection::getOrder)).map(entity -> convert(entity)).toList();
+		return repository.findAll().stream().sorted(Comparator.comparingInt(QAISection::getOrder)).map(entity -> convert(entity)).collect(Collectors.toList());
 	}
 
 	@PreAuthorize("hasAuthority('FM_QAI_READ') or hasAuthority('ADMIN')")
