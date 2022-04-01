@@ -1,5 +1,6 @@
 package net.savantly.sprout.franchise.domain.location;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class FranchiseLocationService {
 	public List<FranchiseLocationDto> getAll() {
 		return repo.findAll().parallelStream().map(l -> toDto(l).orElse(null))
 				.filter(b -> Objects.nonNull(b))
+				.sorted(Comparator.comparing(FranchiseLocationDto::getName))
 				.collect(Collectors.toList());
 	}
 
