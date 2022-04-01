@@ -231,7 +231,7 @@ const QAISubmissionCreate = () => {
           );
           if (sectiondata.length > 0) {
             const questionId = section.questions.map((item: any, i: number) => item.itemId);
-            if (questionId.toString()) {
+            if (questionId.toString() && sectiondata[i]) {
               const answersdata = sectiondata[i].answers.filter(
                 (item: any, i: number) => item.questionId === questionId.toString()
               );
