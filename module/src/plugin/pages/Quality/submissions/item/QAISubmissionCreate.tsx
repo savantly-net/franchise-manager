@@ -156,67 +156,67 @@ const QAISubmissionCreate = () => {
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState<any>({});
 
-  const setSections = (sectionState: any, selectedLocation: any) => {
-    let sections: any = [];
-    sectionState.map((item: any, i: number) => {
-      sections[i] = {};
-      sections[i].sectionId = item.itemId;
-      sections[i].locationId = selectedLocation;
-      sections[i].name = item.name;
-      sections[i].order = item.order;
-      sections[i].managerOnDuty = '';
-      sections[i].dateScored = '';
-      sections[i].status = 'DRAFT';
-      sections[i].requireStaffAttendance = item.requireStaffAttendance;
-      sections[i].staffAttendance = {};
-
-      let answers: any = [];
-
-      item.questions.map((item1: any, i1: number) => {
-        let test: any = {};
-        test.questionId = item1.itemId;
-        test.sectionId = item1.sectionId;
-        test.categoryId = item1.categoryId;
-        test.order = item1.order;
-        test.points = item1.points;
-        test.value = '';
-        test.text = item1.text;
-        test.notes = item1.notes;
-        test.attachments = [];
-        answers.push(test);
-      });
-      sections[i].answers = answers;
-
-      let guestanswers: any = [];
-      item.guestQuestions.map((item1: any = {}, i1: number) => {
-        if (item1.text) {
-          let tests: any = {};
-          tests.notes = item1.text;
-          tests.attachments = [];
-          tests.answers = [
-            { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
-            { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
-            { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
-          ];
-          guestanswers.push(tests);
-        }
-      });
-      sections[i].guestAnswers = guestanswers;
-    });
-    setDraftSubmission({
-      locationId: selectedLocation,
-      dateScored: '',
-      startTime: '',
-      endTime: '',
-      managerOnDuty: '',
-      fsc: userContext?.user?.name ? userContext?.user?.name : '',
-      fsm: '',
-      responsibleAlcoholCert: '',
-      sections: sections,
-    });
-  };
-
   useMemo(() => {
+    const setSections = (sectionState: any, selectedLocation: any) => {
+      let sections: any = [];
+      sectionState.map((item: any, i: number) => {
+        sections[i] = {};
+        sections[i].sectionId = item.itemId;
+        sections[i].locationId = selectedLocation;
+        sections[i].name = item.name;
+        sections[i].order = item.order;
+        sections[i].managerOnDuty = '';
+        sections[i].dateScored = '';
+        sections[i].status = 'DRAFT';
+        sections[i].requireStaffAttendance = item.requireStaffAttendance;
+        sections[i].staffAttendance = {};
+
+        let answers: any = [];
+
+        item.questions.map((item1: any, i1: number) => {
+          let test: any = {};
+          test.questionId = item1.itemId;
+          test.sectionId = item1.sectionId;
+          test.categoryId = item1.categoryId;
+          test.order = item1.order;
+          test.points = item1.points;
+          test.value = '';
+          test.text = item1.text;
+          test.notes = item1.notes;
+          test.attachments = [];
+          answers.push(test);
+        });
+        sections[i].answers = answers;
+
+        let guestanswers: any = [];
+        item.guestQuestions.map((item1: any = {}, i1: number) => {
+          if (item1.text) {
+            let tests: any = {};
+            tests.notes = item1.text;
+            tests.attachments = [];
+            tests.answers = [
+              { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
+              { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
+              { guestQuestionId: item1.itemId, notes: item1.text, value: '' },
+            ];
+            guestanswers.push(tests);
+          }
+        });
+        sections[i].guestAnswers = guestanswers;
+      });
+      setDraftSubmission({
+        locationId: selectedLocation,
+        dateScored: '',
+        startTime: '',
+        endTime: '',
+        managerOnDuty: '',
+        fsc: userContext?.user?.name ? userContext?.user?.name : '',
+        fsm: '',
+        responsibleAlcoholCert: '',
+        sections: sections,
+      });
+    };
+
     const getDataLocally = () => {
       const dataObj = localStorage.getItem(storageKey);
       if (dataObj) {
