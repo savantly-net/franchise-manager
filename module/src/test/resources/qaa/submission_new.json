@@ -54,6 +54,28 @@
         "Dish/Busser": "string",
         "Expo": "string"
       }
+    },
+    {
+      "sectionId": "2",
+      "locationId": "1",
+      "managerOnDuty": "string",
+      "dateScored": "2022-03-11T05:45:20.256Z",
+      "status": "DRAFT",
+      "answers": [
+        {
+          "questionId": "1",
+          "value": "YES",
+          "notes": "string",
+          "attachments": [
+            {
+              "id": "string",
+              "name": "string",
+              "downloadUrl": "string",
+              "contentType": "string"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

@@ -1,6 +1,7 @@
 package net.savantly.sprout.franchise.domain.operations.qai.score;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class QAAScoreService {
 			}
 			
 		}
-		return dto.values().stream().sorted().collect(Collectors.toList());
+		return dto.values().stream().sorted(Comparator.comparing(QAASectionScoreDto::getOrder)).collect(Collectors.toList());
 	}
 
 	private QAASectionCategoryScoreDto convert(QAASectionScore from) {

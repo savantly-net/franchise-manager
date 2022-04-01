@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -136,6 +137,14 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 		return s.setName("test");
 	}
 
+	private QAISection getExampleSection2() {
+		QAISection s = new QAISection();
+		TenantedPrimaryKey key = new TenantedPrimaryKey();
+		key.setItemId("2");
+		s.setId(key);
+		return s.setName("test");
+	}
+
 	@DynamicPropertySource
 	static void properties(DynamicPropertyRegistry registry) {
 		registry.add("spring.datasource.url", DB_CONTAINER::getJdbcUrl);
@@ -165,6 +174,7 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 		QAIGuestQuestion gq = this.gqrepo.save(getExampleGuestQuestion());
 		
 		this.qsrepo.save(getExampleSection());
+		this.qsrepo.save(getExampleSection2());
 		this.qrepo.save(q);
 		this.qsrepo.flush();
 
@@ -195,13 +205,14 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 		ResponseEntity<QAAScoreDto> response2 = rest.withBasicAuth(user, password)
 				.getForEntity(new URI(String.format("%s/%s/score", url, resultBody.getId())),
 				QAAScoreDto.class);
-		Assertions.assertEquals(HttpStatus.OK, response2.getStatusCode(), "Should get score");
-		Assertions.assertEquals(1, response2.getBody().getOverallScore(), "Should get score");
-		Assertions.assertEquals(1, response2.getBody().getSections().size(), "Should get score");
+		Assertions.assertEquals(HttpStatus.OK, response2.getStatusCode(), "Should be a valid status code");
+		Assertions.assertEquals(1, response2.getBody().getOverallScore(), "Should get oeverall score");
+		Assertions.assertEquals(2, response2.getBody().getSections().size(), "Should have the correct number of sections submitted");
 	}
 	
 	@Test
 	@Transactional
+	@WithMockUser(authorities = "ADMIN")
 	public void test() {
 
 		this.qsrepo.save(getExampleSection());
