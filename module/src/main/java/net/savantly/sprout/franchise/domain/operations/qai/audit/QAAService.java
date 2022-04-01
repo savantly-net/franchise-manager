@@ -1,5 +1,7 @@
 package net.savantly.sprout.franchise.domain.operations.qai.audit;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -81,11 +83,14 @@ public class QAAService {
 			.setResponsibleAlcoholCert(entity.getResponsibleAlcoholCert())
 			.setEndTime(entity.getTimeEnd())
 			.setStartTime(entity.getTimeStart());
+		
+		ArrayList<QAISectionSubmissionDto> sections = new ArrayList<QAISectionSubmissionDto>();
 		entity.getSectionIds().forEach(s -> {
 			if (Objects.nonNull(s)) {
-				dto.getSections().add(qaiSubmissionService.findByItemId(s).orElseThrow());
+				sections.add(qaiSubmissionService.findByItemId(s).orElseThrow());
 			}
 		});
+		dto.setSections(sections.stream().sorted(Comparator.comparingInt(QAISectionSubmissionDto::getOrder)).collect(Collectors.toSet()));
 		return dto;
 	}
 

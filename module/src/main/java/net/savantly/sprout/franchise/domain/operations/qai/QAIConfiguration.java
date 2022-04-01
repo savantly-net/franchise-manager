@@ -75,8 +75,8 @@ public class QAIConfiguration {
 
 	@Bean
 	public QAISubmissionService qaiSubmissionService(QAIQuestionAnswerService qaService,
-			QAIGuestQuestionAnswerGroupService gqaService, QAISectionSubmissionRepository repository) {
-		return new QAISubmissionService(repository, qaService, gqaService);
+			QAIGuestQuestionAnswerGroupService gqaService, QAISectionSubmissionRepository repository, QAISectionService sectionService) {
+		return new QAISubmissionService(repository, qaService, gqaService, sectionService);
 	}
 
 	@Bean

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import lombok.RequiredArgsConstructor;
 import net.savantly.sprout.franchise.domain.operations.qai.guestQuestion.answerGroup.QAIGuestQuestionAnswerGroupService;
 import net.savantly.sprout.franchise.domain.operations.qai.question.answer.QAIQuestionAnswerService;
+import net.savantly.sprout.franchise.domain.operations.qai.section.QAISectionService;
 
 @RequiredArgsConstructor
 public class QAISubmissionService {
@@ -20,6 +21,7 @@ public class QAISubmissionService {
 	private final QAISectionSubmissionRepository repository;
 	private final QAIQuestionAnswerService qaService;
 	private final QAIGuestQuestionAnswerGroupService gqaService;
+	private final QAISectionService sectionService;
 	
 	public QAISectionSubmissionDto upsertEntity(QAISectionSubmissionDto object) {
 		if (Objects.isNull(object.getItemId())) {
@@ -52,6 +54,7 @@ public class QAISubmissionService {
 	public QAISectionSubmissionDto convert(QAISectionSubmission entity) {
 		QAISectionSubmissionDto dto = new QAISectionSubmissionDto();
 		dto.setItemId(entity.getItemId());
+		dto.setOrder(sectionService.findByItemId(entity.getSectionId()).getOrder());
 		return dto.setAnswers(qaService.convert(entity.getAnswers()))
 				.setLocationId(entity.getLocationId())
 				.setSectionId(entity.getSectionId())

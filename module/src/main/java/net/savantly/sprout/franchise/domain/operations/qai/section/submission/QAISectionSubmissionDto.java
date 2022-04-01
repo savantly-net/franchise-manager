@@ -26,4 +26,5 @@ public class QAISectionSubmissionDto {
 	private List<QAIQuestionAnswerDto> answers = new ArrayList<>();
 	private List<QAIGuestQuestionAnswerGroupDto> guestAnswers = new ArrayList<>();
 	Map<String, String> staffAttendance = new HashMap<String, String>(); // maps from attribute name to value
+	private int order;
 }

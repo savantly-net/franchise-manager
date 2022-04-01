@@ -1,5 +1,6 @@
 package net.savantly.sprout.franchise.domain.operations.qai.section;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class QAISectionService {
 
 	@PreAuthorize("hasAuthority('FM_QAI_READ') or hasAuthority('ADMIN')")
 	public List<QAISectionDto> findAll() {
-		return repository.findAll().stream().map(entity -> convert(entity)).collect(Collectors.toList());
+		return repository.findAll().stream().sorted(Comparator.comparingInt(QAISection::getOrder)).map(entity -> convert(entity)).toList();
 	}
 
 	@PreAuthorize("hasAuthority('FM_QAI_READ') or hasAuthority('ADMIN')")
