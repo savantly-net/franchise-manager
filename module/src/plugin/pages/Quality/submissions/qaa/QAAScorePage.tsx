@@ -236,10 +236,10 @@ const QAAScorePage = () => {
                                               (answer: any, idxa: number) =>
                                                 answer.value === 'NO' && (
                                                   <tr className="trCls">
-                                                    <td style={{minWidth: "200px"}} className="col-4">
+                                                    <td style={{ minWidth: "200px" }} className="col-4">
                                                       {getQuestionText(answer.questionId, question.sectionId)}
                                                     </td>
-                                                    <td style={{maxWidth: "450px"}} className="col-1">{answer['notes']}</td>
+                                                    <td style={{ maxWidth: "450px" }} className="col-1">{answer['notes']}</td>
                                                   </tr>
                                                 )
                                             )
