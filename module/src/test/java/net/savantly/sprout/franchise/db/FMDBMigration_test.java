@@ -27,7 +27,7 @@ public class FMDBMigration_test extends AbstractContainerBaseTest {
     /**
      * This needs to be update for any new migrations
      */
-    final String expectedVersion = "0.0.10";
+    final String expectedVersion = "0.0.11";
 
     @Test
     public void testMigration() {

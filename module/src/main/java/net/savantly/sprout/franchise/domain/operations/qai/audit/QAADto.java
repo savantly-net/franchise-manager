@@ -19,6 +19,7 @@ public class QAADto {
 	private LocalDateTime dateScored;
 	private String managerOnDuty;
 	private String fsc;
+	private String fsm;
 	private String responsibleAlcoholCert;
 	private LocalTime startTime;
 	private LocalTime endTime;

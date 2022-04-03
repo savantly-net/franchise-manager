@@ -31,7 +31,10 @@ public class QAASubmission {
 	private LocalDateTime dateScored;
 	@Column(name = "manager_on_duty")
 	private String managerOnDuty;
+	
 	private String fsc;
+	private String fsm;
+	
 	@Column(name = "responsible_alcohol_cert")
 	private String responsibleAlcoholCert;
 	
