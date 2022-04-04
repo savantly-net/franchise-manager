@@ -58,7 +58,7 @@ public class QAASectionScore {
 	
 	@Transient
 	public BigDecimal getRating() {
-		if (Objects.isNull(required) || required == BigDecimal.ZERO) {
+		if (Objects.isNull(required) || required == BigDecimal.ZERO || score == 0) {
 			return BigDecimal.ZERO;
 		} else {
 			return new BigDecimal(score).divide(required, RoundingMode.HALF_UP);
