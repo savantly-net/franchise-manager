@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import net.savantly.sprout.franchise.domain.operations.qai.guestQuestion.answerGroup.QAIGuestQuestionAnswerGroupService;
@@ -15,6 +16,7 @@ import net.savantly.sprout.franchise.domain.operations.qai.question.answer.QAIQu
 import net.savantly.sprout.franchise.domain.operations.qai.section.QAISectionService;
 
 @RequiredArgsConstructor
+@Transactional
 public class QAISubmissionService {
 
 	private final static Logger log = LoggerFactory.getLogger(QAISubmissionService.class);

@@ -6,18 +6,18 @@ import { knowledgesStateProvider } from 'plugin/pages/Knowledge/entity';
 import { franchiseFeesStateProvider } from 'plugin/pages/Locations/Fees/feeEntity';
 import { franchiseFeeTypesStateProvider } from 'plugin/pages/Locations/Fees/feeTypesEntity';
 import { franchiseGroupsStateProvider } from 'plugin/pages/Locations/Groups/entity';
-import { franchiseVendorStateProvider } from 'plugin/pages/Vendors/entity';
-import { vendorTypeStateProvider } from 'plugin/pages/Vendors/type/entity';
 import { franchiseMarketStateProvider } from 'plugin/pages/Locations/Market/entity';
 import { franchiseOwnershipStateProvider } from 'plugin/pages/Locations/Owners/entity';
 import { FranchiseLocationsReducer } from 'plugin/pages/Locations/state/reducers';
 import { storePosStateProvider } from 'plugin/pages/Locations/StorePos/entity';
 import { newsletterStateProvider } from 'plugin/pages/Newsletter/entityConfig';
-import { qaiQuestionCategoryStateProvider } from 'plugin/pages/Quality/categories/entity';
-import { qaiSectionStateProvider } from 'plugin/pages/Quality/sections/entity';
-import { qaiSubmissionStateProvider } from 'plugin/pages/Quality/submissions/entity';
+import { qaQuestionCategoryStateProvider } from 'plugin/pages/Quality/categories/entity';
+import { qaSectionStateProvider } from 'plugin/pages/Quality/sections/entity';
+import { qaSubmissionStateProvider } from 'plugin/pages/Quality/submissions/entity';
 import { storeVisitStateProvider } from 'plugin/pages/Quality/visit/entity';
 import { reportSourceStateProvider } from 'plugin/pages/ReportManager/entityConfig';
+import { franchiseVendorStateProvider } from 'plugin/pages/Vendors/entity';
+import { vendorTypeStateProvider } from 'plugin/pages/Vendors/type/entity';
 import { IModule } from 'redux-dynamic-modules';
 import { AppModuleRootState, AppModuleState } from '../types';
 
@@ -36,9 +36,9 @@ const combinedReducers = combineReducers({
   marketState: franchiseMarketStateProvider.slice.reducer,
   newsletter: newsletterStateProvider.slice.reducer,
   ownershipState: franchiseOwnershipStateProvider.slice.reducer,
-  qaiQuestionCategories: qaiQuestionCategoryStateProvider.slice.reducer,
-  qaiSections: qaiSectionStateProvider.slice.reducer,
-  qaiSubmissions: qaiSubmissionStateProvider.slice.reducer,
+  qaQuestionCategories: qaQuestionCategoryStateProvider.slice.reducer,
+  qaSections: qaSectionStateProvider.slice.reducer,
+  qaSubmissions: qaSubmissionStateProvider.slice.reducer,
   reportSources: reportSourceStateProvider.slice.reducer,
   storeVisits: storeVisitStateProvider.slice.reducer,
   storePosState: storePosStateProvider.slice.reducer,

@@ -1,8 +1,8 @@
-import React from 'react';
 import { NavModel, NavModelItem } from '@savantly/sprout-api';
 import { FMPage } from 'plugin/component/FMPage';
-import { StoreVisit as EntityClass } from './entity';
+import React from 'react';
 import '../../storevisittabs.css';
+import { StoreVisit as EntityClass } from './entity';
 const IndexPage = ({ item, isVisit, isTitle }: { item: EntityClass; isVisit: any; isTitle: any }) => {
   const navModelItem: NavModelItem = {
     text: isTitle,

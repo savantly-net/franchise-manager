@@ -1,10 +1,10 @@
 import { AppModuleRootState } from 'plugin/types';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { QAISection, qaiSectionService, qaiSectionStateProvider } from './entity';
+import { QASection, qaSectionService, qaSectionStateProvider } from './entity';
 
-export const useQAISection = (sectionId?: string): QAISection | undefined => {
-  type InternalStateType = QAISection | undefined;
+export const useQASection = (sectionId?: string): QASection | undefined => {
+  type InternalStateType = QASection | undefined;
 
   const [internalState, setInternalState] = useState(undefined as InternalStateType);
   const [fetching, isFetching] = useState('' as any);
@@ -12,7 +12,7 @@ export const useQAISection = (sectionId?: string): QAISection | undefined => {
   useMemo(() => {
     if (!internalState && !fetching && sectionId) {
       isFetching(true);
-      qaiSectionService
+      qaSectionService
         .getById(sectionId)
         .then(response => {
           isFetching(false);
@@ -27,15 +27,15 @@ export const useQAISection = (sectionId?: string): QAISection | undefined => {
   return internalState;
 };
 
-export const useQAISections = (): QAISection[] => {
+export const useQASections = (): QASection[] | undefined => {
   const dispatch = useDispatch();
-  const qaiSectionSelector = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSections);
+  const qaiSectionSelector = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaSections);
 
-  const [internalState, setInternalState] = useState([] as QAISection[]);
+  const [internalState, setInternalState] = useState<QASection[] | undefined>();
 
   useMemo(() => {
     if (!qaiSectionSelector.isFetched && !qaiSectionSelector.isFetching) {
-      dispatch(qaiSectionStateProvider.loadState());
+      dispatch(qaSectionStateProvider.loadState());
     } else if (qaiSectionSelector.isFetched && !qaiSectionSelector.isFetching) {
       const selectedSection = qaiSectionSelector.response || [];
       setInternalState(selectedSection);

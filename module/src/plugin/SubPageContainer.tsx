@@ -13,14 +13,14 @@ import LocationsIndexPage from './pages/Locations/LocationsIndexPage';
 import OwnersPage from './pages/Locations/Owners/OwnersPage';
 import StorePosPage from './pages/Locations/StorePos/StorePosPage';
 import NewsletterIndexPage from './pages/Newsletter/NewsletterIndexPage';
-import QAIIndexPage from './pages/Quality/QAIIndexPage';
-import QAISubmissionsIndexPage from './pages/Quality/submissions/QAISubmissionsIndexPage';
+import QAIIndexPage from './pages/Quality/QAIndexPage';
+import QAISubmissionsIndexPage from './pages/Quality/submissions/QASubmissionsIndexPage';
 import { QAISubmissionView } from './pages/Quality/visit/QAISubmissionView';
 import StoreVisitIndexPage from './pages/Quality/visit/StoreVisitIndexPage';
-import ReportManagerIndexPage from './pages/ReportManager/ReportManagerIndexPage';
 import ReportsIndexPage from './pages/Report/ReportsIndexPage';
-import { AppModuleRootState, AppPluginSettings } from './types';
+import ReportManagerIndexPage from './pages/ReportManager/ReportManagerIndexPage';
 import VendersPage from './pages/Vendors/VendersIndexPage';
+import { AppModuleRootState, AppPluginSettings } from './types';
 
 interface Props {
   path: string;

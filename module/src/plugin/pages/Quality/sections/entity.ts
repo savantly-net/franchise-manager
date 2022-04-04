@@ -1,53 +1,55 @@
 import { BaseEntityService, EntityStateProvider, TenantedEntity, UnpagedEntityState } from '@savantly/sprout-api';
 import { API_URL } from 'plugin/config/appModuleConfiguration';
 
-export interface QAIQuestion extends TenantedEntity {
-  text: string;
-  notes: string;
-  points: number;
-  order: number;
+export interface QAQuestion extends TenantedEntity {
+  itemId: string;
+  sectionId: string;
   categoryId: string;
   tags: string;
-}
-
-export interface QAIGuestQuestion extends TenantedEntity {
+  order: number;
   text: string;
   points: number;
-  order: number;
 }
 
-export interface QAISection extends TenantedEntity {
+export interface QAGuestQuestion extends TenantedEntity {
+  sectionId: string;
+  order: number;
+  text: string;
+  points: number;
+}
+
+export interface QASection extends TenantedEntity {
   name: string;
   order: number;
   requireStaffAttendance: boolean;
-  questions: QAIQuestion[];
-  guestQuestions: QAIGuestQuestion[];
+  questions: QAQuestion[];
+  guestQuestions: QAGuestQuestion[];
 }
 
-export type QAISectionState = UnpagedEntityState<QAISection>;
+export type QASectionState = UnpagedEntityState<QASection>;
 
-class QAISectionService extends BaseEntityService<QAISection> {
+class QASectionService extends BaseEntityService<QASection> {
   constructor() {
     super({
       baseUrl: `${API_URL}/qai/section`,
     });
   }
 }
-const qaiSectionService = new QAISectionService();
-export { qaiSectionService };
+const qaSectionService = new QASectionService();
+export { qaSectionService };
 
-export const qaiSectionStateProvider = new EntityStateProvider<QAISection>({
-  entityService: qaiSectionService,
+export const qaSectionStateProvider = new EntityStateProvider<QASection>({
+  entityService: qaSectionService,
   initialState: {
     isFetched: false,
     isFetching: false,
     example: {
-      name: 'New QAA Section',
+      name: 'New QA Section',
       order: 0,
       requireStaffAttendance: false,
       guestQuestions: [],
       questions: [],
     },
   },
-  stateKey: 'qaiSectionState',
+  stateKey: 'qaSectionState',
 });

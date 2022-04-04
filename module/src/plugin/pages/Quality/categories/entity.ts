@@ -1,24 +1,24 @@
 import { BaseEntityService, EntityStateProvider, PagedEntityState, TenantedEntity } from '@savantly/sprout-api';
 import { API_URL } from 'plugin/config/appModuleConfiguration';
 
-export interface QAIQuestionCategory extends TenantedEntity {
+export interface QAQuestionCategory extends TenantedEntity {
   name: string;
 }
 
-export type QAIQuestionCategoryState = PagedEntityState<QAIQuestionCategory>;
+export type QAQuestionCategoryState = PagedEntityState<QAQuestionCategory>;
 
-class QAIQuestionCategoryService extends BaseEntityService<QAIQuestionCategory> {
+class QAQuestionCategoryService extends BaseEntityService<QAQuestionCategory> {
   constructor() {
     super({
       baseUrl: `${API_URL}/qai/question/category`,
     });
   }
 }
-const qaiQuestionCategoryService = new QAIQuestionCategoryService();
-export { qaiQuestionCategoryService };
+const qaQuestionCategoryService = new QAQuestionCategoryService();
+export { qaQuestionCategoryService };
 
-export const qaiQuestionCategoryStateProvider = new EntityStateProvider<QAIQuestionCategory>({
-  entityService: qaiQuestionCategoryService,
+export const qaQuestionCategoryStateProvider = new EntityStateProvider<QAQuestionCategory>({
+  entityService: qaQuestionCategoryService,
   initialState: {
     isFetched: false,
     isFetching: false,

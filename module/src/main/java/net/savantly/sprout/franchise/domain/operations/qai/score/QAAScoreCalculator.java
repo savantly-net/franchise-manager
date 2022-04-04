@@ -2,9 +2,11 @@ package net.savantly.sprout.franchise.domain.operations.qai.score;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,8 @@ public class QAAScoreCalculator {
 	private final QAIQuestionRepository questionRepo;
 	private final QAIGuestQuestionRepository guestQuestionRepo;
 	private final QAIQuestionCategoryRepository categoryRepo;
+	
+	private final double requiredPercentage = 0.8;
 
 	public QAAScore createScoreFromSubmission(QAASubmission submission, List<QAISectionSubmissionDto> sectionSubmission) {
 		QAAScore rubric = generateRubric(sectionSubmission);
@@ -154,13 +158,23 @@ public class QAAScoreCalculator {
 			
 		}
 		
+		Set<QAAScoreByTag> scoresByTag = rubricByTag.values().stream().collect(Collectors.toSet());
+		scoresByTag.forEach(t -> {
+			t.setRequired(new BigDecimal((t.getAvailable() - t.getNa()) * requiredPercentage));
+		});
+		
+		Set<QAASectionScore> scoresBySection = rubricBySection.values().stream().flatMap(s -> s.values().stream()).collect(Collectors.toSet());
+		scoresBySection.forEach(s -> {
+			s.setRequired(new BigDecimal((s.getAvailable() - s.getNa()) * requiredPercentage));
+		});
+		
 		QAAScore qaaScore = new QAAScore();
 		qaaScore.setOverallAvailable(available);
 		qaaScore.setOverallNA(na);
-		qaaScore.setOverallRequired(new BigDecimal((available - na) * 0.8));
+		qaaScore.setOverallRequired(new BigDecimal((available - na) * requiredPercentage));
 		qaaScore.setOverallScore(score);
-		qaaScore.setScoresByTag(rubricByTag.values().stream().collect(Collectors.toSet()));
-		qaaScore.setSections(rubricBySection.values().stream().flatMap(s -> s.values().stream()).collect(Collectors.toSet()));
+		qaaScore.setScoresByTag(scoresByTag);
+		qaaScore.setSections(scoresBySection);
 		return qaaScore;
 	}
 

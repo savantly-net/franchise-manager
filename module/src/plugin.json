@@ -85,7 +85,6 @@
       "type": "page",
       "icon": "clipboard-check",
       "addToNav": true,
-      "authority": "FM_QAI_READ",
       "children": [
         {
           "name": "Manage Sections",
@@ -124,7 +123,6 @@
       "type": "page",
       "icon": "industry",
       "addToNav": true,
-      "authority": "FM_QAI_READ",
       "children": [
         {
           "name": "Vendors",

@@ -1,6 +1,6 @@
-import { IconButton, Text, Box } from '@chakra-ui/react';
-import { Table, TableCaption, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table';
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
+import { Box, IconButton, Text } from '@chakra-ui/react';
+import { Table, TableCaption, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table';
 import { confirm, FormField, ItemEditorProps } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import { Field, FieldArray, Form, Formik, FormikProps } from 'formik';
@@ -10,23 +10,22 @@ import React, { Fragment, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Prompt, useNavigate } from 'react-router-dom';
 import { Alert, Button } from 'reactstrap';
-import { qaiQuestionCategoryStateProvider } from '../../../categories/entity';
+import { QAQuestionCategory, qaQuestionCategoryStateProvider } from '../../../categories/entity';
 import {
-  QAISection as EntityClass,
-  QAISection,
-  qaiSectionService as service,
-  qaiSectionStateProvider as stateProvider,
+  QASection as EntityClass,
+  QASection,
+  qaSectionService as service,
+  qaSectionStateProvider as stateProvider,
 } from '../../entity';
-
 import './styles.scss';
 
-const QuestionEditor = (props: FormikProps<QAISection>) => {
+const QuestionEditor = (props: FormikProps<QASection>) => {
   const dispatch = useDispatch();
-  const categoryState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiQuestionCategories);
+  const categoryState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaQuestionCategories);
 
   useMemo(() => {
     if (!categoryState.isFetched && !categoryState.isFetching) {
-      dispatch(qaiQuestionCategoryStateProvider.loadState());
+      dispatch(qaQuestionCategoryStateProvider.loadState());
     }
   }, [categoryState, dispatch]);
 
@@ -90,7 +89,7 @@ const QuestionEditor = (props: FormikProps<QAISection>) => {
                           <Fragment>
                             <option></option>
                             {categoryState.response?.content &&
-                              categoryState.response.content.map((t, index) => (
+                              categoryState.response.content.map((t: QAQuestionCategory, index: number) => (
                                 <option key={index} value={t.id?.itemId}>
                                   {t.name}
                                 </option>
@@ -131,7 +130,7 @@ const QuestionEditor = (props: FormikProps<QAISection>) => {
   );
 };
 
-const GuestQuestionEditor = (props: FormikProps<QAISection>) => {
+const GuestQuestionEditor = (props: FormikProps<QASection>) => {
   return (
     <FieldArray name="guestQuestions">
       {({ insert, remove, push }) => (
@@ -209,7 +208,7 @@ const GuestQuestionEditor = (props: FormikProps<QAISection>) => {
   );
 };
 
-export const QAISectionEditor = ({ item, afterSave }: ItemEditorProps<EntityClass>) => {
+export const QASectionEditor = ({ item, afterSave }: ItemEditorProps<EntityClass>) => {
   const navigate = useNavigate();
   const [itemState] = useState(item || stateProvider.props.initialState.example);
   const [error, setError] = useState('');

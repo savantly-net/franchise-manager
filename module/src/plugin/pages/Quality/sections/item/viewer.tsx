@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import { Card, CardBody } from 'reactstrap';
-import { QAISection as EntityClass } from '../entity';
+import { QASection as EntityClass } from '../entity';
 
-export const QAISectionViewer = ({ item }: { item: EntityClass }) => {
+export const QASectionViewer = ({ item }: { item: EntityClass }) => {
   return (
     <Fragment>
       <h2>{item.name}</h2>

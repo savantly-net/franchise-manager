@@ -1,13 +1,12 @@
 import { LoadingIcon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
-import { AppModuleRootState } from 'plugin/types';
-import React, { Fragment, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { Fragment, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Col, Nav, NavItem, NavLink, Row, TabContent, TabPane } from 'reactstrap';
-import { qaiSectionStateProvider } from '../../sections/entity';
-import { qaiSubmissionStateProvider } from '../entity';
-import { useQAASubmissionScore } from '../hooks';
+import { QAQuestion, QASection } from '../sections/entity';
+import { useQASections } from '../sections/hooks';
+import { QAAScoresByTag, QASectionSubmission } from './entity';
+import { useQAASubmissionScore, useQASubmission } from './hooks';
 // import Tabs from '@material-ui/core/Tabs';
 // import Tab from '@material-ui/core/Tab';
 
@@ -36,36 +35,14 @@ const TabEntry = ({
   );
 };
 const QAAScorePage = () => {
-  const sectionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSections);
-  const submissionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSubmissions);
-  const dispatch = useDispatch();
   const params = useParams();
   const submissionId = params['itemId'];
 
-  const [qaaSubmScore, setQaaSubmScore] = useState<any>();
-  const [qaaSubmission, setqaaSubmission] = useState<any>();
-  const [loadData, setLoadData] = useState(true);
+  const qaSubmission = useQASubmission(submissionId);
+  const qaSections = useQASections();
+  const qaScore = useQAASubmissionScore(submissionId);
 
-  const [sectionList, setSectionList] = useState<any>();
-
-  useMemo(() => {
-    if (!sectionState.isFetched && !sectionState.isFetching) {
-      dispatch(qaiSectionStateProvider.loadState());
-    }
-    if (!submissionState.isFetched && !submissionState.isFetching) {
-      dispatch(qaiSubmissionStateProvider.loadState());
-    }
-    if (sectionState?.response) {
-      setSectionList(sectionState?.response);
-    }
-    if (submissionState?.response) {
-      setqaaSubmission(submissionState?.response);
-    }
-  }, [sectionState, submissionState, dispatch]);
-
-  const showLoading = sectionState.isFetching || submissionState.isFetching;
-
-  const fmQaaScore = useQAASubmissionScore(submissionId);
+  const showLoading = !qaSections || !qaSubmission || !qaScore || !params;
 
   const [activeTab, setActiveTab] = useState('score');
   const toggle = (tab: string) => {
@@ -74,26 +51,21 @@ const QAAScorePage = () => {
     }
   };
 
-  const getSection = (sectionId: string) => {
-    const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
-    return searchSection?.name ? searchSection?.name : 'Unknown Section';
+  const getSectionName = (sectionId: string) => {
+    const searchSection: QASection | undefined = qaSections?.find((temp: any) => temp.itemId === sectionId);
+    return searchSection?.name || 'Unknown Section';
   };
-  const getQuestionText = (questionId: string, sectionId: string) => {
-    const searchSection: any = sectionList.find((temp: any) => temp.itemId === sectionId);
-    const searchQuestion: any = searchSection.questions.find((temp: any) => temp.itemId === questionId);
-    return searchQuestion?.text ? searchQuestion?.text : 'NA';
+  const getQuestionText = (questionId: string) => {
+    const searchQuestion: QAQuestion | undefined = qaSections
+      ?.flatMap(s => s.questions)
+      .find((temp: any) => temp.itemId === questionId);
+    return searchQuestion?.text || 'NA';
   };
-  useMemo(() => {
-    if (fmQaaScore) {
-      setQaaSubmScore(fmQaaScore);
-      setLoadData(false);
-    }
-  }, [fmQaaScore]);
 
   return (
     <div>
-      <div>{loadData && <LoadingIcon className="m-auto" />}</div>
-      {qaaSubmScore ? (
+      <div>{showLoading && <LoadingIcon className="m-auto" />}</div>
+      {!showLoading ? (
         <Fragment>
           <Nav tabs>
             <TabEntry tabId="score" tabText="Score" activeTab={activeTab} toggle={toggle} />
@@ -111,14 +83,14 @@ const QAAScorePage = () => {
             <TabPane tabId="score">
               <Fragment>
                 <Row>
-                  {qaaSubmScore &&
-                    qaaSubmScore.sections.length > 0 &&
-                    qaaSubmScore?.sections.map((sectionObj: any, index: number) => (
+                  {qaScore &&
+                    qaScore.sections.length > 0 &&
+                    qaScore.sections.map((sectionObj: any, index: number) => (
                       <>
                         <Col className="mb-3 col-4">
                           <h1 className="section-name">Section {index + 1}</h1>
                           <hr className="mb-2 mt-2" />
-                          <h1 className="category-name">{getSection(sectionObj.sectionId)}</h1>
+                          <h1 className="category-name">{getSectionName(sectionObj.sectionId)}</h1>
                           <Fragment>
                             <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
                               <thead style={{ backgroundColor: '#9e9e9e', color: '#fff' }}>
@@ -176,20 +148,37 @@ const QAAScorePage = () => {
                         </thead>
                         <tbody>
                           <Fragment>
-                            {qaaSubmScore &&
-                              qaaSubmScore.scoresByTag.length > 0 &&
-                              qaaSubmScore?.scoresByTag.map((tagObj: any, index: number) => (
+                            {qaScore && (
+                              <tr className="trCls">
+                                <td className="col-2">Overall</td>
+                                <td className="col-1">{qaScore.overallAvailable}</td>
+                                <td className="col-1">{qaScore.overallNA}</td>
+                                <td className="col-1">{qaScore.overallRequired}</td>
+                                <td className="col-1">{qaScore.overallScore}</td>
+                                <td className="col-1">{qaScore.overallRating}%</td>
+                                {qaScore.overallRating > 0.8 ? (
+                                  <td className="col-1" style={{ color: 'green', fontWeight: 'bold' }}>{`PASS`}</td>
+                                ) : (
+                                  <td className="col-1" style={{ color: 'red', fontWeight: 'bold' }}>{`FAIL`}</td>
+                                )}
+                              </tr>
+                            )}
+                          </Fragment>
+                          <Fragment>
+                            {qaScore &&
+                              qaScore.scoresByTag.length > 0 &&
+                              qaScore.scoresByTag.map((tagObj: QAAScoresByTag, index: number) => (
                                 <tr className="trCls">
                                   <td className="col-2">{tagObj.tag}</td>
                                   <td className="col-1">{tagObj.available}</td>
                                   <td className="col-1">{tagObj.na}</td>
-                                  <td className="col-1">{((tagObj.available - tagObj.na) * 0.8).toFixed(1)}</td>
+                                  <td className="col-1">{tagObj.rating}</td>
                                   <td className="col-1">{tagObj.score}</td>
                                   <td className="col-1">{tagObj.rating}%</td>
-                                  {tagObj.score > (tagObj.available - tagObj.na) * 0.8 ? (
-                                    <td className="col-1" style={{ color: 'green', fontWeight: 'bold' }}>{`PASS`}</td>
+                                  {tagObj.rating > 0.8 ? (
+                                    <td className="col-1" style={{ color: 'green', fontWeight: 'bold' }}>{`Ok`}</td>
                                   ) : (
-                                    <td className="col-1" style={{ color: 'red', fontWeight: 'bold' }}>{`FAIL`}</td>
+                                    <td className="col-1" style={{ color: 'red', fontWeight: 'bold' }}>{`Improve`}</td>
                                   )}
                                 </tr>
                               ))}
@@ -221,32 +210,27 @@ const QAAScorePage = () => {
                           <>
                             <tbody>
                               <Fragment>
-                                {qaaSubmission &&
-                                  qaaSubmission.content.length > 0 &&
-                                  qaaSubmission?.content.map(
-                                    (submissionObj: any, index: number) =>
-                                      submissionObj?.id === submissionId &&
-                                      submissionObj?.sections &&
-                                      submissionObj?.sections
-                                        .sort((next: any, prev: any) => next.order - prev.order)
-                                        .map(
-                                          (question: any, idx: number) =>
-                                            question?.answers &&
-                                            question?.answers.map(
-                                              (answer: any, idxa: number) =>
-                                                answer.value === 'NO' && (
-                                                  <tr className="trCls">
-                                                    <td style={{ minWidth: '200px' }} className="col-4">
-                                                      {getQuestionText(answer.questionId, question.sectionId)}
-                                                    </td>
-                                                    <td style={{ maxWidth: '450px' }} className="col-1">
-                                                      {answer['notes']}
-                                                    </td>
-                                                  </tr>
-                                                )
+                                {qaSubmission &&
+                                  qaSubmission.sections.length > 0 &&
+                                  qaSubmission.sections
+                                    .sort((next: any, prev: any) => next.order - prev.order)
+                                    .map(
+                                      (section: QASectionSubmission) =>
+                                        section?.answers &&
+                                        section?.answers.map(
+                                          (answer: any, idxa: number) =>
+                                            answer.value === 'NO' && (
+                                              <tr className="trCls">
+                                                <td style={{ minWidth: '200px' }} className="col-4">
+                                                  {getQuestionText(answer.questionId)}
+                                                </td>
+                                                <td style={{ maxWidth: '450px' }} className="col-1">
+                                                  {answer['notes']}
+                                                </td>
+                                              </tr>
                                             )
                                         )
-                                  )}
+                                    )}
                               </Fragment>
                             </tbody>
                           </>

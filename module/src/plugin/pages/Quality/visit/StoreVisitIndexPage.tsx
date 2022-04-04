@@ -3,8 +3,6 @@ import { ColumnDescription, EntityManager, EntityPageName } from '@sprout-platfo
 import { useFMLocation } from 'plugin/pages/Locations/Stores/hooks';
 import React, { FC } from 'react';
 import { AppModuleRootState, AppPluginSettings } from '../../../types';
-import { useQAISection } from '../sections/hooks';
-import { useQAISectionSubmission } from '../submissions/hooks';
 import {
   StoreVisit as EntityClass,
   storeVisitService as service,
@@ -18,13 +16,6 @@ const LocationName = ({ locationId }: { locationId?: string }) => {
   return <span className="mr-1">{location?.name}</span>;
 };
 
-const SectionName = ({ sectionSubmissionId }: { sectionSubmissionId?: string }) => {
-  const sectionSubmission = useQAISectionSubmission(sectionSubmissionId);
-  const section = useQAISection(sectionSubmission?.sectionId);
-
-  return <span className="mr-1">({section?.name})</span>;
-};
-
 const columns: Array<ColumnDescription<EntityClass>> = [
   {
     dataField: 'dummy',
@@ -35,7 +26,6 @@ const columns: Array<ColumnDescription<EntityClass>> = [
       return (
         <span>
           <LocationName locationId={row.locationId} />
-          <SectionName sectionSubmissionId={row.sectionSubmissionId} />
           {row.createdDate}
         </span>
       );

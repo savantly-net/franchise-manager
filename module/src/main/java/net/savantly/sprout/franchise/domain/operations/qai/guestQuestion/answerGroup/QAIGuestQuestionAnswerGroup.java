@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
@@ -24,7 +25,7 @@ import net.savantly.sprout.franchise.domain.operations.qai.guestQuestion.answer.
 @Getter @Setter
 public class QAIGuestQuestionAnswerGroup extends TenantKeyedEntity {
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<QAIGuestQuestionAnswer> answers = new ArrayList<>();
 	@Column(length = 2000)
 	@Size(max = 2000)

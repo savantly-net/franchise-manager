@@ -10,8 +10,6 @@ import { getAppPluginSettingsService } from 'plugin/services/pluginSettings';
 import React, { Fragment, useMemo, useState } from 'react';
 import { Prompt } from 'react-router-dom';
 import { Alert } from 'reactstrap';
-import { useQAISections } from '../sections/hooks';
-import { QAISectionSubmission, qaiSubmissionService } from '../submissions/entity';
 import {
   StoreVisit as EntityClass,
   StoreVisit,
@@ -104,19 +102,7 @@ export const StoreVisitEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
   const [error, setError] = useState('');
   const [selectedLocationId, setSelectedLocationId] = useState(item?.locationId);
   const locations = useFMLocations();
-  const [sectionSubmissions, setSectionSubmissions] = useState(undefined as QAISectionSubmission[] | undefined);
   const appPluginSettings = getAppPluginSettingsService().getSettings;
-  const qaiSectionList = useQAISections();
-
-  const getSectionNameById = (sectionId: string | undefined): string => {
-    console.log(`matching section id: ${sectionId} in ${qaiSectionList}`);
-    const matches = qaiSectionList.filter(s => s.itemId === sectionId);
-    if (matches.length > 0) {
-      return matches[0].name;
-    } else {
-      return '';
-    }
-  };
 
   const updateSelectedLocation = (locationId?: string, props?: FormikProps<StoreVisit>) => {
     if (locationId && selectedLocationId !== locationId && props) {
@@ -127,40 +113,10 @@ export const StoreVisitEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
       props.setFieldValue('formData', formData);
 
       setSelectedLocationId(locationId);
-      qaiSubmissionService.findByLocation(locationId).then(response => {
-        setSectionSubmissions(response.data);
-      });
     } else if (item?.locationId) {
-      qaiSubmissionService.findByLocation(item?.locationId).then(response => {
-        setSectionSubmissions(response.data);
-      });
     }
   };
   updateSelectedLocation(item?.locationId, item?.formData?.data);
-
-  // When the section submission changes, we'll update specific form values with data from the section submission, or calculated data
-  const updatedSelectedSection = (sectionSubmissionId?: string, formikProps?: FormikProps<StoreVisit>) => {
-    let sectionSubmissionData = {};
-    sectionSubmissions &&
-      sectionSubmissions.forEach(s => {
-        if (s.itemId === sectionSubmissionId) {
-          sectionSubmissionData = s;
-        }
-      });
-    if (formikProps?.values) {
-      const formData = formikProps.values.formData || {};
-      // This is the embedded formio form data
-      const formDataData = formData.data || {};
-      const updated = {
-        ...formData,
-        data: {
-          ...formDataData,
-          sectionSubmissionData: sectionSubmissionData,
-        },
-      };
-      formikProps.setFieldValue('formData', updated);
-    }
-  };
 
   const submitAll = (values: EntityClass, helpers: FormikHelpers<EntityClass>): Promise<EntityClass> => {
     return new Promise((resolve, reject) => {
@@ -243,29 +199,6 @@ export const StoreVisitEditor = ({ item, afterSave }: ItemEditorProps<EntityClas
                       ))}
                 </Fragment>
               </FormField>
-              <div>
-                <FormField
-                  name="sectionSubmissionId"
-                  label="Section Submission"
-                  wrapperProps={wrapperProps}
-                  as="select"
-                  onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => {
-                    const target = e.target as HTMLSelectElement;
-                    props.setFieldValue('sectionSubmissionId', target.value);
-                    updatedSelectedSection(target.value, props);
-                  }}
-                >
-                  <option></option>
-                  <Fragment>
-                    {sectionSubmissions &&
-                      sectionSubmissions.map(s => (
-                        <option key={s.itemId} value={s.itemId}>
-                          {getSectionNameById(s.sectionId)} {s.dateScored}
-                        </option>
-                      ))}
-                  </Fragment>
-                </FormField>
-              </div>
               {appPluginSettings.jsonData?.storeVisitFormId && selectedLocationId && (
                 <StoreVisitFormField
                   name="formData"

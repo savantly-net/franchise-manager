@@ -1,19 +1,19 @@
 import { Form, FormField } from '@sprout-platform/ui';
 import { FormikHelpers } from 'formik';
 import React, { FC } from 'react';
-import { QAIQuestionCategory } from './entity';
+import { QAQuestionCategory } from './entity';
 
-export interface QAIQuestionCategoryEditorProps {
-  entity: QAIQuestionCategory;
-  onSubmit: (values: QAIQuestionCategory, helpers: FormikHelpers<QAIQuestionCategory>) => void;
+export interface QAQuestionCategoryEditorProps {
+  entity: QAQuestionCategory;
+  onSubmit: (values: QAQuestionCategory, helpers: FormikHelpers<QAQuestionCategory>) => void;
   onCancel: () => void;
 }
 
-export const QAIQuestionCategoryEditor: FC<QAIQuestionCategoryEditorProps> = ({
+export const QAQuestionCategoryEditor: FC<QAQuestionCategoryEditorProps> = ({
   entity,
   onSubmit,
   onCancel,
-}: QAIQuestionCategoryEditorProps) => {
+}: QAQuestionCategoryEditorProps) => {
   return (
     <Form initialValues={entity} onSubmit={onSubmit} onCancel={onCancel}>
       {({ values }) => (

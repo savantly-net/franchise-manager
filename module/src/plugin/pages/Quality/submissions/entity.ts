@@ -1,115 +1,114 @@
 import {
   BaseEntityService,
+  dateTime,
   EntityStateProvider,
   PagedEntityState,
   TenantedEntity,
-  dateTime,
 } from '@savantly/sprout-api';
-import axios from 'axios';
+import { getApiService } from '@savantly/sprout-runtime';
 import { API_URL } from 'plugin/config/appModuleConfiguration';
 import { FileItem } from 'plugin/types';
+import { uuidv4 } from '../../../config/id';
+import { QAQuestionCategory } from '../categories/entity';
+import { QAGuestQuestion, QASection } from '../sections/entity';
 
-export type QAISubmissionStatus = 'DRAFT' | 'FINAL';
+export type QAGuestQuestionAnswerType = 'YES' | 'NO' | 'NA';
+export type QAQuestionAnswerType = 'YES' | 'NO' | 'NA';
+export type QASubmissionStatus = 'DRAFT' | 'FINAL';
 
-export type QAIGuestQuestionAnswerType = 'YES' | 'NO';
-export type QAIQuestionAnswerType = 'YES' | 'NO' | 'NA';
-
-export interface QAIGuestQuestionAnswer {
-  itemId?: string;
-  guestQuestionId?: string;
-  value?: QAIQuestionAnswerType;
-}
-export interface QAIGuestQuestionAnswerEditModel extends QAIGuestQuestionAnswer {
-  questionText?: string;
-  points?: number;
-  order?: number;
-  answers?: QAIGuestQuestionAnswerEditModel[];
-  attachments?: FileItem[];
-  guestAnswers?: QAIGuestQuestionAnswerGroup[];
-}
-/**
- * Guest Question Interface
- */
-export interface QAIGuestQuestionAnswerGroup {
-  itemId?: string;
-  answers: QAIGuestQuestionAnswer[];
-  notes?: string;
-  attachments: FileItem[];
+export interface QASubmission {
+  id?: string;
+  locationId?: string;
+  dateScored?: string;
+  managerOnDuty?: string;
+  fsc?: string;
+  fsm?: string;
+  responsibleAlcoholCert?: string;
+  startTime?: string;
+  endTime?: string;
+  sections: QASectionSubmission[];
 }
 
-export interface QAIGuestQuestionAnswerGroupEditModel {
-  itemId?: string;
-  answers: QAIGuestQuestionAnswerEditModel[];
-  notes?: string;
-  attachments: FileItem[];
-}
-
-export interface QAIQuestionAnswer {
-  itemId?: string;
-  questionId?: string;
-  value?: QAIQuestionAnswerType;
-  text?: string;
-  notes?: string;
-  attachments: FileItem[];
-}
-export interface QAIQuestionAnswerEditModel extends QAIQuestionAnswer {
-  questionText: string;
-  points: number;
+export interface QASectionSubmission extends TenantedEntity {
+  locationId?: string;
+  sectionId?: string;
+  managerOnDuty?: string;
+  dateScored?: string;
+  status?: string;
+  staffAttendance?: { [key: string]: string };
+  answers: QAQuestionAnswer[];
+  guestAnswers: QAGuestQuestionAnswerGroup[];
   order: number;
 }
 
-export interface QAAGuestQuestionAnswerGroupEditModel {
-  itemId?: string;
-  sectionId?: string;
-  locationId?: string;
-  status?: string;
-  answers: QAIGuestQuestionAnswerEditModel[];
-  guestAnswers: QAIGuestQuestionAnswerGroup[];
-}
-
-export interface QAISectionSubmission extends TenantedEntity {
-  id?: any;
-  itemId?: string;
-  locationId?: string;
-  sectionId?: string;
-  managerOnDuty?: string;
-  dateScored?: string;
-  startTime?: string;
-  endTime?: string;
-  status?: QAISubmissionStatus;
-  staffAttendance?: { [key: string]: string };
-  answers?: QAIQuestionAnswer[];
-  guestAnswers?: QAIGuestQuestionAnswerGroup[];
-  fsc?: string;
-  fsm?: string;
-  responsibleAlcoholCert?: string;
-  sections: QAAGuestQuestionAnswerGroupEditModel[];
-}
-
-export interface QAIQuestionAnswerGroupEditModel {
-  groupName: string;
-  answers: QAIQuestionAnswerEditModel[];
-}
-
-export interface QAISectionSubmissionEditModel {
+export interface QAQuestionAnswer {
   itemId: string;
-  sectionId?: string;
-  locationId: string;
-  managerOnDuty?: string;
-  dateScored?: string;
-  status?: QAISubmissionStatus;
-  staffAttendance?: { [key: string]: string };
-  answerGroups?: QAIQuestionAnswerGroupEditModel[];
-  guestAnswerGroups?: QAIGuestQuestionAnswerGroupEditModel[];
-  fsc?: string;
-  fsm?: string;
-  responsibleAlcoholCert?: string;
-  sections?: QAAGuestQuestionAnswerGroupEditModel[];
+  questionId?: string;
+  value?: QAQuestionAnswerType;
+  notes?: string;
+  attachments: FileItem[];
 }
 
-export type QAISectionSubmissionState = PagedEntityState<QAISectionSubmission>;
+export interface QAGuestQuestionAnswerGroup {
+  itemId?: string;
+  answers: QAGuestQuestionAnswer[];
+  notes?: string;
+  attachments: FileItem[];
+}
 
-class QAISectionSubmissionService extends BaseEntityService<QAISectionSubmission> {
+export interface QAGuestQuestionAnswer {
+  itemId?: string;
+  guestQuestionId?: string;
+  value?: QAQuestionAnswerType;
+}
+
+/**
+ * QAA SCORE
+ */
+
+export interface QAcategoryScore extends TenantedEntity {
+  categoryName: string;
+  sectionOrder: number;
+  available: number;
+  na: number;
+  required: number;
+  score: number;
+  rating: number;
+}
+
+export interface QASectionScore extends TenantedEntity {
+  sectionId: string;
+  sectionName: string;
+  order: number;
+  categoryScores: QAcategoryScore[];
+}
+
+export interface QAAScoresByTag extends TenantedEntity {
+  tag: string;
+  available: number;
+  na: number;
+  required: number;
+  score: number;
+  rating: number;
+}
+
+export interface QASubmissionScore extends TenantedEntity {
+  submissionId: string;
+  overallAvailable: number;
+  overallNA: number;
+  overallRequired: number;
+  overallScore: number;
+  overallRating: number;
+  sections: QASectionScore[];
+  scoresByTag: QAAScoresByTag[];
+}
+
+/**
+ * QAA Service/state
+ */
+export type QASubmissionState = PagedEntityState<QASubmission>;
+
+class QASubmissionService extends BaseEntityService<QASubmission> {
   constructor() {
     super({
       baseUrl: `${API_URL}/qaa/submission`,
@@ -117,23 +116,80 @@ class QAISectionSubmissionService extends BaseEntityService<QAISectionSubmission
   }
 
   findByLocation = (locationId: string) => {
-    return axios.get<QAISectionSubmission[]>(`${API_URL}/qai/submission/findByLocation/${locationId}`);
+    return getApiService().get<QASectionSubmission[]>(`${API_URL}/qai/submission/findByLocation/${locationId}`);
+  };
+
+  getQAScore = (submId: string) => {
+    return getApiService().get<QASubmissionScore>(`${API_URL}/qaa/submission/${submId}/score`);
   };
 }
-const qaiSubmissionService = new QAISectionSubmissionService();
-export { qaiSubmissionService };
+const qaService = new QASubmissionService();
+export { qaService };
 
-export const qaiSubmissionStateProvider = new EntityStateProvider<QAISectionSubmission>({
-  entityService: qaiSubmissionService,
+export const qaSubmissionStateProvider = new EntityStateProvider<QASubmission>({
+  entityService: qaService,
   initialState: {
     isFetched: false,
     isFetching: false,
     example: {
       sections: [],
-      answers: [],
-      guestAnswers: [],
-      dateScored: dateTime().format('YYYY-MM-DDTHH:mm:ssZ'),
+      dateScored: dateTime().format('YYYY-MM-DD'),
     },
   },
-  stateKey: 'qaiSubmissionState',
+  stateKey: 'qaSubmissionState',
 });
+
+export const generateEmptyQASubmission = (
+  qaSections: QASection[],
+  questionCategories: QAQuestionCategory[]
+): QASubmission => {
+  const submissionDefaults = qaSubmissionStateProvider.props.initialState.example;
+  const qaSectionSubmissions: QASectionSubmission[] = [];
+  qaSections.map(section => {
+    const model: QASectionSubmission = {
+      order: section.order,
+      dateScored: dateTime().format('YYYY-MM-DD'),
+      sectionId: section.itemId,
+      answers: generateEmptyAnswers(section, questionCategories),
+      guestAnswers: generateEmptyGuestAnswerGroups(section),
+    };
+    qaSectionSubmissions.push(model);
+  });
+  return {
+    ...submissionDefaults,
+    sections: qaSectionSubmissions,
+  };
+};
+
+const generateEmptyAnswers = (section: QASection, questionCategories: QAQuestionCategory[]): QAQuestionAnswer[] => {
+  const answers = section.questions.map(q => {
+    const answer: QAQuestionAnswer = {
+      itemId: uuidv4(),
+      questionId: q.itemId,
+      attachments: [],
+    };
+    return answer;
+  });
+  return answers;
+};
+
+const generateEmptyGuestAnswerGroups = (section: QASection): QAGuestQuestionAnswerGroup[] => {
+  const answerGroups: QAGuestQuestionAnswerGroup[] = [];
+  section.guestQuestions.map(q => {
+    answerGroups.push({
+      answers: generateEmptyGuestAnswers(q),
+      attachments: [],
+    });
+  });
+  return answerGroups;
+};
+
+const generateEmptyGuestAnswers = (question: QAGuestQuestion): QAGuestQuestionAnswer[] => {
+  const answers: QAGuestQuestionAnswer[] = [];
+  for (let i = 0; i < 3; i++) {
+    answers.push({
+      guestQuestionId: question.itemId,
+    });
+  }
+  return answers;
+};

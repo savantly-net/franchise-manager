@@ -60,6 +60,7 @@ public class QAAService {
 		QAASubmission entity = getOrCreateEntity(dto);
 		entity.setDateScored(dto.getDateScored())
 			.setFsc(dto.getFsc())
+			.setFsm(dto.getFsm())
 			.setLocationId(dto.getLocationId())
 			.setManagerOnDuty(dto.getManagerOnDuty())
 			.setResponsibleAlcoholCert(dto.getResponsibleAlcoholCert())
@@ -78,6 +79,7 @@ public class QAAService {
 			.setId(entity.getId())
 			.setDateScored(entity.getDateScored())
 			.setFsc(entity.getFsc())
+			.setFsm(entity.getFsm())
 			.setLocationId(entity.getLocationId())
 			.setManagerOnDuty(entity.getManagerOnDuty())
 			.setResponsibleAlcoholCert(entity.getResponsibleAlcoholCert())

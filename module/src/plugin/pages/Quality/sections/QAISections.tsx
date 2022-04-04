@@ -2,18 +2,18 @@ import { ColumnDescription, EntityManager, EntityPageName } from '@sprout-platfo
 import { AppModuleRootState } from 'plugin/types';
 import React from 'react';
 import {
-  QAISection as EntityClass,
-  qaiSectionService as service,
-  qaiSectionStateProvider as stateProvider,
+  qaSectionService as service,
+  QASection as EntityClass,
+  qaSectionStateProvider as stateProvider,
 } from './entity';
-import { useQAISections } from './hooks';
-import { QAISectionEditor as Editor } from './item/editor';
-import { QAISectionViewer as Viewer } from './item/viewer';
+import { useQASections } from './hooks';
+import { QASectionEditor as Editor } from './item/editor';
+import { QASectionViewer as Viewer } from './item/viewer';
 
-const stateSelector = (state: AppModuleRootState) => state.franchiseManagerState.qaiSections;
+const stateSelector = (state: AppModuleRootState) => state.franchiseManagerState.qaSections;
 
 const IndexPage = () => {
-  const qaiSections = useQAISections();
+  const qaiSections = useQASections();
   const getSection = (sectionId?: string) => {
     if (qaiSections && sectionId) {
       const found = qaiSections.filter(s => s.itemId === sectionId);
@@ -53,11 +53,11 @@ const IndexPage = () => {
       subTitleProvider={({ item, pageName }: { item?: EntityClass; pageName: EntityPageName }) => {
         switch (pageName) {
           case 'create':
-            return 'Create a new QAA Section';
+            return 'Create a new QA Section';
           case 'edit':
             return '';
           case 'list':
-            return 'Manage the QAA Sections';
+            return 'Manage the QA Sections';
           case 'view':
             return '';
           default:
@@ -67,11 +67,11 @@ const IndexPage = () => {
       titleProvider={({ item, pageName }: { item?: EntityClass; pageName: EntityPageName }) => {
         switch (pageName) {
           case 'create':
-            return 'New QAA Section';
+            return 'New QA Section';
           case 'edit':
-            return `Editing the QAA Section: ${item?.name}`;
+            return `Editing the QA Section: ${item?.name}`;
           case 'list':
-            return 'All QAA Section';
+            return 'All QA Section';
           case 'view':
             return item?.name || '';
           default:

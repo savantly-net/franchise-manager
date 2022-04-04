@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -39,10 +40,10 @@ public class QAISectionSubmission extends TenantKeyedEntity {
 	@Enumerated(EnumType.STRING)
 	private QAISubmissionState status;
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<QAIQuestionAnswer> answers = new ArrayList<>();
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<QAIGuestQuestionAnswerGroup> guestAnswers = new ArrayList<>();
 
 	@ElementCollection

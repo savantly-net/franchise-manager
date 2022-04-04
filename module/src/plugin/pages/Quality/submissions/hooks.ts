@@ -1,37 +1,37 @@
-import { AppModuleRootState } from 'plugin/types';
 import { useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { QAISectionSubmission, qaiSubmissionStateProvider } from './entity';
-import { QAASubmScoreService, QAASubmissionScore } from './qaa/entity';
+import { qaService, QASubmission, QASubmissionScore } from './entity';
 
-export const useQAISectionSubmission = (submissionId?: String): QAISectionSubmission | any => {
-  type InternalStateType = any | undefined;
-  const dispatch = useDispatch();
-  const qaiSelector = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSubmissions);
+export const useQASubmission = (submissionId?: string): QASubmission | undefined => {
+  const [fetching, isFetching] = useState(false);
+  type InternalStateType = QASubmission | undefined;
   const [internalState, setInternalState] = useState(undefined as InternalStateType);
 
   useMemo(() => {
-    if (!qaiSelector.isFetched && !qaiSelector.isFetching) {
-      dispatch(qaiSubmissionStateProvider.loadState());
-    } else if (qaiSelector.isFetched && !qaiSelector.isFetching) {
-      const found = qaiSelector.response?.content.filter(s => s.id === submissionId);
-      // const found = qaiSelector.response?.content.filter(s => s.itemId === submissionId);
-      if (found && found.length > 0) {
-        setInternalState(found[0]);
-      }
+    if (!internalState && !fetching && submissionId) {
+      isFetching(true);
+      qaService
+        .getById(submissionId)
+        .then(response => {
+          isFetching(false);
+          setInternalState(response.data);
+        })
+        .catch(err => {
+          console.error(err);
+        });
     }
-  }, [qaiSelector, dispatch, submissionId]);
+  }, [fetching, internalState, submissionId]);
 
   return internalState;
 };
 
-export const useQAASubmissionScore = (submId?: string): QAASubmissionScore[] | undefined => {
-  const [fetching, isFetching] = useState('' as any);
-  const [internalState, setInternalState] = useState(undefined as QAASubmissionScore[] | undefined);
+export const useQAASubmissionScore = (submId?: string): QASubmissionScore | undefined => {
+  const [fetching, isFetching] = useState(false);
+  const [internalState, setInternalState] = useState(undefined as QASubmissionScore | undefined);
   useMemo(() => {
     if (!internalState && !fetching && submId) {
       isFetching(true);
-      QAASubmScoreService.getQAAScore(submId)
+      qaService
+        .getQAScore(submId)
         .then(response => {
           isFetching(false);
           setInternalState(response.data);

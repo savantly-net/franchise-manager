@@ -8,32 +8,32 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Button, ButtonGroup } from 'reactstrap';
-import { useQAISections } from '../sections/hooks';
-import { QAISectionSubmission as EntityClass, qaiSubmissionStateProvider } from './entity';
+import { useQASections } from '../sections/hooks';
+import { QASubmission as EntityClass, qaSubmissionStateProvider } from './entity';
 
 const IndexPage = () => {
-  const submissionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiSubmissions);
+  const submissionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaSubmissions);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const qaiSections = useQAISections();
+  const qaSections = useQASections();
   const fmLocations = useFMLocations();
   const userContext = getUserContextService().getUserContext();
 
   useMemo(() => {
     if (!submissionState.isFetched && !submissionState.isFetching) {
-      dispatch(qaiSubmissionStateProvider.loadState());
+      dispatch(qaSubmissionStateProvider.loadState());
     }
   }, [submissionState, dispatch]);
 
   const userIsQAIAdmin = userContext && userContext.user && userContext.user.authorities.includes('QAI_ADMIN');
 
   const getSection = (section?: any) => {
-    if (qaiSections.length && section) {
+    if (qaSections && qaSections.length && section) {
       let found: any;
       let sectionNames: any = [];
       section.map((resp: any, index: any) => {
-        found = qaiSections.filter(s => s.itemId === resp.sectionId);
+        found = qaSections.filter(s => s.itemId === resp.sectionId);
         sectionNames.push(found[0]?.name);
       });
       if (sectionNames.length) {
@@ -131,8 +131,8 @@ const IndexPage = () => {
   return (
     <BootstrapTable
       columns={columns}
-      data={qaiSections.length && fmLocations.length ? submissionState.response?.content || [] : []}
-      keyField="itemId"
+      data={qaSections && qaSections.length && fmLocations.length ? submissionState.response?.content || [] : []}
+      keyField="id"
       striped={true}
     />
   );

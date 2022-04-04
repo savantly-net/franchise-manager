@@ -3,12 +3,15 @@ package net.savantly.sprout.franchise.domain.operations.qai.question.answer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import net.savantly.sprout.core.tenancy.TenantedPrimaryKey;
 
 @RequiredArgsConstructor
+@Transactional
 public class QAIQuestionAnswerService {
 	
 	private final QAIQuestionAnswerRepository repo;
@@ -31,7 +34,15 @@ public class QAIQuestionAnswerService {
 	public QAIQuestionAnswer upsert(QAIQuestionAnswerDto a) {
 		QAIQuestionAnswer entity = null;
 		if (Objects.nonNull(a.getItemId())) {
-			entity = repo.findByIdItemId(a.getItemId()).orElseThrow(() -> new EntityNotFoundException("A QA could not be found with id: " + a.getItemId()));
+			Optional<QAIQuestionAnswer> optional = repo.findByIdItemId(a.getItemId());
+			if (optional.isPresent()) {
+				entity = optional.get();
+			} else {
+				entity = new QAIQuestionAnswer();
+				TenantedPrimaryKey id = new TenantedPrimaryKey();
+				id.setItemId(a.getItemId());
+				entity.setId(id );
+			}
 		} else {
 			entity = new QAIQuestionAnswer();
 		}
@@ -40,7 +51,7 @@ public class QAIQuestionAnswerService {
 			.setQuestionId(a.getQuestionId())
 			.setValue(a.getValue())
 			.setAttachments(a.getAttachments());
-		repo.save(entity);
+		//repo.save(entity);
 		return entity;
 	}
 

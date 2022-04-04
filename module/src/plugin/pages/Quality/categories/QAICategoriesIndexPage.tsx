@@ -5,14 +5,14 @@ import React, { FC, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppModuleRootState, AppModuleState } from '../../../types';
 import {
-  QAIQuestionCategory as EntityClass,
-  qaiQuestionCategoryService as service,
-  qaiQuestionCategoryStateProvider,
-  qaiQuestionCategoryStateProvider as stateProvider,
+  QAQuestionCategory as EntityClass,
+  qaQuestionCategoryService as service,
+  qaQuestionCategoryStateProvider,
+  qaQuestionCategoryStateProvider as stateProvider,
 } from './entity';
-import { QAIQuestionCategoryEditor } from './QAIQuestionCategoryEditor';
+import { QAQuestionCategoryEditor } from './QAQuestionCategoryEditor';
 
-const qaiQuestionCategoryColumns = [
+const qaQuestionCategoryColumns = [
   {
     dataField: 'name',
     text: 'Name',
@@ -20,20 +20,20 @@ const qaiQuestionCategoryColumns = [
   },
 ];
 
-class QAICategoriesIndexPage extends EntityPage<EntityClass> {}
+class QACategoriesIndexPage extends EntityPage<EntityClass> {}
 
 const IndexPage: FC<any> = ({}: AppModuleState) => {
-  const state = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaiQuestionCategories);
+  const state = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaQuestionCategories);
   const dispatch = useDispatch();
 
   useMemo(() => {
     if (!state.isFetched && !state.isFetching) {
-      dispatch(qaiQuestionCategoryStateProvider.loadState());
+      dispatch(qaQuestionCategoryStateProvider.loadState());
     }
   }, [state, dispatch]);
 
   const navModelItem: NavModelItem = {
-    text: 'QAI Question Categories',
+    text: 'QA Question Categories',
     subTitle: 'Add, edit, and delete QAI Question Categories',
     url: './',
     icon: 'clone',
@@ -46,13 +46,13 @@ const IndexPage: FC<any> = ({}: AppModuleState) => {
 
   return (
     <FMPage model={navModel}>
-      <QAICategoriesIndexPage
+      <QACategoriesIndexPage
         afterDelete={() => {
           dispatch(stateProvider.loadState());
         }}
-        columndescriptions={qaiQuestionCategoryColumns}
+        columndescriptions={qaQuestionCategoryColumns}
         entityEditor={({ entity, save, cancel }) => (
-          <QAIQuestionCategoryEditor
+          <QAQuestionCategoryEditor
             entity={entity}
             onCancel={cancel}
             onSubmit={(values, helpers) => {
