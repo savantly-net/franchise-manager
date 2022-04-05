@@ -102,22 +102,24 @@ public class QAAScoreCalculator {
 					String[] tags = question.getTags().split(",");
 					for (int t = 0; t < tags.length; t++) {
 						String tag = tags[t].trim();
-						QAAScoreByTag tagRubric;
-						if (rubricByTag.containsKey(tag)) {
-							tagRubric = rubricByTag.get(tag);
-						} else {
-							tagRubric = new QAAScoreByTag();
-							rubricByTag.put(tag, tagRubric);
-						}
-						
-						tagRubric.setTag(tag)
-							.setSubmissionId(submissionId);
-						tagRubric.addAvailablePoints(points);
-						if (QAIQuestionAnswerType.NA.equals(answer.getValue())) {
-							tagRubric.addNaPoints(points);
-						}
-						if (QAIQuestionAnswerType.YES.equals(answer.getValue())) {
-							tagRubric.addScorePoints(points);
+						if (Objects.nonNull(tag) && tag != "") {
+							QAAScoreByTag tagRubric;
+							if (rubricByTag.containsKey(tag)) {
+								tagRubric = rubricByTag.get(tag);
+							} else {
+								tagRubric = new QAAScoreByTag();
+								rubricByTag.put(tag, tagRubric);
+							}
+							
+							tagRubric.setTag(tag)
+								.setSubmissionId(submissionId);
+							tagRubric.addAvailablePoints(points);
+							if (QAIQuestionAnswerType.NA.equals(answer.getValue())) {
+								tagRubric.addNaPoints(points);
+							}
+							if (QAIQuestionAnswerType.YES.equals(answer.getValue())) {
+								tagRubric.addScorePoints(points);
+							}
 						}
 					}
 				}
