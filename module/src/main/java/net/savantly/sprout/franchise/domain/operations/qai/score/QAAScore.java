@@ -49,10 +49,10 @@ public class QAAScore {
 
 	@Transient
 	public BigDecimal getOverallRating() {
-		if (Objects.isNull(overallRequired) || overallRequired.equals(BigDecimal.ZERO)) {
+		if (Objects.isNull(overallRequired) || overallRequired.equals(BigDecimal.ZERO) || overallScore == 0) {
 			return BigDecimal.ZERO;
 		} else {
-			return new BigDecimal(overallScore).divide(overallRequired, RoundingMode.HALF_UP);
+			return new BigDecimal(overallScore).setScale(2).divide(overallRequired, RoundingMode.HALF_UP);
 		}
 	};
 	

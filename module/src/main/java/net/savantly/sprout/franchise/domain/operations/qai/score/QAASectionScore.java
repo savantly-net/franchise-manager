@@ -61,7 +61,7 @@ public class QAASectionScore {
 		if (Objects.isNull(required) || required == BigDecimal.ZERO || score == 0) {
 			return BigDecimal.ZERO;
 		} else {
-			return new BigDecimal(score).divide(required, RoundingMode.HALF_UP);
+			return new BigDecimal(score).setScale(2).divide(required, RoundingMode.HALF_UP);
 		}
 	};
 	
