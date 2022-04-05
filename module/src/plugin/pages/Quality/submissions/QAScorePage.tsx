@@ -114,7 +114,7 @@ const QAAScorePage = () => {
                                         <Fragment>
                                           <tr className="trCls">
                                             <td className="col-4">{question.categoryName}</td>
-                                            <td className="col-1">{question.rating}%</td>
+                                            <td className="col-1">{question.rating * 100}%</td>
                                           </tr>
                                         </Fragment>
                                       </tbody>
@@ -155,7 +155,7 @@ const QAAScorePage = () => {
                                 <td className="col-1">{qaScore.overallNA}</td>
                                 <td className="col-1">{qaScore.overallRequired}</td>
                                 <td className="col-1">{qaScore.overallScore}</td>
-                                <td className="col-1">{qaScore.overallRating}%</td>
+                                <td className="col-1">{qaScore.overallRating * 100}%</td>
                                 {qaScore.overallRating > 0.8 ? (
                                   <td className="col-1" style={{ color: 'green', fontWeight: 'bold' }}>{`PASS`}</td>
                                 ) : (
@@ -174,7 +174,7 @@ const QAAScorePage = () => {
                                   <td className="col-1">{tagObj.na}</td>
                                   <td className="col-1">{tagObj.rating}</td>
                                   <td className="col-1">{tagObj.score}</td>
-                                  <td className="col-1">{tagObj.rating}%</td>
+                                  <td className="col-1">{tagObj.rating * 100}%</td>
                                   {tagObj.rating > 0.8 ? (
                                     <td className="col-1" style={{ color: 'green', fontWeight: 'bold' }}>{`Ok`}</td>
                                   ) : (
