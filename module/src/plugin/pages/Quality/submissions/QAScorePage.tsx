@@ -7,8 +7,6 @@ import { QAQuestion, QASection } from '../sections/entity';
 import { useQASections } from '../sections/hooks';
 import { QAAScoresByTag, QASectionSubmission } from './entity';
 import { useQAASubmissionScore, useQASubmission } from './hooks';
-// import Tabs from '@material-ui/core/Tabs';
-// import Tab from '@material-ui/core/Tab';
 
 const TabEntry = ({
   activeTab,
@@ -74,7 +72,8 @@ const QAAScorePage = () => {
           <TabContent
             activeTab={activeTab}
             className={cx(
-              'pt-2',
+              'pt-5',
+              'pl-3',
               css`
                 border-top: #ddd solid 1px;
               `
@@ -88,9 +87,10 @@ const QAAScorePage = () => {
                     qaScore.sections.map((sectionObj: any, index: number) => (
                       <>
                         <Col className="mb-3 col-4">
-                          <h1 className="section-name">Section {index + 1}</h1>
+                          <h1 className="section-name">
+                            Section {index + 1}: {getSectionName(sectionObj.sectionId)}
+                          </h1>
                           <hr className="mb-2 mt-2" />
-                          <h1 className="category-name">{getSectionName(sectionObj.sectionId)}</h1>
                           <Fragment>
                             <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
                               <thead style={{ backgroundColor: '#9e9e9e', color: '#fff' }}>
