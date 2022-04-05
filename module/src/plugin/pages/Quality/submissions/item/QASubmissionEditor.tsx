@@ -423,10 +423,14 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                             <tr>
                                               <td className="col-3">
                                                 {Qanswer.notes}
+                                                {/*
+                                                // this doesnt work as expected because idGusts is the group index, not the answer index
+                                      
                                                 {getGuestQuestionBySectionIdAndGQId(
                                                   sectionObj.sectionId!,
                                                   Qanswer.answers[idGusts].guestQuestionId!
                                                 )}
+                                                */}
                                               </td>
                                               {Qanswer?.answers &&
                                                 Qanswer.answers.map(
