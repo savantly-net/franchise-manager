@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { Alert } from 'reactstrap';
 import { QAQuestionCategory } from '../../categories/entity';
 import { useQAQuestionCategories } from '../../categories/hooks';
-import { QAQuestion, QASection, qaSectionStateProvider } from '../../sections/entity';
+import { QAGuestQuestion, QAQuestion, QASection, qaSectionStateProvider } from '../../sections/entity';
 import { useQASections } from '../../sections/hooks';
 import {
   QAGuestQuestionAnswer,
@@ -37,7 +37,9 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
 
   const allQASections = useQASections();
   const allQAQuestionCategories = useQAQuestionCategories();
-  const [selectedLocation, setSelectedLocation] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState(
+    draftSubmission.locationId ? draftSubmission.locationId : ''
+  );
   const [error, setError] = useState('');
   const fileService = getFileService();
   const userContext = getUserContextService().getUserContext();
@@ -56,6 +58,18 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
       question = searchSection.questions.find((temp: QAQuestion) => temp.itemId === questionId);
     }
     return question;
+  };
+
+  const getGuestQuestionBySectionIdAndGQId = (sectionId: string, gquestionId: string) => {
+    let searchSection: QASection | undefined;
+    if (allQAQuestionCategories) {
+      searchSection = allQASections?.find((temp: QASection) => temp.itemId === sectionId);
+    }
+    let gquestion: QAGuestQuestion | undefined;
+    if (searchSection) {
+      gquestion = searchSection.guestQuestions.find((temp: QAGuestQuestion) => temp.itemId === gquestionId);
+    }
+    return gquestion ? gquestion.text : '';
   };
 
   const getCategoryName = (categoryId: string) => {
@@ -151,6 +165,10 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState<any>({});
 
+  if (draftSubmission.dateScored) {
+    draftSubmission.dateScored = new Date(`${draftSubmission.dateScored}`).toLocaleDateString('fr-CA');
+  }
+
   return (
     <div>
       {error && <Alert color="warning">{error}</Alert>}
@@ -179,7 +197,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                   .then(response => {
                     dispatch(qaSectionStateProvider.loadState());
                     dispatch(qaSubmissionStateProvider.loadState());
-                    navigate(`../item/${response.data.id}`);
+                    navigate(`../${response.data.id}/score`);
                     resetForm();
                   })
                   .catch((err: { message: any }) => {
@@ -206,7 +224,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                       />
                     </div>
                     <div className="col-3">
-                      <FormField name="dateScored" type="date" label="Audit Date" required="required" />
+                      <FormField name={`dateScored`} type="date" label="Audit Date" required="required" />
                     </div>
                     <div className="col-3">
                       <FormField name={`startTime`} label="Start" type="time" className="" required="required" />
@@ -353,9 +371,13 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                             </tr>
                                             {props.values.sections[index].answers[idx]?.value === 'NO' && (
                                               <tr>
-                                                <td colSpan={2}>Notes</td>
-                                                <td colSpan={3}>
+                                                <td className="col-1" colSpan={1}>
+                                                  Notes
+                                                </td>
+                                                <td colSpan={4}>
                                                   <FormField
+                                                    rows="1"
+                                                    as="textarea"
                                                     placeholder="notes"
                                                     required="required"
                                                     name={`sections.${index}.answers.${idx}.notes`}
@@ -391,7 +413,13 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                         <>
                                           <Fragment>
                                             <tr>
-                                              <td className="col-3">{Qanswer.notes}</td>
+                                              <td className="col-3">
+                                                {Qanswer.notes}
+                                                {getGuestQuestionBySectionIdAndGQId(
+                                                  sectionObj.sectionId!,
+                                                  Qanswer.answers[idGusts].guestQuestionId!
+                                                )}
+                                              </td>
                                               {Qanswer?.answers &&
                                                 Qanswer.answers.map(
                                                   (Questquestion: QAGuestQuestionAnswer, idGust: number) => (

@@ -23,8 +23,9 @@
   padding: 5px 0px;
   font-size: 14px;
 }
-.section-namename {
-  font-size: 17px;
+.section-name {
+  font-weight: 900;
+  font-size: initial;
 }
 
 /* tr > td.col-3 {
