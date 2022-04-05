@@ -248,10 +248,12 @@ const QAISubmissionViewPage = () => {
                                     <Tr>
                                       <Td className="col-3">
                                         {Qanswer.notes}
+                                        {/*  This doesn't work as expected, because idGusts is the group id, not the question id.
+                                        // we may need to regroup this data in another object to make it easier to display here
                                         {getGuestQuestionBySectionIdAndGQId(
                                           s.sectionId!,
                                           Qanswer.answers[idGusts].guestQuestionId!
-                                        )}
+                                        )}*/}
                                       </Td>
                                       {Qanswer?.answers &&
                                         Qanswer.answers.map((Questquestion: QAGuestQuestionAnswer, idGust: number) => (
@@ -265,11 +267,6 @@ const QAISubmissionViewPage = () => {
                                   </Fragment>
                                 </>
                               ))}
-                            {s?.guestAnswers && Object.keys(s?.guestAnswers).length === 0 && (
-                              <Tr className="trCls">
-                                <Td className="col-12">Not available</Td>
-                              </Tr>
-                            )}
                           </Fragment>
                         </Tbody>
                       </Table>
