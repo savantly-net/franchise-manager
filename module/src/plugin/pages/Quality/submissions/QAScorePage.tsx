@@ -1,4 +1,4 @@
-import { LoadingIcon } from '@sprout-platform/ui';
+import { LoadingIcon, Icon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import React, { Fragment, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -7,8 +7,6 @@ import { QAQuestion, QASection } from '../sections/entity';
 import { useQASections } from '../sections/hooks';
 import { QAAScoresByTag, QASectionSubmission } from './entity';
 import { useQAASubmissionScore, useQASubmission } from './hooks';
-// import Tabs from '@material-ui/core/Tabs';
-// import Tab from '@material-ui/core/Tab';
 
 const TabEntry = ({
   activeTab,
@@ -74,7 +72,8 @@ const QAAScorePage = () => {
           <TabContent
             activeTab={activeTab}
             className={cx(
-              'pt-2',
+              'pt-5',
+              'pl-3',
               css`
                 border-top: #ddd solid 1px;
               `
@@ -88,9 +87,10 @@ const QAAScorePage = () => {
                     qaScore.sections.map((sectionObj: any, index: number) => (
                       <>
                         <Col className="mb-3 col-4">
-                          <h1 className="section-name">Section {index + 1}</h1>
+                          <h1 className="section-name">
+                            Section {index + 1}: {getSectionName(sectionObj.sectionId)}
+                          </h1>
                           <hr className="mb-2 mt-2" />
-                          <h1 className="category-name">{getSectionName(sectionObj.sectionId)}</h1>
                           <Fragment>
                             <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
                               <thead style={{ backgroundColor: '#9e9e9e', color: '#fff' }}>
@@ -202,8 +202,10 @@ const QAAScorePage = () => {
                         <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
                           <thead style={{ backgroundColor: '#9e9e9e', color: '#fff' }}>
                             <tr className="trCls">
+                              <th className="col-2">Order</th>
                               <th className="col-4">Question</th>
                               <th className="col-2">Notes</th>
+                              <th className="col-2">Image</th>
                             </tr>
                           </thead>
 
@@ -221,11 +223,28 @@ const QAAScorePage = () => {
                                           (answer: any, idxa: number) =>
                                             answer.value === 'NO' && (
                                               <tr className="trCls">
+                                                <td className="col-2">
+                                                  {section.order}.{idxa + 1}
+                                                </td>
                                                 <td style={{ minWidth: '200px' }} className="col-4">
                                                   {getQuestionText(answer.questionId)}
                                                 </td>
-                                                <td style={{ maxWidth: '450px' }} className="col-1">
+                                                <td style={{ maxWidth: '450px' }} className="col-3">
                                                   {answer['notes']}
+                                                </td>
+                                                <td className="col-3" style={{ minWidth: '400px', height: '50px' }}>
+                                                  {answer.attachments && answer.attachments.length > 0 ? (
+                                                    <img
+                                                      src={
+                                                        answer.attachments[answer.attachments.length - 1]['downloadUrl']
+                                                      }
+                                                    />
+                                                  ) : (
+                                                    <Icon
+                                                      name="image"
+                                                      style={{ fontSize: '2.875em', color: '#acb2b9' }}
+                                                    />
+                                                  )}
                                                 </td>
                                               </tr>
                                             )
