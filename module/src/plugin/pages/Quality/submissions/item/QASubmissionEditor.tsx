@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { Alert } from 'reactstrap';
 import { QAQuestionCategory } from '../../categories/entity';
 import { useQAQuestionCategories } from '../../categories/hooks';
-import { QAGuestQuestion, QAQuestion, QASection, qaSectionStateProvider } from '../../sections/entity';
+import { QAQuestion, QASection, qaSectionStateProvider } from '../../sections/entity';
 import { useQASections } from '../../sections/hooks';
 import {
   QAGuestQuestionAnswer,
@@ -60,6 +60,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     return question;
   };
 
+  /*
   const getGuestQuestionBySectionIdAndGQId = (sectionId: string, gquestionId: string) => {
     let searchSection: QASection | undefined;
     if (allQAQuestionCategories) {
@@ -71,6 +72,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     }
     return gquestion ? gquestion.text : '';
   };
+  */
 
   const getCategoryName = (categoryId: string) => {
     let searchCategory: QAQuestionCategory | undefined;

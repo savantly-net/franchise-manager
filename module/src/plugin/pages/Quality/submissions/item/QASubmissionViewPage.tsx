@@ -82,6 +82,7 @@ const QAISubmissionViewPage = () => {
     return searchQuestion?.text ? searchQuestion?.text : 'NA';
   };
 
+  /*
   const getGuestQuestionBySectionIdAndGQId = (sectionId: string, gquestionId: string) => {
     let searchSection;
     if (sectionList) {
@@ -93,6 +94,7 @@ const QAISubmissionViewPage = () => {
     }
     return gquestion ? gquestion.text : '';
   };
+  */
 
   useMemo(() => {
     if (item?.sections) {
