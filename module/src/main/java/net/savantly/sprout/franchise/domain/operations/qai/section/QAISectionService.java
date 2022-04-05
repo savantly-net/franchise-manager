@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import net.savantly.sprout.core.tenancy.TenantKeyedRepository;
 import net.savantly.sprout.franchise.domain.operations.qai.guestQuestion.QAIGuestQuestionDto;
 import net.savantly.sprout.franchise.domain.operations.qai.guestQuestion.QAIGuestQuestionService;
+import net.savantly.sprout.franchise.domain.operations.qai.question.QAIQuestion;
 import net.savantly.sprout.franchise.domain.operations.qai.question.QAIQuestionDto;
 import net.savantly.sprout.franchise.domain.operations.qai.question.QAIQuestionService;
 
@@ -59,7 +60,11 @@ public class QAISectionService {
 
 	private QAISectionDto convert(QAISection entity) {
 		List<QAIQuestionDto> questions = this.questionService.findAllBySectionId(entity.getItemId());
+		questions.sort(Comparator.comparingInt(QAIQuestionDto::getOrder));
+		
 		List<QAIGuestQuestionDto> guestQuestions = this.guestQuestionService.findAllBySectionId(entity.getItemId());
+		guestQuestions.sort(Comparator.comparingInt(QAIGuestQuestionDto::getOrder));
+		
 		return new QAISectionDto().setItemId(entity.getItemId()).setName(entity.getName()).setOrder(entity.getOrder())
 				.setRequireStaffAttendance(entity.isRequireStaffAttendance())
 				.setQuestions(questions)
