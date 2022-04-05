@@ -1,4 +1,4 @@
-import { LoadingIcon } from '@sprout-platform/ui';
+import { LoadingIcon, Icon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import React, { Fragment, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -194,7 +194,7 @@ const QAAScorePage = () => {
               <Fragment>
                 <Row>
                   <>
-                    <Col>
+                    <Col className="mb-3 col-4">
                       <h1 className="category-name" style={{ fontWeight: 'bold' }}>
                         Question
                       </h1>
@@ -233,11 +233,18 @@ const QAAScorePage = () => {
                                                   {answer['notes']}
                                                 </td>
                                                 <td className="col-3" style={{ minWidth: '400px', height: '50px' }}>
-                                                  <img
-                                                    src={
-                                                      answer.attachments[answer.attachments.length - 1]['downloadUrl']
-                                                    }
-                                                  />
+                                                  {answer.attachments && answer.attachments.length > 0 ? (
+                                                    <img
+                                                      src={
+                                                        answer.attachments[answer.attachments.length - 1]['downloadUrl']
+                                                      }
+                                                    />
+                                                  ) : (
+                                                    <Icon
+                                                      name="image"
+                                                      style={{ fontSize: '2.875em', color: '#acb2b9' }}
+                                                    />
+                                                  )}
                                                 </td>
                                               </tr>
                                             )
