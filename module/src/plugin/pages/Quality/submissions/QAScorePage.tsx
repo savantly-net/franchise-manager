@@ -7,8 +7,6 @@ import { QAQuestion, QASection } from '../sections/entity';
 import { useQASections } from '../sections/hooks';
 import { QAAScoresByTag, QASectionSubmission } from './entity';
 import { useQAASubmissionScore, useQASubmission } from './hooks';
-// import Tabs from '@material-ui/core/Tabs';
-// import Tab from '@material-ui/core/Tab';
 
 const TabEntry = ({
   activeTab,
@@ -194,7 +192,7 @@ const QAAScorePage = () => {
               <Fragment>
                 <Row>
                   <>
-                    <Col className="mb-3 col-4">
+                    <Col>
                       <h1 className="category-name" style={{ fontWeight: 'bold' }}>
                         Question
                       </h1>
@@ -202,8 +200,10 @@ const QAAScorePage = () => {
                         <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
                           <thead style={{ backgroundColor: '#9e9e9e', color: '#fff' }}>
                             <tr className="trCls">
+                              <th className="col-2">Order</th>
                               <th className="col-4">Question</th>
                               <th className="col-2">Notes</th>
+                              <th className="col-2">Image</th>
                             </tr>
                           </thead>
 
@@ -221,11 +221,21 @@ const QAAScorePage = () => {
                                           (answer: any, idxa: number) =>
                                             answer.value === 'NO' && (
                                               <tr className="trCls">
+                                                <td className="col-2">
+                                                  {section.order}.{idxa + 1}
+                                                </td>
                                                 <td style={{ minWidth: '200px' }} className="col-4">
                                                   {getQuestionText(answer.questionId)}
                                                 </td>
-                                                <td style={{ maxWidth: '450px' }} className="col-1">
+                                                <td style={{ maxWidth: '450px' }} className="col-3">
                                                   {answer['notes']}
+                                                </td>
+                                                <td className="col-3" style={{ minWidth: '400px', height: '50px' }}>
+                                                  <img
+                                                    src={
+                                                      answer.attachments[answer.attachments.length - 1]['downloadUrl']
+                                                    }
+                                                  />
                                                 </td>
                                               </tr>
                                             )

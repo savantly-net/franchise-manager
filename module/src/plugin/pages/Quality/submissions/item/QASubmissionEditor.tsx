@@ -329,21 +329,26 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                 />
                                               </td>
                                               <td className="col-2">
-                                                <img
-                                                  src={
-                                                    imagePreviewUrl[answer.itemId]
-                                                      ? imagePreviewUrl[answer.itemId]
-                                                      : answer.attachments.length > 0
-                                                      ? `${window.location.origin}${
-                                                          answer.attachments[answer.attachments.length - 1][
-                                                            'downloadUrl'
-                                                          ]
-                                                        }`
-                                                      : ''
-                                                  }
-                                                  height="40px"
-                                                  width="50px"
-                                                />
+                                                {imagePreviewUrl[answer.itemId] ? (
+                                                  <img
+                                                    src={imagePreviewUrl[answer.itemId]}
+                                                    height="40px"
+                                                    width="50px"
+                                                  />
+                                                ) : answer.attachments.length > 0 ? (
+                                                  <img
+                                                    src={`${window.location.origin}${
+                                                      answer.attachments[answer.attachments.length - 1]['downloadUrl']
+                                                    }`}
+                                                    height="40px"
+                                                    width="50px"
+                                                  />
+                                                ) : (
+                                                  <Icon
+                                                    name="image"
+                                                    style={{ fontSize: '2.875em', color: '#acb2b9' }}
+                                                  />
+                                                )}
                                               </td>
                                             </tr>
                                             {props.values.sections[index].answers[idx]?.value === 'NO' && (
