@@ -82,6 +82,18 @@ const QAISubmissionViewPage = () => {
     return searchQuestion?.text ? searchQuestion?.text : 'NA';
   };
 
+  const getGuestQuestionBySectionIdAndGQId = (sectionId: string, gquestionId: string) => {
+    let searchSection;
+    if (sectionList) {
+      searchSection = sectionList?.find((temp: any) => temp.itemId === sectionId);
+    }
+    let gquestion;
+    if (searchSection) {
+      gquestion = searchSection.guestQuestions.find((temp: any) => temp.itemId === gquestionId);
+    }
+    return gquestion ? gquestion.text : '';
+  };
+
   useMemo(() => {
     if (item?.sections) {
       let staticNo = 0;
@@ -185,14 +197,14 @@ const QAISubmissionViewPage = () => {
                                 <Tbody>
                                   <Fragment>
                                     <Tr>
-                                      <Td className="col-5">{getQuestionText(question.questionId, s.sectionId)} </Td>
+                                      <Td className="col-4">{getQuestionText(question.questionId, s.sectionId)} </Td>
                                       <Td className="col-4">{question.notes}</Td>
-                                      <Td className="col-2 ">
+                                      <Td className="col-1 ">
                                         <Fragment>{question.value}</Fragment>
                                       </Td>
-                                      <Td className="col-2 d-flex">
+                                      <Td className="col-3">
                                         {question.attachments.map(attachment => (
-                                          <div className="col-4">
+                                          <div>
                                             <div
                                               className={css`
                                                 text-align: center;
@@ -200,7 +212,10 @@ const QAISubmissionViewPage = () => {
                                             >
                                               <a href={attachment.downloadUrl}>Download</a>
                                             </div>
-                                            <img src={attachment.downloadUrl} width="100%" />
+                                            <img
+                                              src={`${window.location.origin}${attachment.downloadUrl}`}
+                                              width="100%"
+                                            />
                                           </div>
                                         ))}
                                       </Td>
@@ -231,7 +246,13 @@ const QAISubmissionViewPage = () => {
                                 <>
                                   <Fragment>
                                     <Tr>
-                                      <Td className="col-3">{Qanswer.notes}</Td>
+                                      <Td className="col-3">
+                                        {Qanswer.notes}
+                                        {getGuestQuestionBySectionIdAndGQId(
+                                          s.sectionId!,
+                                          Qanswer.answers[idGusts].guestQuestionId!
+                                        )}
+                                      </Td>
                                       {Qanswer?.answers &&
                                         Qanswer.answers.map((Questquestion: QAGuestQuestionAnswer, idGust: number) => (
                                           <>
