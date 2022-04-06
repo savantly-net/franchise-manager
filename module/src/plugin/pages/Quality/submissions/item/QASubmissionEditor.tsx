@@ -167,14 +167,13 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
   };
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState<any>({});
-  const removeImage = (id:any) => {
+  const removeImage = (id: any) => {
     let images = imagePreviewUrl;
-    if (images[id])
-    {
-      delete images[id]
+    if (images[id]) {
+      delete images[id];
       setImagePreviewUrl({
-        ...images
-      })
+        ...images,
+      });
     }
   };
 
@@ -222,7 +221,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
               console.log('Click on Cancel Button');
             }}
           >
-            {(props: FormikProps<QASubmission>) => ( 
+            {(props: FormikProps<QASubmission>) => (
               <>
                 <Fragment>
                   <div className="d-flex mb-3">
@@ -297,9 +296,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                       {idx === 0 && (
                                         <h1 className="category-name">{getCategoryName(question.categoryId)}</h1>
                                       )}
-                                      <table
-                                        style={{ marginTop: '5px', border: '1px solid #D0D7DE', width: '100%' }}
-                                      >
+                                      <table style={{ marginTop: '5px', border: '1px solid #D0D7DE', width: '100%' }}>
                                         <tbody>
                                           <Fragment>
                                             <tr>
@@ -388,15 +385,15 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                 )}
                                               </td>
                                               <td className="col-1">
-                                                  <Icon 
-                                                  name="trash-alt" 
+                                                <Icon
+                                                  name="trash-alt"
                                                   className={cx('text-danger', 'mr-4')}
                                                   color="danger"
-                                                  onClick={() =>   {
-                                                    removeImage(answer.itemId)
+                                                  onClick={() => {
+                                                    removeImage(answer.itemId);
                                                   }}
-                                                  style={{fontSize:"20px"}}
-                                                  ></Icon>
+                                                  style={{ fontSize: '20px' }}
+                                                ></Icon>
                                               </td>
                                             </tr>
                                             {props.values.sections[index].answers[idx]?.value === 'NO' && (
@@ -549,7 +546,11 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
       ) : (
         'No Record available'
       )}
-      {error && <Alert color="warning" className='mt-3'>{error}</Alert>}
+      {error && (
+        <Alert color="warning" className="mt-3">
+          {error}
+        </Alert>
+      )}
     </div>
   );
 };
