@@ -28,21 +28,6 @@ const IndexPage = () => {
 
   const userIsQAIAdmin = userContext && userContext.user && userContext.user.authorities.includes('QAI_ADMIN');
 
-  const getSection = (section?: any) => {
-    if (qaSections && qaSections.length && section) {
-      let found: any;
-      let sectionNames: any = [];
-      section.map((resp: any, index: any) => {
-        found = qaSections.filter(s => s.itemId === resp.sectionId);
-        sectionNames.push(found[0]?.name);
-      });
-      if (sectionNames.length) {
-        return sectionNames.toString();
-      }
-    }
-    return '';
-  };
-
   const getLocation = (locationId?: string) => {
     if (fmLocations && locationId) {
       const found = fmLocations.filter(s => s.id === locationId);
@@ -65,14 +50,9 @@ const IndexPage = () => {
       isDummyField: true,
     },
     {
-      dataField: 'sectionId',
-      text: 'Section',
+      dataField: 'fsc',
+      text: 'FSC',
       sort: true,
-      formatter: (cell, row) => {
-        const section = getSection(row.sections);
-        return <span>{section}</span>;
-      },
-      isDummyField: true,
     },
     {
       dataField: 'dateScored',
