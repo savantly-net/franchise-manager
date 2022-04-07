@@ -32,7 +32,7 @@ public class FranchiseFilesConfiguration implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		ensureFoldersExists();
-		log.info("using Franchise Manager Folders: {}, {}", rootFolder, qaiFolder);
+		log.info("using Franchise Manager Folders: rootFolder:{}, qaiFolder:{}", rootFolder.getId(), qaiFolder.getId());
 	}
 
 	private void ensureFoldersExists() {
