@@ -51,10 +51,7 @@ const QASubmissionCreate = () => {
 
   const [dataProps, setDataProps] = useState<any>();
   useEffect(() => {
-    const alertUser = (e: any, newValue: any) => {
-      if (newValue) {
-        localStorage.setItem(storageKey, JSON.stringify(newValue));
-      }
+    const alertUser = (e: any) => {
       if (removeKey) {
         localStorage.removeItem(storageKey);
       }
@@ -62,8 +59,8 @@ const QASubmissionCreate = () => {
       e.returnValue = '';
     };
     if (dataProps) {
-      window.addEventListener('beforeunload', (e: any) => alertUser(e, dataProps));
-      window.removeEventListener('beforeunload', (e: any) => alertUser(e, dataProps));
+      window.addEventListener('beforeunload', (e: any) => alertUser(e));
+      window.removeEventListener('beforeunload', (e: any) => alertUser(e));
       if (removeKey) {
         localStorage.removeItem(storageKey);
       } else {

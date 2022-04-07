@@ -14,6 +14,7 @@ import { QAQuestionCategory } from '../../categories/entity';
 import { useQAQuestionCategories } from '../../categories/hooks';
 import { QAQuestion, QASection, qaSectionStateProvider } from '../../sections/entity';
 import { useQASections } from '../../sections/hooks';
+import { cx } from 'emotion';
 import {
   QAGuestQuestionAnswer,
   QAGuestQuestionAnswerGroup,
@@ -167,13 +168,24 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState<any>({});
 
+  const removeImage = (props: any, sectionidx: number, idx: number, sectionId: any) => {
+    let images = imagePreviewUrl;
+    if (images[sectionId]) {
+      delete images[sectionId];
+      setImagePreviewUrl({
+        ...images,
+      });
+    }
+    props.setFieldValue(`sections.${sectionidx}.answers.${idx}.attachments`, []);
+    draftSubmission.sections[sectionidx].answers[idx].attachments = [];
+  };
+
   if (draftSubmission.dateScored) {
     draftSubmission.dateScored = new Date(`${draftSubmission.dateScored}`).toLocaleDateString('fr-CA');
   }
 
   return (
     <div>
-      {error && <Alert color="warning">{error}</Alert>}
       {draftSubmission ? (
         <Fragment>
           <Form
@@ -246,7 +258,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                       />
                     </div>
                     <div className="col-3">
-                      <FormField name="fsc" disabled type="text" label="FSC Conducting" required="required" />
+                      <FormField name="fsc" type="text" label="FSC Conducting" required="required" />
                     </div>
                     <div className="col-3">
                       <FormField name="fsm" type="text" label="Food safety manager on duty" required="required" />
@@ -256,7 +268,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                         name="responsibleAlcoholCert"
                         type="text"
                         label="Reponsibility Alcohol Certificate"
-                        placeholder="for Mgr/Bar staff"
+                        placeholder="Name of certificate holder on duty"
                         required="required"
                       />
                     </div>
@@ -287,10 +299,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                       {idx === 0 && (
                                         <h1 className="category-name">{getCategoryName(question.categoryId)}</h1>
                                       )}
-                                      <table
-                                        style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }}
-                                        className="table-count"
-                                      >
+                                      <table style={{ marginTop: '5px', border: '1px solid #D0D7DE', width: '100%' }}>
                                         <tbody>
                                           <Fragment>
                                             <tr>
@@ -300,7 +309,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                 </p>
                                                 <p>{question.tags}</p>
                                               </td>
-                                              <td className="col-4">{question.text}</td>
+                                              <td className="col-3">{question.text}</td>
                                               <td className="col-1">{question.points}</td>
                                               <td className="col-2 ">
                                                 <Fragment>
@@ -378,8 +387,20 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                   />
                                                 )}
                                               </td>
+                                              <td className="col-1">
+                                                <Icon
+                                                  name="trash-alt"
+                                                  className={cx('text-danger', 'mr-4')}
+                                                  color="danger"
+                                                  onClick={() => {
+                                                    removeImage(props, index, idx, answer.itemId);
+                                                  }}
+                                                  style={{ fontSize: '20px' }}
+                                                ></Icon>
+                                              </td>
                                             </tr>
-                                            {props.values.sections[index].answers[idx]?.value === 'NO' && (
+                                            {(props.values.sections[index].answers[idx]?.value === 'NO' ||
+                                              props.values.sections[index].answers[idx]?.value === 'NA') && (
                                               <tr>
                                                 <td className="col-1" colSpan={1}>
                                                   Notes
@@ -528,6 +549,11 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
         </Fragment>
       ) : (
         'No Record available'
+      )}
+      {error && (
+        <Alert color="warning" className="mt-3">
+          {error}
+        </Alert>
       )}
     </div>
   );
