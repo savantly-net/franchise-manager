@@ -167,14 +167,17 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
   };
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState<any>({});
-  const removeImage = (id: any) => {
+
+  const removeImage = (props: any, sectionidx: number, idx: number, sectionId: any) => {
     let images = imagePreviewUrl;
-    if (images[id]) {
-      delete images[id];
+    if (images[sectionId]) {
+      delete images[sectionId];
       setImagePreviewUrl({
         ...images,
       });
     }
+    props.setFieldValue(`sections.${sectionidx}.answers.${idx}.attachments`, []);
+    draftSubmission.sections[sectionidx].answers[idx].attachments = [];
   };
 
   if (draftSubmission.dateScored) {
@@ -255,7 +258,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                       />
                     </div>
                     <div className="col-3">
-                      <FormField name="fsc" disabled type="text" label="FSC Conducting" required="required" />
+                      <FormField name="fsc" type="text" label="FSC Conducting" required="required" />
                     </div>
                     <div className="col-3">
                       <FormField name="fsm" type="text" label="Food safety manager on duty" required="required" />
@@ -265,7 +268,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                         name="responsibleAlcoholCert"
                         type="text"
                         label="Reponsibility Alcohol Certificate"
-                        placeholder="for Mgr/Bar staff"
+                        placeholder="Name of certificate holder on duty"
                         required="required"
                       />
                     </div>
@@ -390,13 +393,14 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                   className={cx('text-danger', 'mr-4')}
                                                   color="danger"
                                                   onClick={() => {
-                                                    removeImage(answer.itemId);
+                                                    removeImage(props, index, idx, answer.itemId);
                                                   }}
                                                   style={{ fontSize: '20px' }}
                                                 ></Icon>
                                               </td>
                                             </tr>
-                                            {props.values.sections[index].answers[idx]?.value === 'NO' && (
+                                            {(props.values.sections[index].answers[idx]?.value === 'NO' ||
+                                              props.values.sections[index].answers[idx]?.value === 'NA') && (
                                               <tr>
                                                 <td className="col-1" colSpan={1}>
                                                   Notes
