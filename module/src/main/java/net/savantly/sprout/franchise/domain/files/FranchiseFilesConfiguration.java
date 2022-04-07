@@ -1,5 +1,7 @@
 package net.savantly.sprout.franchise.domain.files;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,8 @@ import net.savantly.sprout.domain.file.FileProvider;
 @Configuration
 @RequiredArgsConstructor
 public class FranchiseFilesConfiguration implements InitializingBean {
+	
+	private final static Logger log = LoggerFactory.getLogger(FranchiseFilesConfiguration.class);
 
 	private final FileProvider fileProvider;
 	private final static String FM_FOLDER_NAME = "FM";
@@ -28,6 +32,7 @@ public class FranchiseFilesConfiguration implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		ensureFoldersExists();
+		log.info("using Franchise Manager Folders: {}, {}", rootFolder, qaiFolder);
 	}
 
 	private void ensureFoldersExists() {

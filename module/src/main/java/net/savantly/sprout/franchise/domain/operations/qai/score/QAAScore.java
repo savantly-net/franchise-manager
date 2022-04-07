@@ -3,15 +3,10 @@ package net.savantly.sprout.franchise.domain.operations.qai.score;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -49,10 +44,10 @@ public class QAAScore {
 
 	@Transient
 	public BigDecimal getOverallRating() {
-		if (Objects.isNull(overallRequired) || overallRequired.equals(BigDecimal.ZERO) || overallScore == 0) {
+		if (overallAvailable == 0 || overallScore == 0) {
 			return BigDecimal.ZERO;
 		} else {
-			return new BigDecimal(overallScore).setScale(2).divide(overallRequired, RoundingMode.HALF_UP);
+			return new BigDecimal(overallScore).setScale(2).divide(new BigDecimal(overallAvailable), RoundingMode.HALF_UP).setScale(2);
 		}
 	};
 	

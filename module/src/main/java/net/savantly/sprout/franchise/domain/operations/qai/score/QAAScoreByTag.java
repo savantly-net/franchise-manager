@@ -2,7 +2,6 @@ package net.savantly.sprout.franchise.domain.operations.qai.score;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,10 +44,10 @@ public class QAAScoreByTag {
 
 	@Transient
 	public BigDecimal getRating() {
-		if (Objects.isNull(required) || required == BigDecimal.ZERO || score == 0) {
+		if (available == 0 || score == 0) {
 			return BigDecimal.ZERO;
 		} else {
-			return new BigDecimal(score).setScale(2).divide(required, RoundingMode.HALF_UP);
+			return new BigDecimal(score).setScale(2).divide(new BigDecimal(available), RoundingMode.HALF_UP).setScale(2);
 		}
 	};
 	
