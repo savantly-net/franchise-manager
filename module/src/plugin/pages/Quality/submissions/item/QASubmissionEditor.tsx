@@ -54,10 +54,10 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
   const fmConfig = useFMConfig();
   const [showLoading, setShowLoading] = useState(true);
 
-  useMemo(()=>{
+  useMemo(() => {
     const isLoading = !allQASections || !allQAQuestionCategories || !userContext;
     setShowLoading(isLoading);
-  }, [allQASections, allQAQuestionCategories, userContext, attachmentFolder])
+  }, [allQASections, allQAQuestionCategories, userContext]);
 
   const getQuestionBySectionIdAndQuestionId = (sectionId: string, questionId: string): QAQuestion | undefined => {
     let searchSection: QASection | undefined;
