@@ -8,8 +8,8 @@ import { LocationSelector } from 'plugin/pages/Locations/Stores/component/Locati
 import { FileItem } from 'plugin/types';
 import React, { Fragment, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { Alert } from 'reactstrap';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Alert, Button } from 'reactstrap';
 import { QAQuestionCategory } from '../../categories/entity';
 import { useQAQuestionCategories } from '../../categories/hooks';
 import { QAQuestion, QASection, qaSectionStateProvider } from '../../sections/entity';
@@ -30,12 +30,13 @@ export interface QASubmissionEditorProps {
   onChange: (values: QASubmission) => void;
   beforeSubmit?: (values: QASubmission) => boolean;
   afterSubmit?: () => void;
+  formDataReset: (value: any) => void;
 }
 const QASubmissionEditor = (props: QASubmissionEditorProps) => {
-  const { draftSubmission } = props;
+  const { draftSubmission, formDataReset } = props;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const submissionId = useParams().itemId;
   const allQASections = useQASections();
   const allQAQuestionCategories = useQAQuestionCategories();
   const [selectedLocation, setSelectedLocation] = useState(
@@ -60,20 +61,6 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     }
     return question;
   };
-
-  /*
-  const getGuestQuestionBySectionIdAndGQId = (sectionId: string, gquestionId: string) => {
-    let searchSection: QASection | undefined;
-    if (allQAQuestionCategories) {
-      searchSection = allQASections?.find((temp: QASection) => temp.itemId === sectionId);
-    }
-    let gquestion: QAGuestQuestion | undefined;
-    if (searchSection) {
-      gquestion = searchSection.guestQuestions.find((temp: QAGuestQuestion) => temp.itemId === gquestionId);
-    }
-    return gquestion ? gquestion.text : '';
-  };
-  */
 
   const getCategoryName = (categoryId: string) => {
     let searchCategory: QAQuestionCategory | undefined;
@@ -222,6 +209,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
             }}
             onCancel={() => {
               console.log('Click on Cancel Button');
+              navigate(`../list`);
             }}
           >
             {(props: FormikProps<QASubmission>) => (
@@ -444,17 +432,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                         <>
                                           <Fragment>
                                             <tr>
-                                              <td className="col-3">
-                                                {Qanswer.notes}
-                                                {/*
-                                                // this doesnt work as expected because idGusts is the group index, not the answer index
-                                      
-                                                {getGuestQuestionBySectionIdAndGQId(
-                                                  sectionObj.sectionId!,
-                                                  Qanswer.answers[idGusts].guestQuestionId!
-                                                )}
-                                                */}
-                                              </td>
+                                              <td className="col-3">{Qanswer.notes}</td>
                                               {Qanswer?.answers &&
                                                 Qanswer.answers.map(
                                                   (Questquestion: QAGuestQuestionAnswer, idGust: number) => (
@@ -540,6 +518,25 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                         </>
                       )}
                       <br />
+                      <>
+                        {!submissionId && (
+                          <div className="d-flex">
+                            <div className="col-4"></div>
+                            <div className="col-4" style={{ textAlign: 'center' }}>
+                              <Button
+                                onClick={() => {
+                                  setImagePreviewUrl({});
+                                  formDataReset(props);
+                                }}
+                                color={`info`}
+                              >
+                                Reset
+                              </Button>
+                            </div>
+                            <div className="col-4"></div>
+                          </div>
+                        )}
+                      </>
                     </>
                   ))}
                 <div>{showLoading && <LoadingIcon className="m-auto" />}</div>
