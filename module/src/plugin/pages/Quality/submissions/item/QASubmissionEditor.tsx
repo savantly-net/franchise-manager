@@ -313,9 +313,8 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                             <tr>
                                               <td className="col-1">
                                                 <p>
-                                                  {index + 1}.{question.order}
+                                                  {index + 1}.{question.order} {question.tags}
                                                 </p>
-                                                <p>{question.tags}</p>
                                               </td>
                                               <td className="col-3">{question.text}</td>
                                               <td className="col-1">{question.points}</td>
