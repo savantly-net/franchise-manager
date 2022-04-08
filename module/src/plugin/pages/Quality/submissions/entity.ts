@@ -17,7 +17,7 @@ export type QAQuestionAnswerType = 'YES' | 'NO' | 'NA';
 export type QASubmissionStatus = 'DRAFT' | 'FINAL';
 
 export interface QASubmission {
-  id?: string;
+  id: string;
   locationId?: string;
   dateScored?: string;
   managerOnDuty?: string;
@@ -132,6 +132,7 @@ export const qaSubmissionStateProvider = new EntityStateProvider<QASubmission>({
     isFetched: false,
     isFetching: false,
     example: {
+      id: uuidv4(),
       sections: [],
       dateScored: dateTime().format('YYYY-MM-DD'),
     },
@@ -144,6 +145,7 @@ export const generateEmptyQASubmission = (
   questionCategories: QAQuestionCategory[]
 ): QASubmission => {
   const submissionDefaults = qaSubmissionStateProvider.props.initialState.example;
+  submissionDefaults.id = uuidv4();
   const qaSectionSubmissions: QASectionSubmission[] = [];
   qaSections.map(section => {
     const model: QASectionSubmission = {
