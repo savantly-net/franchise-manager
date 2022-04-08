@@ -187,6 +187,13 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     draftSubmission.sections[sectionidx].answers[idx].attachments = [];
   };
 
+  const attachmentIsAnImage = (attachment: FileItem): boolean => {
+    if (attachment.contentType && attachment.contentType.split('/')[0] === 'image') {
+      return true;
+    }
+    return false;
+  };
+
   if (draftSubmission.dateScored) {
     draftSubmission.dateScored = new Date(`${draftSubmission.dateScored}`).toLocaleDateString('fr-CA');
   }
@@ -377,13 +384,9 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                     width="50px"
                                                   />
                                                 ) : answer.attachments.length > 0 &&
-                                                  answer.attachments[answer.attachments.length - 1][
-                                                    'contentType'
-                                                  ].split('/')[0] === 'image' ? (
+                                                  attachmentIsAnImage(answer.attachments[0]) ? (
                                                   <img
-                                                    src={`${window.location.origin}${
-                                                      answer.attachments[answer.attachments.length - 1]['downloadUrl']
-                                                    }`}
+                                                    src={`${window.location.origin}${answer.attachments[0].downloadUrl}`}
                                                     height="40px"
                                                     width="50px"
                                                   />
