@@ -6,7 +6,7 @@ import { FormikProps } from 'formik';
 import { useFMConfig } from 'plugin/config/useFmConfig';
 import { LocationSelector } from 'plugin/pages/Locations/Stores/component/LocationSelector';
 import { FileItem } from 'plugin/types';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Alert } from 'reactstrap';
@@ -24,6 +24,12 @@ import {
   QASubmission,
   qaSubmissionStateProvider,
 } from '../entity';
+
+interface ImagePreviewUrlItem {
+  image: string | ArrayBuffer | null;
+  type: string;
+}
+type ImagePreviewUrls = Record<string, ImagePreviewUrlItem>;
 
 export interface QASubmissionEditorProps {
   draftSubmission: QASubmission;
@@ -44,10 +50,14 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
   const [error, setError] = useState('');
   const fileService = getFileService();
   const userContext = getUserContextService().getUserContext();
-  const [attachmentFolder, setAttachmentFolder] = useState(undefined as FileMetaData | undefined);
+  const [attachmentFolder, setAttachmentFolder] = useState<FileMetaData | undefined>();
   const fmConfig = useFMConfig();
+  const [showLoading, setShowLoading] = useState(true);
 
-  const showLoading = !allQASections || !allQAQuestionCategories || !userContext;
+  useMemo(()=>{
+    const isLoading = !allQASections || !allQAQuestionCategories || !userContext;
+    setShowLoading(isLoading);
+  }, [allQASections, allQAQuestionCategories, userContext, attachmentFolder])
 
   const getQuestionBySectionIdAndQuestionId = (sectionId: string, questionId: string): QAQuestion | undefined => {
     let searchSection: QASection | undefined;
@@ -99,20 +109,21 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     return searchSection?.requireStaffAttendance || false;
   };
 
-  const checkFolderCreated = (itemId?: string) => {
-    if (itemId && fmConfig && fmConfig?.rootFolder) {
+  const checkFolderCreated = (draftSubmissionId: string) => {
+    if (draftSubmissionId && fmConfig && fmConfig.qaiFolder) {
+      const parentFolderId = fmConfig.qaiFolder.id;
       fileService
-        .getFilesByPath(fmConfig.rootFolder.id)
+        .getFilesByPath(parentFolderId)
         .then(response => {
-          const found = response.data.children.filter(f => f.name === itemId);
+          const found = response.data.children.filter(f => f.name === draftSubmissionId);
           if (found && found.length > 0) {
             setAttachmentFolder(found[0]);
           } else {
             fileService
               .createFile({
-                name: itemId,
+                name: draftSubmissionId,
                 isDir: true,
-                parent: fmConfig.rootFolder.id,
+                parent: parentFolderId,
               })
               .then(response => {
                 setAttachmentFolder(response.data);
@@ -128,7 +139,16 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     }
   };
 
-  const fileUpload = async (props: any, value: any, sectionidx: number, idx: number, sectionId: string) => {
+  const fileUpload = async (
+    props: FormikProps<QASubmission>,
+    value: {
+      files: FileList;
+    },
+    sectionidx: number,
+    answerIndex: number,
+    sectionId: string
+  ) => {
+    console.info('checking for files to upload', value);
     if (value.files) {
       const fileUploads: Array<Promise<AxiosResponse<FileMetaData>>> = [];
       for (let index = 0; index < value.files.length; index++) {
@@ -138,10 +158,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
             fileService.uploadFile(
               {
                 name: file.name,
-                isDir:
-                  attachmentFolder !== undefined && Object.keys(attachmentFolder).length > 0
-                    ? attachmentFolder.isDir
-                    : false,
+                isDir: false,
                 parent:
                   attachmentFolder !== undefined &&
                   Object.keys(attachmentFolder).length > 0 &&
@@ -159,14 +176,17 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
           const newFiles = responses.map(f => {
             return f.data as FileItem;
           });
-          const attachments = [...draftSubmission.sections[sectionidx]['answers'][idx]['attachments'], ...newFiles];
-          props.setFieldValue(`sections.${sectionidx}.answers.${idx}.attachments`, attachments);
+          const attachments = [
+            ...draftSubmission.sections[sectionidx]['answers'][answerIndex]['attachments'],
+            ...newFiles,
+          ];
+          props.setFieldValue(`sections.${sectionidx}.answers.${answerIndex}.attachments`, attachments);
         });
       }
     }
   };
 
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<any>({});
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<ImagePreviewUrls>({});
 
   const removeImage = (props: any, sectionidx: number, idx: number, sectionId: any) => {
     let images = imagePreviewUrl;
@@ -186,7 +206,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
 
   return (
     <div>
-      {draftSubmission ? (
+      {draftSubmission! && !showLoading ? (
         <Fragment>
           <Form
             initialValues={draftSubmission}
@@ -333,7 +353,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                     <Fragment>
                                                       <Icon
                                                         onClick={value => {
-                                                          checkFolderCreated(answer.itemId);
+                                                          checkFolderCreated(draftSubmission.id);
                                                         }}
                                                         name="paperclip"
                                                       ></Icon>
@@ -365,7 +385,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                 {imagePreviewUrl[answer.itemId] &&
                                                 imagePreviewUrl[answer.itemId].type === 'image' ? (
                                                   <img
-                                                    src={imagePreviewUrl[answer.itemId].image}
+                                                    src={imagePreviewUrl[answer.itemId].image as string}
                                                     height="40px"
                                                     width="50px"
                                                   />
