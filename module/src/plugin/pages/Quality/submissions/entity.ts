@@ -180,6 +180,7 @@ const generateEmptyGuestAnswerGroups = (section: QASection): QAGuestQuestionAnsw
   section.guestQuestions.map(q => {
     answerGroups.push({
       answers: generateEmptyGuestAnswers(q),
+      notes: q.text,
       attachments: [],
     });
   });
