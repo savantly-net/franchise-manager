@@ -518,26 +518,26 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                         </>
                       )}
                       <br />
-                      <>
-                        {!submissionId && (
-                          <div className="d-flex">
-                            <div className="col-12 p-0 mb-3">
-                              <Button
-                                onClick={() => {
-                                  setImagePreviewUrl({});
-                                  formDataReset(props);
-                                }}
-                                color={`info`}
-                              >
-                                Reset
-                              </Button>
-                            </div>
-                          </div>
-                        )}
-                      </>
                     </>
                   ))}
                 <div>{showLoading && <LoadingIcon className="m-auto" />}</div>
+                <>
+                  {!submissionId && (
+                    <div className="d-flex">
+                      <div className="col-12 p-0 mb-3">
+                        <Button
+                          onClick={() => {
+                            setImagePreviewUrl({});
+                            formDataReset(props);
+                          }}
+                          color={`info`}
+                        >
+                          Reset
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </>
               </>
             )}
           </Form>
