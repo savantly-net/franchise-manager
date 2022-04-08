@@ -172,7 +172,7 @@ const QAAScorePage = () => {
                                   <td className="col-2">{tagObj.tag}</td>
                                   <td className="col-1">{tagObj.available}</td>
                                   <td className="col-1">{tagObj.na}</td>
-                                  <td className="col-1">{tagObj.rating}</td>
+                                  <td className="col-1">{tagObj.required}</td>
                                   <td className="col-1">{tagObj.score}</td>
                                   <td className="col-1">{tagObj.rating * 100}%</td>
                                   {tagObj.rating > 0.8 ? (
