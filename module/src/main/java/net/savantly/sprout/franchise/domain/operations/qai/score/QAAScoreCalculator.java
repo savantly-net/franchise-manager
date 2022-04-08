@@ -2,12 +2,14 @@ package net.savantly.sprout.franchise.domain.operations.qai.score;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import lombok.RequiredArgsConstructor;
 import net.savantly.sprout.franchise.domain.operations.qai.audit.QAASubmission;
@@ -28,6 +30,8 @@ import net.savantly.sprout.franchise.domain.operations.qai.section.submission.QA
 
 @RequiredArgsConstructor
 public class QAAScoreCalculator {
+	
+	private final Logger log = LoggerFactory.getLogger(QAAScoreCalculator.class);
 	
 	private final String GUEST_CATEGORY = "GUEST";
 	
@@ -181,19 +185,23 @@ public class QAAScoreCalculator {
 	}
 
 	private QAISection getSection(String sectionId) {
+		log.info("finding QAISection by id: {}", sectionId);
 		return this.sectionRepo.findByIdItemId(sectionId).orElseThrow();
 	}
 
 	private QAIQuestionCategory getCategory(String categoryId) {
+		log.info("finding QAIQuestionCategory by id: {}", categoryId);
 		return this.categoryRepo.findByIdItemId(categoryId).orElseThrow();
 	}
 
 	private QAIGuestQuestion getGuestQuestionById(String guestQuestionId) {
+		log.info("finding QAIGuestQuestion by id: {}", guestQuestionId);
 		QAIGuestQuestion q = this.guestQuestionRepo.findByIdItemId(guestQuestionId).orElseThrow();
 		return q;
 	}
 
 	private QAIQuestion getQuestionById(String questionId) {
+		log.info("finding QAIQuestion by id: {}", questionId);
 		QAIQuestion q = this.questionRepo.findByIdItemId(questionId).orElseThrow();
 		return q;
 	}
