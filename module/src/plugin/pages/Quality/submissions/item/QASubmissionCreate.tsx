@@ -71,6 +71,65 @@ const QASubmissionCreate = () => {
 
   const showLoading = !allQASections || !allQAQuestionCategories || !userContext || !draftSubmission;
 
+  const resetFormData = (props: any) => {
+    if (draftSubmission) {
+      let draft: any;
+      if (allQASections && allQAQuestionCategories) {
+        const emptySubmission = generateEmptyQASubmission(allQASections, allQAQuestionCategories);
+        emptySubmission.fsc = userContext.user?.name;
+        draft = emptySubmission;
+      }
+      props.setFieldValue(`locationId`, '');
+      props.setFieldValue(`dateScored`, draft.dateScored);
+      props.setFieldValue(`startTime`, '');
+      props.setFieldValue(`endTime`, '');
+      props.setFieldValue(`managerOnDuty`, '');
+      props.setFieldValue(`fsc`, draft.fsc);
+      props.setFieldValue(`fsm`, '');
+      props.setFieldValue(`responsibleAlcoholCert`, '');
+      draftSubmission.locationId = '';
+      draftSubmission.dateScored = draft.dateScored;
+      draftSubmission.startTime = '';
+      draftSubmission.endTime = '';
+      draftSubmission.managerOnDuty = '';
+      draftSubmission.fsc = draft.fsc;
+      draftSubmission.fsm = '';
+      draftSubmission.responsibleAlcoholCert = '';
+
+      setTimeout(() => {
+        localStorage.removeItem('QASubmissionData');
+      }, 1000);
+
+      props.values.sections.length > 0 &&
+        props.values.sections.map((section: any, index: number) => {
+          section.answers.length > 0 &&
+            section.answers.map((answer: any, indA: number) => {
+              props.setFieldValue(`sections.${index}.answers.${indA}.attachments`, []);
+              props.setFieldValue(`sections.${index}.answers.${indA}.notes`, '');
+              props.setFieldValue(`sections.${index}.answers.${indA}.value`, '');
+              draftSubmission.sections[index].answers[indA].attachments = [];
+              draftSubmission.sections[index].answers[indA].notes = '';
+              draftSubmission.sections[index].answers[indA].value = undefined;
+            });
+          section.guestAnswers.length > 0 &&
+            section.guestAnswers.map((gAnswer: any, indG: number) => {
+              gAnswer.answers.length > 0 &&
+                gAnswer.answers.map((answer: any, indA: number) => {
+                  props.setFieldValue(`sections.${index}.guestAnswers.${indG}.answers.${indA}.value`, '');
+                  draftSubmission.sections[index].guestAnswers[indG].answers[indA].value = undefined;
+                });
+            });
+          props.setFieldValue(`sections.${index}.staffAttendance.Bartenders`, '');
+          props.setFieldValue(`sections.${index}.staffAttendance.Cashiers`, '');
+          props.setFieldValue(`sections.${index}.staffAttendance.Dish/Busser`, '');
+          props.setFieldValue(`sections.${index}.staffAttendance.Expo`, '');
+          props.setFieldValue(`sections.${index}.staffAttendance.Line Cooks`, '');
+          props.setFieldValue(`sections.${index}.staffAttendance.Prep`, '');
+          draftSubmission.sections[index].staffAttendance = {};
+        });
+    }
+  };
+
   log(`loading: ${showLoading}`);
   log(`draftSubmission: ${draftSubmission}`);
 
@@ -84,6 +143,7 @@ const QASubmissionCreate = () => {
           afterSubmit={() => {
             localStorage.removeItem(storageKey);
           }}
+          formDataReset={value => resetFormData(value)}
         />
       )}
     </Fragment>
