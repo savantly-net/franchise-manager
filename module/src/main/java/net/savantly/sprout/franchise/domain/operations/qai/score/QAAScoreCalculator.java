@@ -68,7 +68,7 @@ public class QAAScoreCalculator {
 				rubricBySection.put(sectionId, sectionRubric);
 			}
 			
-			for (QAIQuestionAnswerDto answer : qaiSectionSubmission.getAnswers()) {
+			for (QAIQuestionAnswerDto answer : qaiSectionSubmission.getAnswers().stream().filter(q -> Objects.nonNull(q.getQuestionId())).collect(Collectors.toList())) {
 				QAIQuestion question = getQuestionById(answer.getQuestionId());
 				long points = question.getPoints();
 				available += points;
