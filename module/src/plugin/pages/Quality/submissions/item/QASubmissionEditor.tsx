@@ -521,8 +521,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                       <>
                         {!submissionId && (
                           <div className="d-flex">
-                            <div className="col-4"></div>
-                            <div className="col-4" style={{ textAlign: 'center' }}>
+                            <div className="col-12 p-0 mb-3" style={{ textAlign: 'center' }}>
                               <Button
                                 onClick={() => {
                                   setImagePreviewUrl({});
@@ -533,7 +532,6 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                 Reset
                               </Button>
                             </div>
-                            <div className="col-4"></div>
                           </div>
                         )}
                       </>
