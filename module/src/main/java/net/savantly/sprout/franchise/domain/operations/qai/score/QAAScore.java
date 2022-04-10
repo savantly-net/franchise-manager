@@ -25,6 +25,8 @@ import lombok.experimental.Accessors;
 @Setter
 @Table(name = "fm_qaa_score")
 public class QAAScore {
+	
+	private final double requiredPercentage = 0.8;
 
 	@Id
 	@Column(name = "submission_id")
@@ -36,8 +38,10 @@ public class QAAScore {
 	@Column(name = "na_points")
 	private long overallNA;
 
-	@Column(name = "required_points")
-	private BigDecimal overallRequired;
+	@Transient
+	private long getOverallRequired() {
+		return Math.round((overallAvailable - overallNA) * requiredPercentage);
+	}
 
 	@Column(name = "scored_points")
 	private long overallScore;

@@ -76,7 +76,6 @@ public class QAAScoreService {
 			.setCategoryName(from.getCategoryName())
 			.setNa(from.getNa())
 			.setRating(from.getRating())
-			.setRequired(from.getRequired())
 			.setScore(from.getScore())
 			.setSectionOrder(from.getOrder());
 	}

@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @IdClass(QAAScoreByTagId.class)
 @Table(name = "fm_qaa_score_tag")
 public class QAAScoreByTag {
+	private final double requiredPercentage = 0.8;
 
 	@Id
 	@Column(name = "submission_id")
@@ -35,28 +36,32 @@ public class QAAScoreByTag {
 	@Column(name = "na_points")
 	private long na;
 
-	@Column(name = "required_points")
-	private BigDecimal required;
+	@Transient
+	public long getRequired() {
+		return Math.round((available - na) * requiredPercentage);
+	}
 
 	@Column(name = "scored_points")
 	private long score;
-	
 
 	@Transient
 	public BigDecimal getRating() {
 		if (available == 0 || score == 0) {
 			return BigDecimal.ZERO;
 		} else {
-			return new BigDecimal(score).setScale(2).divide(new BigDecimal(available), RoundingMode.HALF_UP).setScale(2);
+			return new BigDecimal(score).setScale(2).divide(new BigDecimal(available), RoundingMode.HALF_UP)
+					.setScale(2);
 		}
 	};
-	
+
 	public void addAvailablePoints(long points) {
 		this.available += points;
 	}
+
 	public void addNaPoints(long points) {
 		this.na += points;
 	}
+
 	public void addScorePoints(long points) {
 		this.score += points;
 	}

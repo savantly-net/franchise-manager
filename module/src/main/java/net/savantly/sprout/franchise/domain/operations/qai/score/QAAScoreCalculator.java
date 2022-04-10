@@ -1,7 +1,5 @@
 package net.savantly.sprout.franchise.domain.operations.qai.score;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -166,19 +164,11 @@ public class QAAScoreCalculator {
 		}
 		
 		Set<QAAScoreByTag> scoresByTag = rubricByTag.values().stream().collect(Collectors.toSet());
-		scoresByTag.forEach(t -> {
-			t.setRequired(new BigDecimal(Double.valueOf(t.getAvailable() - t.getNa() * requiredPercentage)).setScale(0, RoundingMode.HALF_UP));
-		});
-		
 		Set<QAASectionScore> scoresBySection = rubricBySection.values().stream().flatMap(s -> s.values().stream()).collect(Collectors.toSet());
-		scoresBySection.forEach(s -> {
-			s.setRequired(new BigDecimal(Double.valueOf(s.getAvailable() - s.getNa() * requiredPercentage)).setScale(0, RoundingMode.HALF_UP));
-		});
 		
 		QAAScore qaaScore = new QAAScore();
 		qaaScore.setOverallAvailable(available);
 		qaaScore.setOverallNA(na);
-		qaaScore.setOverallRequired(new BigDecimal(Double.valueOf((available - na) * requiredPercentage)).setScale(0, RoundingMode.HALF_UP));
 		qaaScore.setOverallScore(score);
 		qaaScore.setScoresByTag(scoresByTag);
 		qaaScore.setSections(scoresBySection);
