@@ -26,6 +26,7 @@ import lombok.experimental.Accessors;
 @Table(name = "fm_qaa_score")
 public class QAAScore {
 	
+	@Transient
 	private final double requiredPercentage = 0.8;
 
 	@Id

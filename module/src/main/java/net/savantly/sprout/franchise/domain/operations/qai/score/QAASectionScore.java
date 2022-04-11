@@ -21,6 +21,8 @@ import lombok.experimental.Accessors;
 @IdClass(QAASectionScoreId.class)
 @Table(name = "fm_qaa_score_section")
 public class QAASectionScore {
+
+	@Transient
 	private final double requiredPercentage = 0.8;
 
 
