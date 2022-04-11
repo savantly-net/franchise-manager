@@ -1,4 +1,4 @@
-import { LoadingIcon, Icon } from '@sprout-platform/ui';
+import { Icon, LoadingIcon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import React, { Fragment, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -194,7 +194,7 @@ const QAAScorePage = () => {
               <Fragment>
                 <Row>
                   <>
-                    <Col className="mb-3 col-4">
+                    <Col>
                       <h1 className="category-name" style={{ fontWeight: 'bold' }}>
                         Question
                       </h1>
@@ -204,7 +204,7 @@ const QAAScorePage = () => {
                             <tr className="trCls">
                               <th className="col-2">Order</th>
                               <th className="col-4">Question</th>
-                              <th className="col-2">Notes</th>
+                              <th className="col-4">Notes</th>
                               <th className="col-2">Image</th>
                             </tr>
                           </thead>
@@ -223,16 +223,12 @@ const QAAScorePage = () => {
                                           (answer: any, idxa: number) =>
                                             answer.value === 'NO' && (
                                               <tr className="trCls">
-                                                <td className="col-2">
+                                                <td>
                                                   {section.order}.{idxa + 1}
                                                 </td>
-                                                <td style={{ minWidth: '200px' }} className="col-4">
-                                                  {getQuestionText(answer.questionId)}
-                                                </td>
-                                                <td style={{ maxWidth: '450px' }} className="col-3">
-                                                  {answer['notes']}
-                                                </td>
-                                                <td className="col-3" style={{ minWidth: '400px', height: '50px' }}>
+                                                <td>{getQuestionText(answer.questionId)}</td>
+                                                <td>{answer['notes']}</td>
+                                                <td>
                                                   {answer.attachments && answer.attachments.length > 0 ? (
                                                     <img
                                                       src={
