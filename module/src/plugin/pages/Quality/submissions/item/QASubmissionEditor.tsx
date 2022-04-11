@@ -2,6 +2,7 @@ import { dateTimeForTimeZone, FileMetaData } from '@savantly/sprout-api';
 import { getFileService, getUserContextService } from '@savantly/sprout-runtime';
 import { FileUploadButton, Form, FormField, Icon, LoadingIcon } from '@sprout-platform/ui';
 import { AxiosResponse } from 'axios';
+import { cx } from 'emotion';
 import { FormikProps } from 'formik';
 import { useFMConfig } from 'plugin/config/useFmConfig';
 import { LocationSelector } from 'plugin/pages/Locations/Stores/component/LocationSelector';
@@ -14,7 +15,6 @@ import { QAQuestionCategory } from '../../categories/entity';
 import { useQAQuestionCategories } from '../../categories/hooks';
 import { QAQuestion, QASection, qaSectionStateProvider } from '../../sections/entity';
 import { useQASections } from '../../sections/hooks';
-import { cx } from 'emotion';
 import {
   QAGuestQuestionAnswer,
   QAGuestQuestionAnswerGroup,
@@ -194,6 +194,22 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     return false;
   };
 
+  const formatTags = (tags: string): string => {
+    if (!tags || tags == '') {
+      return tags;
+    }
+    const pairs = tags.split(',');
+    const identifiers = pairs.map(p => {
+      if (p) {
+        const parts = p.split('|');
+        return parts[0];
+      } else {
+        return '';
+      }
+    });
+    return identifiers.join(',');
+  };
+
   if (draftSubmission.dateScored) {
     draftSubmission.dateScored = new Date(`${draftSubmission.dateScored}`).toLocaleDateString('fr-CA');
   }
@@ -320,7 +336,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                             <tr>
                                               <td className="col-1">
                                                 <p>
-                                                  {index + 1}.{question.order} {question.tags}
+                                                  {index + 1}.{question.order} {formatTags(question.tags)}
                                                 </p>
                                               </td>
                                               <td className="col-3">{question.text}</td>
