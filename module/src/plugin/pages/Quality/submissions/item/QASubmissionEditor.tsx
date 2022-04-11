@@ -195,7 +195,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
   };
 
   const formatTags = (tags: string): string => {
-    if (!tags || tags == '') {
+    if (!tags || tags === '') {
       return tags;
     }
     const pairs = tags.split(',');
