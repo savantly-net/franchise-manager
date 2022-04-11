@@ -15,7 +15,7 @@ public class QAAScoreDto {
 	private String submissionId;
 	private long overallAvailable;
 	private long overallNA;
-	private BigDecimal overallRequired;
+	private long overallRequired;
 	private long overallScore;
 	private BigDecimal overallRating;
 

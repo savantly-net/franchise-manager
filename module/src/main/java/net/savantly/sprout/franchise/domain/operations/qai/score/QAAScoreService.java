@@ -34,7 +34,7 @@ public class QAAScoreService {
 			.setOverallAvailable(from.getOverallAvailable())
 			.setOverallNA(from.getOverallNA())
 			.setOverallRating(from.getOverallRating())
-			.setOverallRequired(from.getOverallRating())
+			.setOverallRequired(from.getOverallRequired())
 			.setOverallScore(from.getOverallScore())
 			.setScoresByTag(from.getScoresByTag().stream().map(s -> convert(s)).collect(Collectors.toList()))
 			.setSections(convert(from.getSections()));

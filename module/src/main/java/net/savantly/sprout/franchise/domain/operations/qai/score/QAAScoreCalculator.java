@@ -38,8 +38,6 @@ public class QAAScoreCalculator {
 	private final QAIQuestionRepository questionRepo;
 	private final QAIGuestQuestionRepository guestQuestionRepo;
 	private final QAIQuestionCategoryRepository categoryRepo;
-	
-	private final double requiredPercentage = 0.8;
 
 	public QAAScore createScoreFromSubmission(QAASubmission submission, List<QAISectionSubmissionDto> sectionSubmission) {
 		QAAScore rubric = generateRubric(sectionSubmission);

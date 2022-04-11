@@ -22,7 +22,6 @@ import lombok.experimental.Accessors;
 @Entity
 @Accessors(chain = true)
 @Getter
-@Setter
 @Table(name = "fm_qaa_score")
 public class QAAScore {
 	
@@ -31,20 +30,24 @@ public class QAAScore {
 
 	@Id
 	@Column(name = "submission_id")
+	@Setter
 	private String submissionId;
 
 	@Column(name = "available_points")
+	@Setter
 	private long overallAvailable;
 
 	@Column(name = "na_points")
+	@Setter
 	private long overallNA;
 
-	@Transient
-	private long getOverallRequired() {
+	@Transient 
+	public long getOverallRequired() {
 		return Math.round((overallAvailable - overallNA) * requiredPercentage);
 	}
 
 	@Column(name = "scored_points")
+	@Setter
 	private long overallScore;
 
 	@Transient
@@ -69,10 +72,12 @@ public class QAAScore {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "submission_id")
+	@Setter
 	private Set<QAASectionScore> sections = new HashSet<>();
 
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "submission_id")
+	@Setter
 	private Set<QAAScoreByTag> scoresByTag = new HashSet<>(); 
 }
