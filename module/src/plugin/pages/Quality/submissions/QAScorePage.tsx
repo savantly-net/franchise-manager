@@ -203,9 +203,9 @@ const QAAScorePage = () => {
                           <thead style={{ backgroundColor: '#9e9e9e', color: '#fff' }}>
                             <tr className="trCls">
                               <th className="col-2">Order</th>
-                              <th className="col-4">Question</th>
-                              <th className="col-4">Notes</th>
-                              <th className="col-2">Image</th>
+                              <th className="col-3">Question</th>
+                              <th className="col-3">Notes</th>
+                              <th className="col-4">Image</th>
                             </tr>
                           </thead>
 
