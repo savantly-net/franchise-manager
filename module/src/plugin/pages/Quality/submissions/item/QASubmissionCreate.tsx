@@ -97,7 +97,7 @@ const QASubmissionCreate = () => {
       draftSubmission.responsibleAlcoholCert = '';
 
       setTimeout(() => {
-        localStorage.removeItem('QASubmissionData');
+        localStorage.removeItem(storageKey);
       }, 1000);
 
       props.values.sections.length > 0 &&
