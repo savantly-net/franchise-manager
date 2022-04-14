@@ -252,7 +252,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
             }}
             onCancel={() => {
               console.log('Click on Cancel Button');
-              navigate(`../list`);
+              navigate(-1);
             }}
           >
             {(props: FormikProps<QASubmission>) => (

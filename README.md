@@ -1,7 +1,7 @@
 # Franchise Manager 
 The franchise manager module provides basic line-of-business data management for managing franchises.  
 It's developed as a Sprout Module to take advantage of the pluggable nature of Sprout.  
-Both Sprout and Franchise Module are dependencies that can be added to a Java Spring Boot application, to facilitate extension, customization, and easy upgrades.  
+Both Sprout and Franchise Module are dependencies that can be added to a Java Spring Boot application, to facilitate extension, customization, and easy upgrades.   
 
 Read more about the Sprout Project -  
 [https://github.com/savantly-net/sprout-platform](https://github.com/savantly-net/sprout-platform)
