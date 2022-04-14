@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { Col, Nav, NavItem, NavLink, Row, TabContent, TabPane } from 'reactstrap';
 import { QAQuestion, QASection } from '../sections/entity';
 import { useQASections } from '../sections/hooks';
-import { QAAScoresByTag, QASectionSubmission } from './entity';
+import { QAAScoresByTag, QASectionScore, QASectionSubmission } from './entity';
 import { useQAASubmissionScore, useQASubmission } from './hooks';
 
 const TabEntry = ({
@@ -84,7 +84,7 @@ const QAAScorePage = () => {
                 <Row>
                   {qaScore &&
                     qaScore.sections.length > 0 &&
-                    qaScore.sections.map((sectionObj: any, index: number) => (
+                    qaScore.sections.map((sectionObj: QASectionScore, index: number) => (
                       <>
                         <Col className="mb-3 col-4">
                           <h1 className="section-name">
@@ -102,7 +102,7 @@ const QAAScorePage = () => {
                               <tfoot>
                                 <tr className="trCls">
                                   <td className="col-4">Total</td>
-                                  <td className="col-2">100%</td>
+                                  <td className="col-2">{sectionObj.rating * 100}%</td>
                                 </tr>
                               </tfoot>
                               {sectionObj?.categoryScores &&

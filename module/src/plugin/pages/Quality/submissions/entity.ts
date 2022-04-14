@@ -80,6 +80,7 @@ export interface QASectionScore extends TenantedEntity {
   sectionId: string;
   sectionName: string;
   order: number;
+  rating: number;
   categoryScores: QAcategoryScore[];
 }
 
