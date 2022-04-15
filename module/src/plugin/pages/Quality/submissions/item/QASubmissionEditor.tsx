@@ -146,12 +146,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
               {
                 name: file.name,
                 isDir: false,
-                parent:
-                  attachmentFolder !== undefined &&
-                  Object.keys(attachmentFolder).length > 0 &&
-                  attachmentFolder !== undefined
-                    ? attachmentFolder.name
-                    : sectionId,
+                parent: attachmentFolder?.id || sectionId,
               },
               file
             )
@@ -407,22 +402,21 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                     width="50px"
                                                   />
                                                 ) : (
-                                                  <Icon
-                                                    name="image"
-                                                    style={{ fontSize: '2.875em', color: '#acb2b9' }}
-                                                  />
+                                                  <Icon name="image" style={{ fontSize: '2.875em', color: '#eee' }} />
                                                 )}
                                               </td>
                                               <td className="col-1">
-                                                <Icon
-                                                  name="trash-alt"
-                                                  className={cx('text-danger', 'mr-4')}
-                                                  color="danger"
-                                                  onClick={() => {
-                                                    removeImage(props, index, idx, answer.itemId);
-                                                  }}
-                                                  style={{ fontSize: '20px' }}
-                                                ></Icon>
+                                                {answer.attachments.length > 0 && (
+                                                  <Icon
+                                                    name="trash-alt"
+                                                    className={cx('text-danger', 'mr-4')}
+                                                    color="danger"
+                                                    onClick={() => {
+                                                      removeImage(props, index, idx, answer.itemId);
+                                                    }}
+                                                    style={{ fontSize: '20px' }}
+                                                  ></Icon>
+                                                )}
                                               </td>
                                             </tr>
                                             {(props.values.sections[index].answers[idx]?.value === 'NO' ||
