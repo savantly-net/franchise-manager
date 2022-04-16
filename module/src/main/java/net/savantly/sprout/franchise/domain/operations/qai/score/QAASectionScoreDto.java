@@ -33,7 +33,7 @@ public class QAASectionScoreDto {
 		long score = 0;
 		for (QAASectionCategoryScoreDto qaaSectionCategoryScoreDto : categoryScores) {
 			available += qaaSectionCategoryScoreDto.getAvailable();
-			score = qaaSectionCategoryScoreDto.getScore();
+			score += qaaSectionCategoryScoreDto.getScore();
 		}
 		if (available == 0 || score == 0) {
 			return BigDecimal.ZERO;
