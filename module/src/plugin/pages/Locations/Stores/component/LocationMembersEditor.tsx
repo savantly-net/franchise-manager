@@ -1,3 +1,4 @@
+import { FormControl, FormLabel } from '@chakra-ui/react';
 import { Icon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import { FieldArray } from 'formik';
@@ -49,16 +50,24 @@ export const FranchiseLocationMemberEditor = ({ location }: FranchiseLocationMem
                   {location.members &&
                     location.members.length > 0 &&
                     location.members.map((bar, index) => (
-                      <Row key={`member-${index}`}>
+                      <Row
+                        key={`member-${index}`}
+                        style={{
+                          margin: '0',
+                          borderBottom: '1px solid #ddd',
+                          padding: '5px 0',
+                          alignItems: 'center',
+                        }}
+                      >
                         <Col
                           className={css`
                             text-align: center;
                           `}
                         >
-                          <div>
-                            <label>Delete</label>
-                          </div>
-                          <RemoveItemButton index={index} remove={remove} />
+                          <FormControl>
+                            <FormLabel>{`Delete`}</FormLabel>
+                            <RemoveItemButton index={index} remove={remove} />
+                          </FormControl>
                         </Col>
                         <Col>
                           <UserPicker name={`members.${index}.userId`} users={users} label="User" />
@@ -79,6 +88,14 @@ export const FranchiseLocationMemberEditor = ({ location }: FranchiseLocationMem
                             ]}
                           />
                         </Col>
+                        {index % 2 === 0 ? (
+                          <span
+                            className="verticleLine"
+                            style={{ height: '65px', width: '1px', backgroundColor: '#ddd', margin: '0 20px' }}
+                          />
+                        ) : (
+                          ''
+                        )}
                       </Row>
                     ))}
                 </div>
