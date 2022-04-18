@@ -26,12 +26,7 @@ export const FranchiseGroupEditor = ({ item, afterSave }: FranchiseGroupEditorPr
         .get(`${API_URL}/group-members/`)
         .then(response => {
           const found = response?.data?.content.filter((l: any) => l.franchiseGroupId === item.itemId);
-          if (users) {
-            found.map((bar: any, index: any) => {
-              found[index]['userId'] = users.filter(user => user.itemId === bar?.userId)?.[0]?.displayName;
-            });
-            item.members = found;
-          }
+          item.members = found;
         })
         .catch(err => {
           console.error(err.message || err.detail || 'An error occurred while saving.');
@@ -67,7 +62,7 @@ export const FranchiseGroupEditor = ({ item, afterSave }: FranchiseGroupEditorPr
                 }
                 groupMemberToSave
                   .then(resp => {
-                    console.log('resp', resp);
+                    // console.log('resp', resp);
                   })
                   .catch(err => {
                     setError(err.message || err.detail || 'An error occurred while saving.');

@@ -39,7 +39,7 @@ export const FranchiseLocationMemberEditor = ({ location }: FranchiseLocationMem
                   color="info"
                   onClick={() => {
                     push({
-                      locationId: location.id,
+                      locationId: location.id ? location.id : '',
                     });
                   }}
                 >
