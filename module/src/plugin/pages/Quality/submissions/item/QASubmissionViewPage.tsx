@@ -180,22 +180,48 @@ const QAISubmissionViewPage = () => {
                       </h1>
                       {s.staffAttendance && (
                         <div>
-                          <label className="mr-2">Staff Attendance Log: </label>
-                          <span>
-                            {Object.keys(s.staffAttendance).map(o => (
-                              <Fragment>
-                                <i>{o}</i>
-                                {s.staffAttendance && s.staffAttendance[o]}
-                              </Fragment>
-                            ))}
-                          </span>
+                          {Object.values(s.staffAttendance).length > 0 && (
+                            <>
+                              <label className="mt-2">Staff Attendance Log: </label>
+                              <span>
+                                <Table
+                                  style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }}
+                                  className="table-count"
+                                >
+                                  <Tbody>
+                                    <Fragment>
+                                      <Tr>
+                                        <Th className="col-2">Bartenders</Th>
+                                        <Th className="col-2">Cashiers</Th>
+                                        <Th className="col-2">Expo</Th>
+                                        <Th className="col-2">Dish/Busser</Th>
+                                        <Th className="col-2">Line Cooks</Th>
+                                        <Th className="col-2">Prep</Th>
+                                      </Tr>
+                                      <Tr>
+                                        <Td className="col-2">{Object.values(s.staffAttendance)[0]}</Td>
+                                        <Td className="col-2">{Object.values(s.staffAttendance)[1]}</Td>
+                                        <Td className="col-2">{Object.values(s.staffAttendance)[2]}</Td>
+                                        <Td className="col-2">{Object.values(s.staffAttendance)[3]}</Td>
+                                        <Td className="col-2">{Object.values(s.staffAttendance)[4]}</Td>
+                                        <Td className="col-2">{Object.values(s.staffAttendance)[5]}</Td>
+                                      </Tr>
+                                    </Fragment>
+                                  </Tbody>
+                                </Table>
+                              </span>
+                            </>
+                          )}
                         </div>
                       )}
                       <Fragment>
                         {s?.answers &&
                           s?.answers.map((question: QAQuestionAnswer, idx: number) => (
                             <>
-                              <Table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
+                              <Table
+                                style={{ marginTop: '15px', border: '1px solid #D0D7DE;' }}
+                                className="table-count"
+                              >
                                 <Tbody>
                                   <Fragment>
                                     <Tr>

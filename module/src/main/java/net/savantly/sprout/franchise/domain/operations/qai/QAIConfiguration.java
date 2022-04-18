@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import net.savantly.sprout.core.tenancy.TenantKeyedRepository;
+import net.savantly.sprout.domain.file.FileProvider;
 import net.savantly.sprout.franchise.domain.operations.qai.audit.QAAApi;
 import net.savantly.sprout.franchise.domain.operations.qai.audit.QAAService;
 import net.savantly.sprout.franchise.domain.operations.qai.audit.QAASubmissionRepository;
@@ -53,8 +54,8 @@ public class QAIConfiguration {
 	}
 	
 	@Bean
-	public QAAApi qaaApi(QAAService qaaService, QAAScoreService qaaScoreService) {
-		return new QAAApi(qaaService, qaaScoreService);
+	public QAAApi qaaApi(QAAService qaaService, QAAScoreService qaaScoreService, FileProvider fileService) {
+		return new QAAApi(qaaService, qaaScoreService, fileService);
 	}
 	
 	@Bean

@@ -1,11 +1,11 @@
-import { LoadingIcon, Icon } from '@sprout-platform/ui';
+import { Icon, LoadingIcon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import React, { Fragment, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Col, Nav, NavItem, NavLink, Row, TabContent, TabPane } from 'reactstrap';
 import { QAQuestion, QASection } from '../sections/entity';
 import { useQASections } from '../sections/hooks';
-import { QAAScoresByTag, QASectionSubmission } from './entity';
+import { QAAScoresByTag, QASectionScore, QASectionSubmission } from './entity';
 import { useQAASubmissionScore, useQASubmission } from './hooks';
 
 const TabEntry = ({
@@ -84,7 +84,7 @@ const QAAScorePage = () => {
                 <Row>
                   {qaScore &&
                     qaScore.sections.length > 0 &&
-                    qaScore.sections.map((sectionObj: any, index: number) => (
+                    qaScore.sections.map((sectionObj: QASectionScore, index: number) => (
                       <>
                         <Col className="mb-3 col-4">
                           <h1 className="section-name">
@@ -102,7 +102,7 @@ const QAAScorePage = () => {
                               <tfoot>
                                 <tr className="trCls">
                                   <td className="col-4">Total</td>
-                                  <td className="col-2">100%</td>
+                                  <td className="col-2">{sectionObj.rating * 100}%</td>
                                 </tr>
                               </tfoot>
                               {sectionObj?.categoryScores &&
@@ -172,7 +172,7 @@ const QAAScorePage = () => {
                                   <td className="col-2">{tagObj.tag}</td>
                                   <td className="col-1">{tagObj.available}</td>
                                   <td className="col-1">{tagObj.na}</td>
-                                  <td className="col-1">{tagObj.rating}</td>
+                                  <td className="col-1">{tagObj.required}</td>
                                   <td className="col-1">{tagObj.score}</td>
                                   <td className="col-1">{tagObj.rating * 100}%</td>
                                   {tagObj.rating > 0.8 ? (
@@ -194,7 +194,7 @@ const QAAScorePage = () => {
               <Fragment>
                 <Row>
                   <>
-                    <Col className="mb-3 col-4">
+                    <Col>
                       <h1 className="category-name" style={{ fontWeight: 'bold' }}>
                         Question
                       </h1>
@@ -203,9 +203,9 @@ const QAAScorePage = () => {
                           <thead style={{ backgroundColor: '#9e9e9e', color: '#fff' }}>
                             <tr className="trCls">
                               <th className="col-2">Order</th>
-                              <th className="col-4">Question</th>
-                              <th className="col-2">Notes</th>
-                              <th className="col-2">Image</th>
+                              <th className="col-3">Question</th>
+                              <th className="col-3">Notes</th>
+                              <th className="col-4">Image</th>
                             </tr>
                           </thead>
 
@@ -223,16 +223,12 @@ const QAAScorePage = () => {
                                           (answer: any, idxa: number) =>
                                             answer.value === 'NO' && (
                                               <tr className="trCls">
-                                                <td className="col-2">
+                                                <td>
                                                   {section.order}.{idxa + 1}
                                                 </td>
-                                                <td style={{ minWidth: '200px' }} className="col-4">
-                                                  {getQuestionText(answer.questionId)}
-                                                </td>
-                                                <td style={{ maxWidth: '450px' }} className="col-3">
-                                                  {answer['notes']}
-                                                </td>
-                                                <td className="col-3" style={{ minWidth: '400px', height: '50px' }}>
+                                                <td>{getQuestionText(answer.questionId)}</td>
+                                                <td>{answer['notes']}</td>
+                                                <td>
                                                   {answer.attachments && answer.attachments.length > 0 ? (
                                                     <img
                                                       src={

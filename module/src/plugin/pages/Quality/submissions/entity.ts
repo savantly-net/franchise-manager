@@ -17,7 +17,7 @@ export type QAQuestionAnswerType = 'YES' | 'NO' | 'NA';
 export type QASubmissionStatus = 'DRAFT' | 'FINAL';
 
 export interface QASubmission {
-  id?: string;
+  id: string;
   locationId?: string;
   dateScored?: string;
   managerOnDuty?: string;
@@ -80,6 +80,7 @@ export interface QASectionScore extends TenantedEntity {
   sectionId: string;
   sectionName: string;
   order: number;
+  rating: number;
   categoryScores: QAcategoryScore[];
 }
 
@@ -132,6 +133,7 @@ export const qaSubmissionStateProvider = new EntityStateProvider<QASubmission>({
     isFetched: false,
     isFetching: false,
     example: {
+      id: uuidv4(),
       sections: [],
       dateScored: dateTime().format('YYYY-MM-DD'),
     },
@@ -144,6 +146,7 @@ export const generateEmptyQASubmission = (
   questionCategories: QAQuestionCategory[]
 ): QASubmission => {
   const submissionDefaults = qaSubmissionStateProvider.props.initialState.example;
+  submissionDefaults.id = uuidv4();
   const qaSectionSubmissions: QASectionSubmission[] = [];
   qaSections.map(section => {
     const model: QASectionSubmission = {
@@ -178,6 +181,7 @@ const generateEmptyGuestAnswerGroups = (section: QASection): QAGuestQuestionAnsw
   section.guestQuestions.map(q => {
     answerGroups.push({
       answers: generateEmptyGuestAnswers(q),
+      notes: q.text,
       attachments: [],
     });
   });

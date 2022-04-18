@@ -2,7 +2,6 @@ package net.savantly.sprout.franchise.domain.operations.qai.score;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +21,10 @@ import lombok.experimental.Accessors;
 @IdClass(QAASectionScoreId.class)
 @Table(name = "fm_qaa_score_section")
 public class QAASectionScore {
+
+	@Transient
+	private final double requiredPercentage = 0.8;
+
 
 	@Id
 	@Column(name = "submission_id")
@@ -50,18 +53,20 @@ public class QAASectionScore {
 	@Column(name = "na_points")
 	private long na;
 
-	@Column(name = "required_points")
-	private BigDecimal required;
+	@Transient
+	public long getRequired() {
+		return Math.round((available - na) * requiredPercentage);
+	}
 
 	@Column(name = "scored_points")
 	private long score;
 	
 	@Transient
 	public BigDecimal getRating() {
-		if (Objects.isNull(required) || required == BigDecimal.ZERO || score == 0) {
+		if (available == 0 || score == 0) {
 			return BigDecimal.ZERO;
 		} else {
-			return new BigDecimal(score).setScale(2).divide(required, RoundingMode.HALF_UP);
+			return new BigDecimal(score).setScale(2).divide(new BigDecimal(available), RoundingMode.HALF_UP).setScale(2);
 		}
 	};
 	

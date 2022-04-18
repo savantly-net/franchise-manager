@@ -3,15 +3,10 @@ package net.savantly.sprout.franchise.domain.operations.qai.score;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -27,32 +22,40 @@ import lombok.experimental.Accessors;
 @Entity
 @Accessors(chain = true)
 @Getter
-@Setter
 @Table(name = "fm_qaa_score")
 public class QAAScore {
+	
+	@Transient
+	private final double requiredPercentage = 0.8;
 
 	@Id
 	@Column(name = "submission_id")
+	@Setter
 	private String submissionId;
 
 	@Column(name = "available_points")
+	@Setter
 	private long overallAvailable;
 
 	@Column(name = "na_points")
+	@Setter
 	private long overallNA;
 
-	@Column(name = "required_points")
-	private BigDecimal overallRequired;
+	@Transient 
+	public long getOverallRequired() {
+		return Math.round((overallAvailable - overallNA) * requiredPercentage);
+	}
 
 	@Column(name = "scored_points")
+	@Setter
 	private long overallScore;
 
 	@Transient
 	public BigDecimal getOverallRating() {
-		if (Objects.isNull(overallRequired) || overallRequired.equals(BigDecimal.ZERO) || overallScore == 0) {
+		if (overallAvailable == 0 || overallScore == 0) {
 			return BigDecimal.ZERO;
 		} else {
-			return new BigDecimal(overallScore).setScale(2).divide(overallRequired, RoundingMode.HALF_UP);
+			return new BigDecimal(overallScore).setScale(2).divide(new BigDecimal(overallAvailable), RoundingMode.HALF_UP).setScale(2);
 		}
 	};
 	
@@ -69,10 +72,12 @@ public class QAAScore {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "submission_id")
+	@Setter
 	private Set<QAASectionScore> sections = new HashSet<>();
 
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "submission_id")
+	@Setter
 	private Set<QAAScoreByTag> scoresByTag = new HashSet<>(); 
 }

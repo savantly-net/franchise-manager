@@ -12,7 +12,9 @@ const QAISubmissionEditPage = () => {
   return (
     <Fragment>
       {showLoading && <LoadingIcon />}
-      {qaSubmission && <QASubmissionEditor draftSubmission={qaSubmission} onChange={values => values} />}
+      {qaSubmission && (
+        <QASubmissionEditor draftSubmission={qaSubmission} onChange={values => values} formDataReset={value => value} />
+      )}
     </Fragment>
   );
 };

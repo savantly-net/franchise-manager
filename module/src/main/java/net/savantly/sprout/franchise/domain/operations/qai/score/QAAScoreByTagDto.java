@@ -14,7 +14,7 @@ public class QAAScoreByTagDto {
 
 	private long available;
 	private long na;
-	private BigDecimal required;
+	private long required;
 	private long score;
 	private BigDecimal rating;
 	

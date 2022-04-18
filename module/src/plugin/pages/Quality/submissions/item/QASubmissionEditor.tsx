@@ -2,14 +2,15 @@ import { dateTimeForTimeZone, FileMetaData } from '@savantly/sprout-api';
 import { getFileService, getUserContextService } from '@savantly/sprout-runtime';
 import { FileUploadButton, Form, FormField, Icon, LoadingIcon } from '@sprout-platform/ui';
 import { AxiosResponse } from 'axios';
+import { cx } from 'emotion';
 import { FormikProps } from 'formik';
 import { useFMConfig } from 'plugin/config/useFmConfig';
 import { LocationSelector } from 'plugin/pages/Locations/Stores/component/LocationSelector';
 import { FileItem } from 'plugin/types';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { Alert } from 'reactstrap';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Alert, Button } from 'reactstrap';
 import { QAQuestionCategory } from '../../categories/entity';
 import { useQAQuestionCategories } from '../../categories/hooks';
 import { QAQuestion, QASection, qaSectionStateProvider } from '../../sections/entity';
@@ -24,17 +25,24 @@ import {
   qaSubmissionStateProvider,
 } from '../entity';
 
+interface ImagePreviewUrlItem {
+  image: string | ArrayBuffer | null;
+  type: string;
+}
+type ImagePreviewUrls = Record<string, ImagePreviewUrlItem>;
+
 export interface QASubmissionEditorProps {
   draftSubmission: QASubmission;
   onChange: (values: QASubmission) => void;
   beforeSubmit?: (values: QASubmission) => boolean;
   afterSubmit?: () => void;
+  formDataReset: (value: any) => void;
 }
 const QASubmissionEditor = (props: QASubmissionEditorProps) => {
-  const { draftSubmission } = props;
+  const { draftSubmission, formDataReset } = props;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const submissionId = useParams().itemId;
   const allQASections = useQASections();
   const allQAQuestionCategories = useQAQuestionCategories();
   const [selectedLocation, setSelectedLocation] = useState(
@@ -43,10 +51,14 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
   const [error, setError] = useState('');
   const fileService = getFileService();
   const userContext = getUserContextService().getUserContext();
-  const [attachmentFolder, setAttachmentFolder] = useState(undefined as FileMetaData | undefined);
+  const [attachmentFolder, setAttachmentFolder] = useState<FileMetaData | undefined>();
   const fmConfig = useFMConfig();
+  const [showLoading, setShowLoading] = useState(true);
 
-  const showLoading = !allQASections || !allQAQuestionCategories || !userContext;
+  useMemo(() => {
+    const isLoading = !allQASections || !allQAQuestionCategories || !userContext;
+    setShowLoading(isLoading);
+  }, [allQASections, allQAQuestionCategories, userContext]);
 
   const getQuestionBySectionIdAndQuestionId = (sectionId: string, questionId: string): QAQuestion | undefined => {
     let searchSection: QASection | undefined;
@@ -59,20 +71,6 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     }
     return question;
   };
-
-  /*
-  const getGuestQuestionBySectionIdAndGQId = (sectionId: string, gquestionId: string) => {
-    let searchSection: QASection | undefined;
-    if (allQAQuestionCategories) {
-      searchSection = allQASections?.find((temp: QASection) => temp.itemId === sectionId);
-    }
-    let gquestion: QAGuestQuestion | undefined;
-    if (searchSection) {
-      gquestion = searchSection.guestQuestions.find((temp: QAGuestQuestion) => temp.itemId === gquestionId);
-    }
-    return gquestion ? gquestion.text : '';
-  };
-  */
 
   const getCategoryName = (categoryId: string) => {
     let searchCategory: QAQuestionCategory | undefined;
@@ -98,20 +96,21 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     return searchSection?.requireStaffAttendance || false;
   };
 
-  const checkFolderCreated = (itemId?: string) => {
-    if (itemId && fmConfig && fmConfig?.rootFolder) {
+  const checkFolderCreated = (draftSubmissionId: string) => {
+    if (draftSubmissionId && fmConfig && fmConfig.qaiFolder) {
+      const parentFolderId = fmConfig.qaiFolder.id;
       fileService
-        .getFilesByPath(fmConfig.rootFolder.id)
+        .getFilesByPath(parentFolderId)
         .then(response => {
-          const found = response.data.children.filter(f => f.name === itemId);
+          const found = response.data.children.filter(f => f.name === draftSubmissionId);
           if (found && found.length > 0) {
             setAttachmentFolder(found[0]);
           } else {
             fileService
               .createFile({
-                name: itemId,
+                name: draftSubmissionId,
                 isDir: true,
-                parent: fmConfig.rootFolder.id,
+                parent: parentFolderId,
               })
               .then(response => {
                 setAttachmentFolder(response.data);
@@ -127,7 +126,16 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     }
   };
 
-  const fileUpload = async (props: any, value: any, sectionidx: number, idx: number, sectionId: string) => {
+  const fileUpload = async (
+    props: FormikProps<QASubmission>,
+    value: {
+      files: FileList;
+    },
+    sectionidx: number,
+    answerIndex: number,
+    sectionId: string
+  ) => {
+    console.info('checking for files to upload', value);
     if (value.files) {
       const fileUploads: Array<Promise<AxiosResponse<FileMetaData>>> = [];
       for (let index = 0; index < value.files.length; index++) {
@@ -137,16 +145,8 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
             fileService.uploadFile(
               {
                 name: file.name,
-                isDir:
-                  attachmentFolder !== undefined && Object.keys(attachmentFolder).length > 0
-                    ? attachmentFolder.isDir
-                    : false,
-                parent:
-                  attachmentFolder !== undefined &&
-                  Object.keys(attachmentFolder).length > 0 &&
-                  attachmentFolder !== undefined
-                    ? attachmentFolder.name
-                    : sectionId,
+                isDir: false,
+                parent: attachmentFolder?.id || sectionId,
               },
               file
             )
@@ -158,14 +158,52 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
           const newFiles = responses.map(f => {
             return f.data as FileItem;
           });
-          const attachments = [...draftSubmission.sections[sectionidx]['answers'][idx]['attachments'], ...newFiles];
-          props.setFieldValue(`sections.${sectionidx}.answers.${idx}.attachments`, attachments);
+          const attachments = [
+            ...draftSubmission.sections[sectionidx]['answers'][answerIndex]['attachments'],
+            ...newFiles,
+          ];
+          props.setFieldValue(`sections.${sectionidx}.answers.${answerIndex}.attachments`, attachments);
         });
       }
     }
   };
 
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<any>({});
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<ImagePreviewUrls>({});
+
+  const removeImage = (props: any, sectionidx: number, idx: number, sectionId: any) => {
+    let images = imagePreviewUrl;
+    if (images[sectionId]) {
+      delete images[sectionId];
+      setImagePreviewUrl({
+        ...images,
+      });
+    }
+    props.setFieldValue(`sections.${sectionidx}.answers.${idx}.attachments`, []);
+    draftSubmission.sections[sectionidx].answers[idx].attachments = [];
+  };
+
+  const attachmentIsAnImage = (attachment: FileItem): boolean => {
+    if (attachment.contentType && attachment.contentType.split('/')[0] === 'image') {
+      return true;
+    }
+    return false;
+  };
+
+  const formatTags = (tags: string): string => {
+    if (!tags || tags === '') {
+      return tags;
+    }
+    const pairs = tags.split(',');
+    const identifiers = pairs.map(p => {
+      if (p) {
+        const parts = p.split('|');
+        return parts[0];
+      } else {
+        return '';
+      }
+    });
+    return identifiers.join(',');
+  };
 
   if (draftSubmission.dateScored) {
     draftSubmission.dateScored = new Date(`${draftSubmission.dateScored}`).toLocaleDateString('fr-CA');
@@ -173,8 +211,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
 
   return (
     <div>
-      {error && <Alert color="warning">{error}</Alert>}
-      {draftSubmission ? (
+      {draftSubmission! && !showLoading ? (
         <Fragment>
           <Form
             initialValues={draftSubmission}
@@ -210,6 +247,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
             }}
             onCancel={() => {
               console.log('Click on Cancel Button');
+              navigate(-1);
             }}
           >
             {(props: FormikProps<QASubmission>) => (
@@ -246,7 +284,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                       />
                     </div>
                     <div className="col-3">
-                      <FormField name="fsc" disabled type="text" label="FSC Conducting" required="required" />
+                      <FormField name="fsc" type="text" label="FSC Conducting" required="required" />
                     </div>
                     <div className="col-3">
                       <FormField name="fsm" type="text" label="Food safety manager on duty" required="required" />
@@ -256,7 +294,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                         name="responsibleAlcoholCert"
                         type="text"
                         label="Reponsibility Alcohol Certificate"
-                        placeholder="for Mgr/Bar staff"
+                        placeholder="Name of certificate holder on duty"
                         required="required"
                       />
                     </div>
@@ -287,20 +325,16 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                       {idx === 0 && (
                                         <h1 className="category-name">{getCategoryName(question.categoryId)}</h1>
                                       )}
-                                      <table
-                                        style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }}
-                                        className="table-count"
-                                      >
+                                      <table style={{ marginTop: '5px', border: '1px solid #D0D7DE', width: '100%' }}>
                                         <tbody>
                                           <Fragment>
                                             <tr>
                                               <td className="col-1">
                                                 <p>
-                                                  {index + 1}.{question.order}
+                                                  {index + 1}.{question.order} {formatTags(question.tags)}
                                                 </p>
-                                                <p>{question.tags}</p>
                                               </td>
-                                              <td className="col-4">{question.text}</td>
+                                              <td className="col-3">{question.text}</td>
                                               <td className="col-1">{question.points}</td>
                                               <td className="col-2 ">
                                                 <Fragment>
@@ -324,7 +358,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                     <Fragment>
                                                       <Icon
                                                         onClick={value => {
-                                                          checkFolderCreated(answer.itemId);
+                                                          checkFolderCreated(draftSubmission.id);
                                                         }}
                                                         name="paperclip"
                                                       ></Icon>
@@ -356,30 +390,37 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                 {imagePreviewUrl[answer.itemId] &&
                                                 imagePreviewUrl[answer.itemId].type === 'image' ? (
                                                   <img
-                                                    src={imagePreviewUrl[answer.itemId].image}
+                                                    src={imagePreviewUrl[answer.itemId].image as string}
                                                     height="40px"
                                                     width="50px"
                                                   />
                                                 ) : answer.attachments.length > 0 &&
-                                                  answer.attachments[answer.attachments.length - 1][
-                                                    'contentType'
-                                                  ].split('/')[0] === 'image' ? (
+                                                  attachmentIsAnImage(answer.attachments[0]) ? (
                                                   <img
-                                                    src={`${window.location.origin}${
-                                                      answer.attachments[answer.attachments.length - 1]['downloadUrl']
-                                                    }`}
+                                                    src={`${window.location.origin}${answer.attachments[0].downloadUrl}`}
                                                     height="40px"
                                                     width="50px"
                                                   />
                                                 ) : (
+                                                  <Icon name="image" style={{ fontSize: '2.875em', color: '#eee' }} />
+                                                )}
+                                              </td>
+                                              <td className="col-1">
+                                                {answer.attachments.length > 0 && (
                                                   <Icon
-                                                    name="image"
-                                                    style={{ fontSize: '2.875em', color: '#acb2b9' }}
-                                                  />
+                                                    name="trash-alt"
+                                                    className={cx('text-danger', 'mr-4')}
+                                                    color="danger"
+                                                    onClick={() => {
+                                                      removeImage(props, index, idx, answer.itemId);
+                                                    }}
+                                                    style={{ fontSize: '20px' }}
+                                                  ></Icon>
                                                 )}
                                               </td>
                                             </tr>
-                                            {props.values.sections[index].answers[idx]?.value === 'NO' && (
+                                            {(props.values.sections[index].answers[idx]?.value === 'NO' ||
+                                              props.values.sections[index].answers[idx]?.value === 'NA') && (
                                               <tr>
                                                 <td className="col-1" colSpan={1}>
                                                   Notes
@@ -423,17 +464,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                         <>
                                           <Fragment>
                                             <tr>
-                                              <td className="col-3">
-                                                {Qanswer.notes}
-                                                {/*
-                                                // this doesnt work as expected because idGusts is the group index, not the answer index
-                                      
-                                                {getGuestQuestionBySectionIdAndGQId(
-                                                  sectionObj.sectionId!,
-                                                  Qanswer.answers[idGusts].guestQuestionId!
-                                                )}
-                                                */}
-                                              </td>
+                                              <td className="col-3">{Qanswer.notes}</td>
                                               {Qanswer?.answers &&
                                                 Qanswer.answers.map(
                                                   (Questquestion: QAGuestQuestionAnswer, idGust: number) => (
@@ -522,12 +553,34 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                     </>
                   ))}
                 <div>{showLoading && <LoadingIcon className="m-auto" />}</div>
+                <>
+                  {!submissionId && (
+                    <div className="d-flex">
+                      <div className="col-12 p-0 mb-3">
+                        <Button
+                          onClick={() => {
+                            setImagePreviewUrl({});
+                            formDataReset(props);
+                          }}
+                          color={`info`}
+                        >
+                          Reset
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </>
               </>
             )}
           </Form>
         </Fragment>
       ) : (
         'No Record available'
+      )}
+      {error && (
+        <Alert color="warning" className="mt-3">
+          {error}
+        </Alert>
       )}
     </div>
   );

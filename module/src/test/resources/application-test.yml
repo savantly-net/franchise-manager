@@ -1,6 +1,6 @@
 logging:
   level:
-    org.springframework.security.web: DEBUG
+    org.springframework.security.web: INFO
     org.flywaydb: DEBUG
 
 sprout:
