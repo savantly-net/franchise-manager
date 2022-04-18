@@ -3,7 +3,6 @@ import { FormField } from '@sprout-platform/ui';
 import { css } from 'emotion';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { API_URL } from 'plugin/config/appModuleConfiguration';
-import { useAppUsers } from 'plugin/services/userService';
 import React, { Fragment, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Button, Col, Row } from 'reactstrap';
@@ -17,7 +16,6 @@ export interface FranchiseGroupEditorProps {
 
 export const FranchiseGroupEditor = ({ item, afterSave }: FranchiseGroupEditorProps) => {
   const navigate = useNavigate();
-  const users = useAppUsers();
   const [itemState] = useState(item || franchiseGroupsStateProvider.props.initialState.example);
   const [error, setError] = useState('');
   useMemo(() => {
@@ -32,7 +30,7 @@ export const FranchiseGroupEditor = ({ item, afterSave }: FranchiseGroupEditorPr
           console.error(err.message || err.detail || 'An error occurred while saving.');
         });
     }
-  }, [item, users]);
+  }, [item]);
   return (
     <Fragment>
       {error && <Alert color="danger">{error}</Alert>}
