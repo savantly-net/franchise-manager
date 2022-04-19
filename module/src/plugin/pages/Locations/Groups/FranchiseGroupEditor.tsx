@@ -3,7 +3,6 @@ import { FormField } from '@sprout-platform/ui';
 import { css } from 'emotion';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { API_URL } from 'plugin/config/appModuleConfiguration';
-import { useAppUsers } from 'plugin/services/userService';
 import React, { Fragment, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Button, Col, Row } from 'reactstrap';
@@ -17,7 +16,6 @@ export interface FranchiseGroupEditorProps {
 
 export const FranchiseGroupEditor = ({ item, afterSave }: FranchiseGroupEditorProps) => {
   const navigate = useNavigate();
-  const users = useAppUsers();
   const [itemState] = useState(item || franchiseGroupsStateProvider.props.initialState.example);
   const [error, setError] = useState('');
   useMemo(() => {
@@ -26,18 +24,13 @@ export const FranchiseGroupEditor = ({ item, afterSave }: FranchiseGroupEditorPr
         .get(`${API_URL}/group-members/`)
         .then(response => {
           const found = response?.data?.content.filter((l: any) => l.franchiseGroupId === item.itemId);
-          if (users) {
-            found.map((bar: any, index: any) => {
-              found[index]['userId'] = users.filter(user => user.itemId === bar?.userId)?.[0]?.displayName;
-            });
-            item.members = found;
-          }
+          item.members = found;
         })
         .catch(err => {
           console.error(err.message || err.detail || 'An error occurred while saving.');
         });
     }
-  }, [item, users]);
+  }, [item]);
   return (
     <Fragment>
       {error && <Alert color="danger">{error}</Alert>}
@@ -67,7 +60,7 @@ export const FranchiseGroupEditor = ({ item, afterSave }: FranchiseGroupEditorPr
                 }
                 groupMemberToSave
                   .then(resp => {
-                    console.log('resp', resp);
+                    // console.log('resp', resp);
                   })
                   .catch(err => {
                     setError(err.message || err.detail || 'An error occurred while saving.');

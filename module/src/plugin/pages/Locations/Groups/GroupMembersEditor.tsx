@@ -1,3 +1,4 @@
+import { Table, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { Icon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import { FieldArray } from 'formik';
@@ -57,42 +58,24 @@ export const GroupMembersEditor = ({ groupMember }: FranchiseGroupMemberEditorPr
                     </Button>
                   </Col>
                 </Row>
-                <div className="form-inline p-0">
+                <Table>
                   {groupMember?.members && groupMember?.members.length > 0 && (
-                    <Row
-                      className={css`
-                        margin-bottom: 1em;
-                        width: 100%;
-                      `}
-                    >
-                      <Col>
-                        <label>User</label>
-                      </Col>
-                      <Col>
-                        <label>Role</label>
-                      </Col>
-                      <div
-                        className={css`
-                          width: 0;
-                        `}
-                      >
-                        <label>Delete</label>
-                      </div>
-                    </Row>
+                    <Thead>
+                      <Tr>
+                        <Th>User</Th>
+                        <Th className="">Role</Th>
+                        <Th className="QAI__table__col__actions">Delete</Th>
+                      </Tr>
+                    </Thead>
                   )}
                   {groupMember?.members &&
                     groupMember?.members.length > 0 &&
                     groupMember?.members.map((bar: any, index: any) => (
-                      <Row
-                        key={`member-${index}`}
-                        className={css`
-                          margin-bottom: 2em;
-                        `}
-                      >
-                        <Col>
+                      <Tr key={`member-${index}`}>
+                        <Td className="p-0">
                           <UserPicker name={`members.${index}.userId`} users={users} />
-                        </Col>
-                        <Col>
+                        </Td>
+                        <Td className="p-0">
                           <TypeAheadSelectField
                             name={`members.${index}.role`}
                             label=""
@@ -107,18 +90,13 @@ export const GroupMembersEditor = ({ groupMember }: FranchiseGroupMemberEditorPr
                               { value: 'OTHER', displayText: 'OTHER' },
                             ]}
                           />
-                        </Col>
-                        <Col
-                          className={css`
-                            text-align: center;
-                            padding: 0;
-                          `}
-                        >
+                        </Td>
+                        <Td>
                           <RemoveItemButton index={index} remove={remove} />
-                        </Col>
-                      </Row>
+                        </Td>
+                      </Tr>
                     ))}
-                </div>
+                </Table>
               </Fragment>
             )}
           </FieldArray>

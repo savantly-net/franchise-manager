@@ -543,9 +543,6 @@ export const LocationEditor = ({
   useMemo(() => {
     if (fmLocationMembers) {
       if (users) {
-        fmLocationMembers.map((bar: any, index: any) => {
-          fmLocationMembers[index]['userId'] = users.filter(user => user.itemId === bar?.userId)?.[0]?.displayName;
-        });
         location.members = fmLocationMembers;
       }
     }

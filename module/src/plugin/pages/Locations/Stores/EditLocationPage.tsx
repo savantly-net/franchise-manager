@@ -7,7 +7,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Alert, Spinner } from 'reactstrap';
 import { locationService } from '../locationService';
 import { loadLocations } from '../state/actions';
-import { FranchiseLocation } from '../types';
+import { FranchiseLocation, FranchiseLocationMember } from '../types';
 import { LocationEditor } from './LocationEditor';
 
 const EditLocation = ({ location }: { location?: FranchiseLocation }) => {
@@ -50,14 +50,31 @@ const EditLocation = ({ location }: { location?: FranchiseLocation }) => {
                       // dispatch(loadLocations());
                     });
                   }
-                  locationService.updateLocationMembers(response.data.id, values.members).then(membersSaveResponse => {
-                    publishSuccessNotification(
-                      'Saved',
-                      !params['id'] ? 'Location created sucessfully' : 'Location updated sucessfully'
-                    );
-                    dispatch(loadLocations());
-                    navigate(-1);
-                  });
+                  const addMultipleMembers = (itemId: string, members: FranchiseLocationMember[]) => {
+                    const membersData: FranchiseLocationMember[] = [];
+                    members &&
+                      members.length > 0 &&
+                      members.map((bar: any, index: any) => {
+                        members[index].locationId = itemId;
+                        membersData.push({
+                          ...members,
+                          locationId: itemId,
+                          userId: members[index].userId,
+                          role: members[index].role,
+                        });
+                      });
+                    return membersData;
+                  };
+                  locationService
+                    .updateLocationMembers(response.data.id, addMultipleMembers(response.data.id, values.members))
+                    .then(membersSaveResponse => {
+                      publishSuccessNotification(
+                        'Saved',
+                        !params['id'] ? 'Location created sucessfully' : 'Location updated sucessfully'
+                      );
+                      dispatch(loadLocations());
+                      navigate(-1);
+                    });
                 })
                 .catch(err => {
                   console.error(err);

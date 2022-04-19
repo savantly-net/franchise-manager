@@ -1,7 +1,7 @@
 import React from 'react';
-import { useField, useFormikContext } from 'formik';
+import { useField } from 'formik';
 import { FormControl, FormLabel } from '@chakra-ui/react';
-import { AutoComplete, AutoCompleteInput, AutoCompleteItem, AutoCompleteList } from '@choc-ui/chakra-autocomplete';
+import { FormField } from '@sprout-platform/ui';
 
 interface AutoCompleteItemProps {
   value: string;
@@ -15,29 +15,23 @@ export interface TypeAheadSelectFieldProps {
 }
 
 const TypeAheadSelectField = ({ name, label, items }: TypeAheadSelectFieldProps) => {
-  const { setFieldValue } = useFormikContext();
-  const [field, { value }] = useField(name);
+  const [field] = useField(name);
   return (
     <>
       <div key={field.name}>
         <FormControl>
           <FormLabel>{label}</FormLabel>
-          <AutoComplete
-            openOnFocus
-            onChange={val => setFieldValue(field.name, val)}
-            defaultValues={[value]}
-            suggestWhenEmpty
-            listAllValuesOnFocus
-          >
-            <AutoCompleteInput variant="filled" placeholder="Search..."></AutoCompleteInput>
-            <AutoCompleteList>
-              {items.map(({ value, displayText }) => (
-                <AutoCompleteItem key={value} value={value} label={displayText}>
-                  {displayText || value}
-                </AutoCompleteItem>
-              ))}
-            </AutoCompleteList>
-          </AutoComplete>
+          <FormField name={name} className="mb-1" as="select" required="required">
+            <>
+              <option></option>
+              {items &&
+                items.map(({ value, displayText }) => (
+                  <option key={value} value={value}>
+                    {displayText}
+                  </option>
+                ))}
+            </>
+          </FormField>
         </FormControl>
       </div>
     </>
