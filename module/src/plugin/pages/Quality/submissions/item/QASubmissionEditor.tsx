@@ -208,7 +208,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
   if (draftSubmission.dateScored) {
     draftSubmission.dateScored = new Date(`${draftSubmission.dateScored}`).toLocaleDateString('fr-CA');
   }
-
+  let categoryManage = '';
   return (
     <div>
       {draftSubmission! && !showLoading ? (
@@ -312,6 +312,25 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                           {sectionObj.answers &&
                             sectionObj.answers
                               .sort((next: any, prev: any) => next.order - prev.order)
+                              .sort((next: any, prev: any) => {
+                                const cat1 = getQuestionBySectionIdAndQuestionId(
+                                  sectionObj.sectionId!,
+                                  next.questionId!
+                                );
+                                const cat2 = getQuestionBySectionIdAndQuestionId(
+                                  sectionObj.sectionId!,
+                                  prev.questionId!
+                                );
+                                var nameA = cat1?.categoryId.toLowerCase(),
+                                  nameB = cat2?.categoryId.toLowerCase();
+                                if (nameA! < nameB!) {
+                                  return -1;
+                                }
+                                if (nameA! > nameB!) {
+                                  return 1;
+                                }
+                                return 0;
+                              })
                               .map((answer: QAQuestionAnswer, idx: number) => {
                                 const question = getQuestionBySectionIdAndQuestionId(
                                   sectionObj.sectionId!,
@@ -322,21 +341,29 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                 } else {
                                   return (
                                     <>
-                                      {idx === 0 && (
-                                        <h1 className="category-name">{getCategoryName(question.categoryId)}</h1>
-                                      )}
-                                      <table style={{ marginTop: '5px', border: '1px solid #D0D7DE', width: '100%' }}>
+                                      {categoryManage !== question.categoryId &&
+                                        ((categoryManage = question.categoryId),
+                                        (<h1 className="category-name">{getCategoryName(question.categoryId)}</h1>))}
+                                      <table
+                                        className="hideAttatchThumbRemoveIcon"
+                                        style={{
+                                          marginTop: '5px',
+                                          border: '1px solid #D0D7DE',
+                                          width: '100%',
+                                          tableLayout: 'fixed',
+                                        }}
+                                      >
                                         <tbody>
                                           <Fragment>
                                             <tr>
                                               <td className="col-1">
                                                 <p>
-                                                  {index + 1}.{question.order} {formatTags(question.tags)}
+                                                  {index + 1}.{idx + 1} {formatTags(question.tags)}
                                                 </p>
                                               </td>
-                                              <td className="col-3">{question.text}</td>
+                                              <td className="col-4">{question.text}</td>
                                               <td className="col-1">{question.points}</td>
-                                              <td className="col-2 ">
+                                              <td className="col-2">
                                                 <Fragment>
                                                   <FormField
                                                     name={`sections.${index}.answers.${idx}.value`}
@@ -351,8 +378,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                   </FormField>
                                                 </Fragment>
                                               </td>
-
-                                              <td className="col-2">
+                                              <td className="col-1">
                                                 <FileUploadButton
                                                   buttonContent={
                                                     <Fragment>
@@ -386,27 +412,28 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                   accept={['image/*']}
                                                 />
                                               </td>
-                                              <td className="col-2">
+                                              <td className="col-2" rowSpan={2}>
                                                 {imagePreviewUrl[answer.itemId] &&
                                                 imagePreviewUrl[answer.itemId].type === 'image' ? (
                                                   <img
                                                     src={imagePreviewUrl[answer.itemId].image as string}
                                                     height="40px"
-                                                    width="50px"
+                                                    width="100%"
                                                   />
                                                 ) : answer.attachments.length > 0 &&
                                                   attachmentIsAnImage(answer.attachments[0]) ? (
                                                   <img
                                                     src={`${window.location.origin}${answer.attachments[0].downloadUrl}`}
                                                     height="40px"
-                                                    width="50px"
+                                                    width="100%"
                                                   />
                                                 ) : (
                                                   <Icon name="image" style={{ fontSize: '2.875em', color: '#eee' }} />
                                                 )}
                                               </td>
                                               <td className="col-1">
-                                                {answer.attachments.length > 0 && (
+                                                {imagePreviewUrl[answer.itemId] &&
+                                                imagePreviewUrl[answer.itemId].type === 'image' ? (
                                                   <Icon
                                                     name="trash-alt"
                                                     className={cx('text-danger', 'mr-4')}
@@ -416,6 +443,19 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                     }}
                                                     style={{ fontSize: '20px' }}
                                                   ></Icon>
+                                                ) : (
+                                                  answer.attachments.length > 0 &&
+                                                  attachmentIsAnImage(answer.attachments[0]) && (
+                                                    <Icon
+                                                      name="trash-alt"
+                                                      className={cx('text-danger', 'mr-4')}
+                                                      color="danger"
+                                                      onClick={() => {
+                                                        removeImage(props, index, idx, answer.itemId);
+                                                      }}
+                                                      style={{ fontSize: '20px' }}
+                                                    ></Icon>
+                                                  )
                                                 )}
                                               </td>
                                             </tr>
@@ -447,7 +487,10 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                         {sectionObj?.guestAnswers && Object.keys(sectionObj?.guestAnswers).length > 0 && (
                           <>
                             <h1 className="category-name">Guest Question</h1>
-                            <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
+                            <table
+                              style={{ marginTop: '5px', border: '1px solid #D0D7DE', tableLayout: 'fixed' }}
+                              className="table-count"
+                            >
                               <thead>
                                 <tr className="trCls">
                                   <th className="col-4">Question</th>
