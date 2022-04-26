@@ -1,6 +1,7 @@
+import { Box } from '@chakra-ui/react';
 import { Icon, LoadingIcon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, ReactNode, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Col, Nav, NavItem, NavLink, Row, TabContent, TabPane } from 'reactstrap';
 import { QAQuestion, QASection } from '../sections/entity';
@@ -32,6 +33,25 @@ const TabEntry = ({
     </NavItem>
   );
 };
+interface Props {
+  children?: ReactNode;
+  email: any;
+  subject: string;
+  body?: ReactNode;
+}
+const Mailto = (props: Props) => {
+  const { children, email, subject, body } = props;
+  let param = subject || body ? '?' : '';
+  if (subject) param += `subject=${encodeURIComponent(subject)}`;
+  if (body) param += `${subject ? '&' : ''}body=${body}`;
+
+  return (
+    <a href={`mailto:${email}${param}`} style={{ textDecoration: 'underline' }}>
+      {children}
+    </a>
+  );
+};
+
 const QAAScorePage = () => {
   const params = useParams();
   const submissionId = params['itemId'];
@@ -195,11 +215,25 @@ const QAAScorePage = () => {
                 <Row>
                   <>
                     <Col>
-                      <h1 className="category-name" style={{ fontWeight: 'bold' }}>
-                        Question
-                      </h1>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <h1 className="category-name" style={{ fontWeight: 'bold' }}>
+                          Question
+                        </h1>
+                        <>
+                          <Mailto
+                            email="franchisemanager@gmail.com"
+                            subject="QAA Action Plan"
+                            body={window.location.href}
+                          >
+                            Send Email
+                          </Mailto>
+                        </>
+                      </Box>
                       <Fragment>
-                        <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
+                        <table
+                          style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }}
+                          className="table-count tableRowSizeManageActionPlan"
+                        >
                           <thead style={{ backgroundColor: '#9e9e9e', color: '#fff' }}>
                             <tr className="trCls">
                               <th className="col-2">Order</th>
