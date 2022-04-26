@@ -42,8 +42,12 @@ interface Props {
 const Mailto = (props: Props) => {
   const { children, email, subject, body } = props;
   let param = subject || body ? '?' : '';
-  if (subject) param += `subject=${encodeURIComponent(subject)}`;
-  if (body) param += `${subject ? '&' : ''}body=${body}`;
+  if (subject) {
+    param += `subject=${encodeURIComponent(subject)}`;
+  }
+  if (body) {
+    param += `${subject ? '&' : ''}body=${body}`;
+  }
 
   return (
     <a href={`mailto:${email}${param}`} style={{ textDecoration: 'underline' }}>
