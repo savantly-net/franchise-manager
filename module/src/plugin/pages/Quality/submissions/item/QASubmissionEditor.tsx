@@ -378,7 +378,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                   </FormField>
                                                 </Fragment>
                                               </td>
-                                              <td className="col-1">
+                                              <td className="col-2">
                                                 <FileUploadButton
                                                   buttonContent={
                                                     <Fragment>
@@ -489,7 +489,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                             <h1 className="category-name">Guest Question</h1>
                             <table
                               style={{ marginTop: '5px', border: '1px solid #D0D7DE', tableLayout: 'fixed' }}
-                              className="table-count"
+                              className="table-count tableRowSizeManageGuestQue"
                             >
                               <thead>
                                 <tr className="trCls">

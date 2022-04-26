@@ -1,21 +1,58 @@
 @media print {
-  .hideAttatchThumbRemoveIcon th:nth-child(5) {
-    display: none;
+  .hideAttatchThumbRemoveIcon td:nth-child(1) {
+    width: 90px !important;
   }
-  .hideAttatchThumbRemoveIcon th:nth-child(6) {
-    display: none;
+
+  .hideAttatchThumbRemoveIcon td:nth-child(3) {
+    width: 90px !important;
   }
-  .hideAttatchThumbRemoveIcon th:nth-child(7) {
-    display: none;
+
+  .hideAttatchThumbRemoveIcon td:nth-child(4) {
+    width: 160px !important;
   }
+
   .hideAttatchThumbRemoveIcon td:nth-child(5) {
     display: none;
   }
+
   .hideAttatchThumbRemoveIcon td:nth-child(6) {
     display: none;
   }
+
   .hideAttatchThumbRemoveIcon td:nth-child(7) {
     display: none;
+  }
+
+  .tableRowSizeManageGuestQue th:nth-child(2) {
+    width: 160px !important;
+  }
+
+  .tableRowSizeManageGuestQue th:nth-child(3) {
+    width: 160px !important;
+  }
+
+  .tableRowSizeManageGuestQue th:nth-child(4) {
+    width: 160px !important;
+  }
+
+  .tableRowSizeManageGuestQue td:nth-child(2) {
+    width: 160px !important;
+  }
+
+  .tableRowSizeManageGuestQue td:nth-child(3) {
+    width: 160px !important;
+  }
+
+  .tableRowSizeManageGuestQue td:nth-child(4) {
+    width: 160px !important;
+  }
+
+  .tableRowSizeManageActionPlan th:nth-child(1) {
+    width: 160px !important;
+  }
+
+  .tableRowSizeManageActionPlan td:nth-child(1) {
+    width: 160px !important;
   }
 }
 

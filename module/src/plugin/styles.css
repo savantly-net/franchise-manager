@@ -1,0 +1,9 @@
+@media print {
+    .sidemenu1 {
+        display: none;
+    }
+
+    .scroll-canvas {
+        height: auto;
+    }
+}
