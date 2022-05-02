@@ -60,6 +60,37 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     setShowLoading(isLoading);
   }, [allQASections, allQAQuestionCategories, userContext]);
 
+  useMemo(() => {
+    const draftSubmissionId = draftSubmission.id;
+    if (draftSubmissionId && fmConfig && fmConfig.qaiFolder && !attachmentFolder) {
+      const parentFolderId = fmConfig.qaiFolder.id;
+      fileService
+        .getFilesByPath(parentFolderId)
+        .then(response => {
+          const found = response.data.children.filter(f => f.name === draftSubmissionId);
+          if (found && found.length > 0) {
+            setAttachmentFolder(found[0]);
+          } else {
+            fileService
+              .createFile({
+                name: draftSubmissionId,
+                isDir: true,
+                parent: parentFolderId,
+              })
+              .then(response => {
+                setAttachmentFolder(response.data);
+              })
+              .catch(err => {
+                setError(err.message || 'Could not create attachment folder');
+              });
+          }
+        })
+        .catch(err => {
+          setError(err.message || 'Could not retrieve attachment folders');
+        });
+    }
+  }, [draftSubmission, fmConfig, attachmentFolder, fileService]);
+
   const getQuestionBySectionIdAndQuestionId = (sectionId: string, questionId: string): QAQuestion | undefined => {
     let searchSection: QASection | undefined;
     if (allQAQuestionCategories) {
@@ -96,44 +127,13 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     return searchSection?.requireStaffAttendance || false;
   };
 
-  const checkFolderCreated = (draftSubmissionId: string) => {
-    if (draftSubmissionId && fmConfig && fmConfig.qaiFolder) {
-      const parentFolderId = fmConfig.qaiFolder.id;
-      fileService
-        .getFilesByPath(parentFolderId)
-        .then(response => {
-          const found = response.data.children.filter(f => f.name === draftSubmissionId);
-          if (found && found.length > 0) {
-            setAttachmentFolder(found[0]);
-          } else {
-            fileService
-              .createFile({
-                name: draftSubmissionId,
-                isDir: true,
-                parent: parentFolderId,
-              })
-              .then(response => {
-                setAttachmentFolder(response.data);
-              })
-              .catch(err => {
-                setError(err.message || 'Could not create attachment folder');
-              });
-          }
-        })
-        .catch(err => {
-          setError(err.message || 'Could not retrieve attachment folders');
-        });
-    }
-  };
-
   const fileUpload = async (
     props: FormikProps<QASubmission>,
     value: {
       files: FileList;
     },
     sectionidx: number,
-    answerIndex: number,
-    sectionId: string
+    answerIndex: number
   ) => {
     console.info('checking for files to upload', value);
     if (value.files) {
@@ -146,7 +146,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
               {
                 name: file.name,
                 isDir: false,
-                parent: attachmentFolder?.id || sectionId,
+                parent: attachmentFolder?.id || 'unknown-qa',
               },
               file
             )
@@ -382,12 +382,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                 <FileUploadButton
                                                   buttonContent={
                                                     <Fragment>
-                                                      <Icon
-                                                        onClick={value => {
-                                                          checkFolderCreated(draftSubmission.id);
-                                                        }}
-                                                        name="paperclip"
-                                                      ></Icon>
+                                                      <Icon name="paperclip"></Icon>
                                                       <span>Attach</span>
                                                     </Fragment>
                                                   }
@@ -406,7 +401,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                     };
                                                     reader.readAsDataURL(file);
                                                     setTimeout(function() {
-                                                      fileUpload(props, value, index, idx, answer.itemId);
+                                                      fileUpload(props, value, index, idx);
                                                     }, 1000);
                                                   }}
                                                   accept={['image/*']}
