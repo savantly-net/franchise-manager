@@ -1,4 +1,9 @@
-import { dateTimeForTimeZone, FileMetaData } from '@savantly/sprout-api';
+import {
+  dateTimeForTimeZone,
+  FileMetaData,
+  publishErrorNotification,
+  publishSuccessNotification,
+} from '@savantly/sprout-api';
 import { getFileService, getUserContextService } from '@savantly/sprout-runtime';
 import { FileUploadButton, Form, FormField, Icon, LoadingIcon } from '@sprout-platform/ui';
 import { AxiosResponse } from 'axios';
@@ -133,7 +138,10 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
       files: FileList;
     },
     sectionidx: number,
-    answerIndex: number
+    answerIndex: number,
+    answerItemId: any,
+    readerResult: any,
+    fileType: any
   ) => {
     console.info('checking for files to upload', value);
     if (value.files) {
@@ -154,16 +162,29 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
         } catch (e) {
           setError('error' + e);
         }
-        Promise.all(fileUploads).then(responses => {
-          const newFiles = responses.map(f => {
-            return f.data as FileItem;
+        Promise.all(fileUploads)
+          .then(responses => {
+            const newFiles = responses.map(f => {
+              return f.data as FileItem;
+            });
+            const attachments = [
+              ...draftSubmission.sections[sectionidx]['answers'][answerIndex]['attachments'],
+              ...newFiles,
+            ];
+
+            setImagePreviewUrl({
+              ...imagePreviewUrl,
+              [answerItemId]: {
+                image: readerResult,
+                type: fileType,
+              },
+            });
+            publishSuccessNotification('Saved', 'Image saved successfully');
+            props.setFieldValue(`sections.${sectionidx}.answers.${answerIndex}.attachments`, attachments);
+          })
+          .catch(e => {
+            publishErrorNotification('Failed', 'Image upload failed');
           });
-          const attachments = [
-            ...draftSubmission.sections[sectionidx]['answers'][answerIndex]['attachments'],
-            ...newFiles,
-          ];
-          props.setFieldValue(`sections.${sectionidx}.answers.${answerIndex}.attachments`, attachments);
-        });
       }
     }
   };
@@ -391,17 +412,19 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                     let reader = new FileReader();
                                                     let file = value.files[0];
                                                     reader.onloadend = () => {
-                                                      setImagePreviewUrl({
-                                                        ...imagePreviewUrl,
-                                                        [answer.itemId]: {
-                                                          image: reader.result,
-                                                          type: file.type.split('/')[0],
-                                                        },
-                                                      });
+                                                      console.log('Image preview');
                                                     };
                                                     reader.readAsDataURL(file);
                                                     setTimeout(function() {
-                                                      fileUpload(props, value, index, idx);
+                                                      fileUpload(
+                                                        props,
+                                                        value,
+                                                        index,
+                                                        idx,
+                                                        answer.itemId,
+                                                        reader.result,
+                                                        file.type.split('/')[0]
+                                                      );
                                                     }, 1000);
                                                   }}
                                                   accept={['image/*']}
