@@ -20,10 +20,10 @@
   "devDependencies": {
     "@grafana/eslint-config": "^2.0.1",
     "@reduxjs/toolkit": "^1.4.0",
-    "@savantly/sprout-api": "2.0.0-38",
-    "@savantly/sprout-runtime": "2.0.0-38",
-    "@savantly/sprout-toolkit": "2.0.0-38",
-    "@sprout-platform/ui": "2.0.0-38",
+    "@savantly/sprout-api": "2.0.0-41",
+    "@savantly/sprout-runtime": "2.0.0-41",
+    "@savantly/sprout-toolkit": "2.0.0-41",
+    "@sprout-platform/ui": "2.0.0-41",
     "@types/jest": "^24.0.0",
     "@types/react": "^16.9.49",
     "@types/react-bootstrap-table-next": "^4.0.10",
@@ -35,7 +35,7 @@
     "prettier-eslint-cli": "^5.0.0"
   },
   "engines": {
-    "node": ">=12 <13"
+    "node": ">=14 <15"
   },
   "dependencies": {
     "@chakra-ui/icons": "^1.0.15",
@@ -52,6 +52,7 @@
     "react-redux": "^7.2.1",
     "react-router-dom": "6.0.0-beta.0",
     "reactstrap": "^8.7.1",
-    "redux-dynamic-modules": "~5.2.3"
+    "redux-dynamic-modules": "~5.2.3",
+    "sass": "^1.51.0"
   }
 }

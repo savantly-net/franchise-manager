@@ -50,7 +50,7 @@ const Mailto = (props: Props) => {
   }
 
   return (
-    <a href={`mailto:${email}${param}`} style={{ textDecoration: 'underline' }}>
+    <a target='_blank' href={`mailto:${email}${param}`} style={{ textDecoration: 'underline' }}>
       {children}
     </a>
   );
@@ -225,7 +225,7 @@ const QAAScorePage = () => {
                         </h1>
                         <>
                           <Mailto
-                            email="franchisemanager@gmail.com"
+                            email=''
                             subject="QAA Action Plan"
                             body={window.location.href}
                           >

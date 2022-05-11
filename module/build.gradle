@@ -38,7 +38,7 @@ repositories {
 task stage(dependsOn: ['build'])
 
 node {
-    version = '12.18.3'
+    version = '14.19.1'
     download = true
 }
 

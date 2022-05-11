@@ -1,7 +1,8 @@
-import { Icon, IconName, IconProps } from '@sprout-platform/ui';
+import { Icon, IconName, IconSize } from '@sprout-platform/ui';
 import React from 'react';
 
-interface OwnProps extends Omit<IconProps, 'name'> {
+interface OwnProps {
+  size?: IconSize;
   name?: IconName;
 }
 export const LoadingIcon = ({ size = '6x', name = 'cog' }: OwnProps) => {
