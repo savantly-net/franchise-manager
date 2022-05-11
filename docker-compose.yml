@@ -1,0 +1,59 @@
+version: '3.7'
+services:
+
+  # It mounts the project directory
+  sprout-server:
+    image: gradle:jdk11
+    container_name: fmgr-dev-server
+    command: gradle bootRun -x nodeSetup -x yarnSetup -x yarn -x yarn_build
+    working_dir: /app
+    volumes:
+      - "webapp:/app"
+    ports:
+      - 8080:8080
+    environment:
+      LOGGING_LEVEL_NET_SAVANTLY: WARN
+      LOGGING_LEVEL_NET_SAVANTLY_SPROUT_FRANCHISE: DEBUG
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_DATASOURCE_DRIVER_CLASS: org.postgresql.Driver
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+  
+  # This will rebuild the front-end assets when changes occur
+  # It mounts the project directory
+  plugin-builder:
+    image: node:14
+    command: ["yarn", "watch"]
+    working_dir: /app/module
+    volumes:
+      - "webapp:/app"
+
+  webapp:
+    image: savantly/sprout-webapp
+    container_name: fmgr-dev-webapp
+    restart: on-failure
+    init: true
+    ports:
+      - 3000:3000
+    environment: 
+      - SPROUT_API_URL=http://fmgr-dev-server:8080
+    depends_on: 
+      - sprout-server
+
+  db:
+    image: postgres:12
+    container_name: fmgr-dev-db
+    restart: on-failure
+    init: true
+    environment:
+      POSTGRES_PASSWORD: postgres
+
+volumes:
+  webapp:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${PROJECT_ROOT}
