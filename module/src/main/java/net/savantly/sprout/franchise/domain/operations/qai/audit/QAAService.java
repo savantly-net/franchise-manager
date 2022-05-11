@@ -100,7 +100,7 @@ public class QAAService {
 		if (Objects.isNull(dto.getId())) {
 			return createNewEntity();
 		} else {
-			return this.repository.findById(dto.getId()).orElse(createNewEntity());
+			return this.repository.findById(dto.getId()).orElse(createNewEntity().setId(dto.getId()));
 		}
 	}
 
