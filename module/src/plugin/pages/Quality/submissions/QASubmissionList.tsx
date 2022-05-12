@@ -1,6 +1,6 @@
 import { dateTime } from '@savantly/sprout-api';
 import { getUserContextService } from '@savantly/sprout-runtime';
-import { ColumnDescription, Icon } from '@sprout-platform/ui';
+import { ColumnDescription, Icon, LoadingIcon } from '@sprout-platform/ui';
 import { useFMLocations } from 'plugin/pages/Locations/Stores/hooks';
 import { AppModuleRootState } from 'plugin/types';
 import React, { useMemo } from 'react';
@@ -27,6 +27,8 @@ const IndexPage = () => {
   }, [submissionState, dispatch]);
 
   const userIsQAIAdmin = userContext && userContext.user && userContext.user.authorities.includes('QAI_ADMIN');
+
+  const showLoading = !qaSections || !fmLocations;
 
   const getLocation = (locationId?: string) => {
     if (fmLocations && locationId) {
@@ -109,12 +111,19 @@ const IndexPage = () => {
   ];
 
   return (
-    <BootstrapTable
-      columns={columns}
-      data={qaSections && qaSections.length && fmLocations.length ? submissionState.response?.content || [] : []}
-      keyField="id"
-      striped={true}
-    />
+    <>
+      <div>{showLoading && <LoadingIcon className="m-auto" />}</div>
+      {!showLoading ? (
+        <BootstrapTable
+          columns={columns}
+          data={qaSections && qaSections.length && fmLocations.length ? submissionState.response?.content || [] : []}
+          keyField="id"
+          striped={true}
+        />
+      ) : (
+        'No Record available'
+      )}
+    </>
   );
 };
 
