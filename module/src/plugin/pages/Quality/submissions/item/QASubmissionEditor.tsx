@@ -141,7 +141,9 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     answerIndex: number,
     answerItemId: any,
     readerResult: any,
-    fileType: any
+    fileType: any,
+    sectionOrder: number,
+    questionOrder: number
   ) => {
     console.info('checking for files to upload', value);
     if (value.files) {
@@ -152,7 +154,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
           await fileUploads.push(
             fileService.uploadFile(
               {
-                name: file.name,
+                name: `${sectionOrder}.${questionOrder}-${file.name}`,
                 isDir: false,
                 parent: attachmentFolder?.id || 'unknown-qa',
               },
@@ -423,7 +425,9 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                         idx,
                                                         answer.itemId,
                                                         reader.result,
-                                                        file.type.split('/')[0]
+                                                        file.type.split('/')[0],
+                                                        sectionObj?.order,
+                                                        question?.order
                                                       );
                                                     }, 1000);
                                                   }}
