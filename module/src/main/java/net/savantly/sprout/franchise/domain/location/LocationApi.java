@@ -3,7 +3,6 @@ package net.savantly.sprout.franchise.domain.location;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,11 +17,11 @@ import net.savantly.sprout.franchise.domain.fee.FranchiseFeeDto;
 import net.savantly.sprout.franchise.domain.fee.FranchiseFeeService;
 import net.savantly.sprout.franchise.domain.locationMember.FranchiseLocationMemberDto;
 import net.savantly.sprout.franchise.domain.locationMember.FranchiseLocationMemberService;
+import net.savantly.sprout.franchise.permission.IsFranchiseLocationAdmin;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/fm/locations")
-@PreAuthorize("hasAuthority('FM_LOCATION_ADMIN')")
 public class LocationApi {
 
 	private final FranchiseLocationService service;
@@ -42,6 +41,7 @@ public class LocationApi {
 	}
 
 	@GetMapping("/{itemId}/fees")
+	@IsFranchiseLocationAdmin
 	@Operation(summary = "Get a franchise location's fees")
 	public ResponseEntity<List<FranchiseFeeDto>> getFeesById(@PathVariable("itemId") String itemId) {
 		return ResponseEntity.ok(feeService.findByLocationId(itemId));
@@ -54,6 +54,7 @@ public class LocationApi {
 	}
 
 	@PutMapping("/{itemId}/members")
+	@IsFranchiseLocationAdmin
 	@Operation(summary = "Update a franchise location's members")
 	public ResponseEntity<Void> updateMembersById(@PathVariable("itemId") String itemId,
 			@RequestBody List<FranchiseLocationMemberDto> members) {
@@ -62,12 +63,14 @@ public class LocationApi {
 	}
 
 	@PostMapping
+	@IsFranchiseLocationAdmin
 	@Operation(summary = "Create a new location")
 	public FranchiseLocationDto createOne(@RequestBody FranchiseLocationDto item) {
 		return service.upsertOne(item);
 	}
 
 	@PostMapping("/{itemId}")
+	@IsFranchiseLocationAdmin
 	@Operation(summary = "Update or create a new location by id")
 	public FranchiseLocationDto upsertOne(@PathVariable("itemId") String itemId,
 			@RequestBody FranchiseLocationDto item) {

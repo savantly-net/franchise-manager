@@ -29,6 +29,7 @@ import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreService
 
 @RestController
 @RequestMapping("/api/fm/qaa/submission")
+@PreAuthorize("isAuthenticated()")
 @RequiredArgsConstructor
 public class QAAApi {
 
@@ -61,6 +62,7 @@ public class QAAApi {
 	}
 
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasAuthority('QAI_ADMIN') or hasAuthority('ADMIN')")
 	@Operation(summary = "Deletes a QAA Submissions")
 	public void delete(@PathVariable("id") String id) {
 		this.service.delete(id);
