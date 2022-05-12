@@ -12,6 +12,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -35,6 +38,7 @@ public class QAIQuestionAnswer extends TenantKeyedEntity {
 
 	@Embedded
 	@ElementCollection
+	@Cascade(CascadeType.ALL)
 	private Set<FileItem> attachments = new HashSet<>();
 	
 }
