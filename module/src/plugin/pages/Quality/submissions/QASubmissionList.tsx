@@ -1,15 +1,15 @@
 import { dateTime } from '@savantly/sprout-api';
 import { getUserContextService } from '@savantly/sprout-runtime';
-import { ColumnDescription, Icon, LoadingIcon } from '@sprout-platform/ui';
+import { ColumnDescription, ConfirmModal, Icon, LoadingIcon } from '@sprout-platform/ui';
 import { useFMLocations } from 'plugin/pages/Locations/Stores/hooks';
 import { AppModuleRootState } from 'plugin/types';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Button, ButtonGroup } from 'reactstrap';
 import { useQASections } from '../sections/hooks';
-import { QASubmission as EntityClass, qaSubmissionStateProvider } from './entity';
+import { qaService, QASubmission as EntityClass, qaSubmissionStateProvider } from './entity';
 
 const IndexPage = () => {
   const submissionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaSubmissions);
@@ -26,9 +26,26 @@ const IndexPage = () => {
     }
   }, [submissionState, dispatch]);
 
-  const userIsQAIAdmin = userContext && userContext.user && userContext.user.authorities.includes('QAI_ADMIN');
+  const userIsQAIAdmin = userContext && userContext.user && userContext.user.authorities.includes('FM_QAI_ADMIN');
 
   const showLoading = !qaSections || !fmLocations;
+
+  const [open, setOpen] = useState(false);
+  const [confirmVal, setConfirmVal] = useState('');
+
+  const deleteHandle = (itemId: any) => {
+    setConfirmVal(itemId);
+    setOpen(!open);
+  };
+
+  const confirmHandle = () => {
+    if (confirmVal) {
+      qaService.deleteQASubmission(confirmVal).then(() => {
+        dispatch(qaSubmissionStateProvider.loadState());
+      });
+    }
+    setOpen(!open);
+  };
 
   const getLocation = (locationId?: string) => {
     if (fmLocations && locationId) {
@@ -86,13 +103,7 @@ const IndexPage = () => {
             >
               <Icon name="pen" />
             </Button>
-            <Button
-              color="danger"
-              onClick={() => {
-                navigate(`../item/${row.id}/delete`);
-              }}
-              disabled={!userIsQAIAdmin}
-            >
+            <Button color="danger" onClick={() => deleteHandle(row?.id)} disabled={!userIsQAIAdmin}>
               <Icon name="trash" />
             </Button>
             <Button
@@ -114,12 +125,30 @@ const IndexPage = () => {
     <>
       <div>{showLoading && <LoadingIcon className="m-auto" />}</div>
       {!showLoading ? (
-        <BootstrapTable
-          columns={columns}
-          data={qaSections && qaSections.length && fmLocations.length ? submissionState.response?.content || [] : []}
-          keyField="id"
-          striped={true}
-        />
+        <>
+          <BootstrapTable
+            columns={columns}
+            data={qaSections && qaSections.length && fmLocations.length ? submissionState.response?.content || [] : []}
+            keyField="id"
+            striped={true}
+          />
+          {open && (
+            <ConfirmModal
+              onClose={() => setOpen(!open)}
+              message={'Are you sure?'}
+              title={'Warning!'}
+              size={'md'}
+              buttonsComponent={() => (
+                <>
+                  <Button onClick={() => setOpen(!open)}>Cancel</Button>
+                  <Button color="danger" onClick={confirmHandle}>
+                    Ok
+                  </Button>
+                </>
+              )}
+            />
+          )}
+        </>
       ) : (
         'No Record available'
       )}

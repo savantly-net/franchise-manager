@@ -123,6 +123,10 @@ class QASubmissionService extends BaseEntityService<QASubmission> {
   getQAScore = (submId: string) => {
     return getApiService().get<QASubmissionScore>(`${API_URL}/qaa/submission/${submId}/score`);
   };
+
+  deleteQASubmission = (submId: string) => {
+    return getApiService().delete<QASubmission>(`${API_URL}/qaa/submission/${submId}`);
+  };
 }
 const qaService = new QASubmissionService();
 export { qaService };
