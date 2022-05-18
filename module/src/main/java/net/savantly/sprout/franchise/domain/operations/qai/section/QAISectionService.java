@@ -83,6 +83,14 @@ public class QAISectionService {
 	}
 
 	private List<QAIQuestionDto> upsertQuestions(List<QAIQuestionDto> questions, String sectionId) {
+		List<QAIQuestionDto> existingQuestions = this.questionService.findAllBySectionId(sectionId);
+		// mark existing questions as deleted, if they aren't part of the update.
+		for (QAIQuestionDto qaiQuestionDto : existingQuestions) {
+			if (questions.stream().noneMatch(d -> qaiQuestionDto.getItemId().contentEquals(d.getItemId()))) {
+				qaiQuestionDto.setDeleted(true);
+				this.questionService.upsert(qaiQuestionDto);
+			}
+		}
 		return questions.stream().map(q -> {
 			q.setSectionId(sectionId);
 			return this.questionService.upsert(q);
@@ -90,6 +98,14 @@ public class QAISectionService {
 	}
 
 	private List<QAIGuestQuestionDto> upsertGuestQuestions(List<QAIGuestQuestionDto> questions, String sectionId) {
+		List<QAIGuestQuestionDto> existingQuestions = this.guestQuestionService.findAllBySectionId(sectionId);
+		// mark existing questions as deleted, if they aren't part of the update.
+		for (QAIGuestQuestionDto qaiQuestionDto : existingQuestions) {
+			if (questions.stream().noneMatch(d -> qaiQuestionDto.getItemId().contentEquals(d.getItemId()))) {
+				qaiQuestionDto.setDeleted(true);
+				this.guestQuestionService.upsert(qaiQuestionDto);
+			}
+		}
 		return questions.stream().map(q -> {
 			q.setSectionId(sectionId);
 			return this.guestQuestionService.upsert(q);
