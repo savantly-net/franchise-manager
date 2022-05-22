@@ -1,6 +1,6 @@
 import { cx } from 'emotion';
 import React, { useState } from 'react';
-import { useFMLocations } from '../hooks';
+import { useFMLocations } from '../../pages/Locations/Stores/hooks';
 
 interface LocationSelectorProps {
   initialValue: string;

@@ -9,8 +9,8 @@ import { FileUploadButton, Form, FormField, Icon, LoadingIcon } from '@sprout-pl
 import { AxiosResponse } from 'axios';
 import { cx } from 'emotion';
 import { FormikProps } from 'formik';
+import { LocationSelectorField } from 'plugin/component/LocationSelector/LocationSelectorField';
 import { useFMConfig } from 'plugin/config/useFmConfig';
-import { LocationSelector } from 'plugin/pages/Locations/Stores/component/LocationSelector';
 import { FileItem } from 'plugin/types';
 import React, { Fragment, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -50,9 +50,6 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
   const submissionId = useParams().itemId;
   const allQASections = useQASections();
   const allQAQuestionCategories = useQAQuestionCategories();
-  const [selectedLocation, setSelectedLocation] = useState(
-    draftSubmission.locationId ? draftSubmission.locationId : ''
-  );
   const [error, setError] = useState('');
   const fileService = getFileService();
   const userContext = getUserContextService().getUserContext();
@@ -247,9 +244,8 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                 console.info('cancelled submit');
               } else {
                 setError('');
-                values.locationId = selectedLocation;
                 values.dateScored = dateTimeForTimeZone(values.dateScored).toISOString();
-                values.sections?.map((submitData: any = {}) => {
+                values.sections?.map((submitData: QASectionSubmission) => {
                   submitData.dateScored = values.dateScored;
                   submitData.locationId = values.locationId;
                   submitData.managerOnDuty = values.managerOnDuty;
@@ -279,13 +275,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                 <Fragment>
                   <div className="d-flex mb-3">
                     <div className="col-3 location-select">
-                      <label>Select Location</label>
-                      <LocationSelector
-                        initialValue={selectedLocation}
-                        onChange={value => {
-                          setSelectedLocation(value);
-                        }}
-                      />
+                      <LocationSelectorField name="locationId" />
                     </div>
                     <div className="col-3">
                       <FormField name={`dateScored`} type="date" label="Audit Date" required="required" />
