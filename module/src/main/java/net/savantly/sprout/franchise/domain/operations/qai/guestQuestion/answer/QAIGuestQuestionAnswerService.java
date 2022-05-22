@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.EntityNotFoundException;
-
 import lombok.RequiredArgsConstructor;
+import net.savantly.sprout.core.tenancy.TenantedPrimaryKey;
 
 @RequiredArgsConstructor
 public class QAIGuestQuestionAnswerService {
@@ -30,7 +29,10 @@ public class QAIGuestQuestionAnswerService {
 			QAIGuestQuestionAnswer entity = null;
 			if (Objects.nonNull(a.getItemId())) {
 				entity = repository.findByIdItemId(a.getItemId())
-						.orElseThrow(() -> new EntityNotFoundException("A Guest QA could not be found with id: " + a.getItemId()));
+						.orElse(new QAIGuestQuestionAnswer());
+				TenantedPrimaryKey key = new TenantedPrimaryKey();
+				key.setItemId(a.getItemId());
+				entity.setId(key);
 			} else {
 				entity = new QAIGuestQuestionAnswer();
 			}

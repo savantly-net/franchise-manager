@@ -13,7 +13,7 @@ import { QAQuestionCategory } from '../categories/entity';
 import { QAGuestQuestion, QASection } from '../sections/entity';
 
 export type QAGuestQuestionAnswerType = 'YES' | 'NO' | 'NA';
-export type QAQuestionAnswerType = 'YES' | 'NO' | 'NA';
+export type QAQuestionAnswerType = 'YES' | 'NO' | 'NA' | '';
 export type QASubmissionStatus = 'DRAFT' | 'FINAL';
 
 export interface QASubmission {
@@ -138,6 +138,10 @@ export const qaSubmissionStateProvider = new EntityStateProvider<QASubmission>({
     isFetching: false,
     example: {
       id: uuidv4(),
+      locationId: '',
+      fsm: '',
+      managerOnDuty: '',
+      responsibleAlcoholCert: '',
       sections: [],
       dateScored: dateTime().format('YYYY-MM-DD'),
     },
@@ -173,6 +177,8 @@ const generateEmptyAnswers = (section: QASection, questionCategories: QAQuestion
     const answer: QAQuestionAnswer = {
       itemId: uuidv4(),
       questionId: q.itemId,
+      notes: '',
+      value: '',
       attachments: [],
     };
     return answer;
@@ -196,6 +202,7 @@ const generateEmptyGuestAnswers = (question: QAGuestQuestion): QAGuestQuestionAn
   const answers: QAGuestQuestionAnswer[] = [];
   for (let i = 0; i < 3; i++) {
     answers.push({
+      value: '',
       guestQuestionId: question.itemId,
     });
   }

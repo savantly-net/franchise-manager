@@ -238,6 +238,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
         <Fragment>
           <Form
             initialValues={draftSubmission}
+            enableReinitialize
             validate={values => {
               props.onChange(values);
             }}
