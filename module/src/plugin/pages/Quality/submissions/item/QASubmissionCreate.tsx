@@ -1,7 +1,8 @@
 import { getUserContextService } from '@savantly/sprout-runtime';
 import { LoadingIcon } from '@sprout-platform/ui';
 import { useLocalStorage } from 'plugin/state/LocalStorage';
-import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import { Button, Col, Row } from 'reactstrap';
 import { useQAQuestionCategories } from '../../categories/hooks';
 import { useQASections } from '../../sections/hooks';
 import { generateEmptyQASubmission, QASubmission } from '../entity';
@@ -45,22 +46,8 @@ const QASubmissionCreate = () => {
     }
   }, [allQASections, allQAQuestionCategories, userContext]);
 
-  useMemo(() => {
-    if (!draftSubmission) {
-      if (localHistoryState) {
-        log(`setting draftSubmission from local history: ${localHistoryState.modifiedDate}`);
-        setDraftSubmission(localHistoryState.data);
-      } else {
-        setToEmptySubmission();
-      }
-    }
-  }, [localHistoryState, draftSubmission, setToEmptySubmission]);
-
   useEffect(() => {
     const alertUser = (e: BeforeUnloadEvent) => {
-      if (confirm('Clear your QAA auto-save history')) {
-        localStorage.removeItem(storageKey);
-      }
       e.preventDefault();
       e.returnValue = '';
     };
@@ -70,21 +57,79 @@ const QASubmissionCreate = () => {
     };
   }, []);
 
-  const showLoading = !allQASections || !allQAQuestionCategories || !userContext || !draftSubmission;
+  const showLoading = !allQASections || !allQAQuestionCategories || !userContext;
 
   const resetFormData = (props: any) => {
     setToEmptySubmission();
   };
 
+  const RestoreFromHistoryButton = () => {
+    if (localHistoryState) {
+      return (
+        <Button
+          color="primary"
+          onClick={() => {
+            log(`setting draftSubmission from local history: ${localHistoryState.modifiedDate}`);
+            setDraftSubmission(localHistoryState.data);
+          }}
+        >
+          Restore From Auto-Save
+        </Button>
+      );
+    } else {
+      return <Fragment />;
+    }
+  };
+
+  const CreateNewSubmissionButton = () => {
+    return (
+      <Button color="secondary" onClick={setToEmptySubmission}>
+        Create New Submission
+      </Button>
+    );
+  };
+
+  const RestorationChoice = () => {
+    return (
+      <div
+        style={{
+          maxWidth: '900px',
+          margin: 'auto',
+        }}
+      >
+        <Col>
+          <div>
+            <h2>We found an auto-saved form</h2>
+          </div>
+          <Row>
+            <Col>
+              <div>
+                <h3>Do you want to restore it?</h3>
+              </div>
+              <RestoreFromHistoryButton />
+            </Col>
+            <Col>
+              <div>
+                <h3>Or create a new submission?</h3>
+              </div>
+              <CreateNewSubmissionButton />
+            </Col>
+          </Row>
+        </Col>
+      </div>
+    );
+  };
+
   return (
     <Fragment>
       {showLoading && <LoadingIcon />}
+      {!showLoading && !draftSubmission && localHistoryState && <RestorationChoice />}
       {draftSubmission && (
         <QASubmissionEditor
           draftSubmission={draftSubmission}
           onChange={values => setLocalHistoryState(newQASubmissionHistoryItem(values))}
           afterSubmit={() => {
-            //localStorage.removeItem(storageKey);
+            setLocalHistoryState(undefined);
           }}
           formDataReset={value => resetFormData(value)}
         />
