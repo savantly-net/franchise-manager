@@ -40,6 +40,16 @@ spring:
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          no-cache: true
+      chain:
+        strategy:
+          content:
+            enabled: false
+            paths: "/**"
 
 
 management:
