@@ -9,16 +9,16 @@ import net.savantly.sprout.core.tenancy.TenantedPrimaryKey;
 
 @RequiredArgsConstructor
 public class QAIGuestQuestionAnswerService {
-	
+
 	private final QAIGuestQuestionAnswerRespository repository;
 
 	public List<QAIGuestQuestionAnswerDto> convert(List<QAIGuestQuestionAnswer> answers) {
 		List<QAIGuestQuestionAnswerDto> result = new ArrayList<>();
 		answers.forEach(a -> {
 			result.add(new QAIGuestQuestionAnswerDto()
-				.setGuestQuestionId(a.getGuestQuestionId())
-				.setItemId(a.getItemId())
-				.setValue(a.getValue()));
+					.setGuestQuestionId(a.getGuestQuestionId())
+					.setItemId(a.getItemId())
+					.setValue(a.getValue()));
 		});
 		return result;
 	}
@@ -37,7 +37,7 @@ public class QAIGuestQuestionAnswerService {
 				entity = new QAIGuestQuestionAnswer();
 			}
 			entity.setValue(a.getValue())
-				.setGuestQuestionId(a.getGuestQuestionId());
+					.setGuestQuestionId(a.getGuestQuestionId());
 			result.add(entity);
 		});
 		repository.saveAll(result);
