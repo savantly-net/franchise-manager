@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
+import net.savantly.sprout.core.tenancy.TenantContext;
 import net.savantly.sprout.core.tenancy.TenantedPrimaryKey;
 
 @RequiredArgsConstructor
@@ -31,6 +32,7 @@ public class QAIGuestQuestionAnswerService {
 				entity = repository.findByIdItemId(a.getItemId())
 						.orElse(new QAIGuestQuestionAnswer());
 				TenantedPrimaryKey key = new TenantedPrimaryKey();
+				key.setTenantId(TenantContext.getCurrentTenant());
 				key.setItemId(a.getItemId());
 				entity.setId(key);
 			} else {
