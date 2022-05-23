@@ -120,6 +120,10 @@ const QASubmissionCreate = () => {
     );
   };
 
+  if (!showLoading && !draftSubmission && !localHistoryState) {
+    setToEmptySubmission();
+  }
+
   return (
     <Fragment>
       {showLoading && <LoadingIcon />}
