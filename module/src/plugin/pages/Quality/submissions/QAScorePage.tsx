@@ -1,12 +1,13 @@
 import { Box } from '@chakra-ui/react';
 import { Icon, LoadingIcon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
-import React, { Fragment, ReactNode, useState } from 'react';
+import ErrorBoundary from 'plugin/component/ErrorBoundary';
+import React, { Fragment, ReactNode, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Col, Nav, NavItem, NavLink, Row, TabContent, TabPane } from 'reactstrap';
 import { QAQuestion, QASection } from '../sections/entity';
 import { useQASections } from '../sections/hooks';
-import { QAAScoresByTag, QASectionScore, QASectionSubmission } from './entity';
+import { QAAScoresByTag, QASectionScore, QASectionSubmission, QASubmissionScore } from './entity';
 import { useQAASubmissionScore, useQASubmission } from './hooks';
 
 const TabEntry = ({
@@ -33,6 +34,128 @@ const TabEntry = ({
     </NavItem>
   );
 };
+
+interface QASectionMap {
+  [key: string]: QASection;
+}
+
+interface QAScoreTablesProps {
+  qaScore: QASubmissionScore;
+  sectionMap: QASectionMap;
+}
+const QAScoreTables = ({ qaScore, sectionMap }: QAScoreTablesProps) => {
+  return (
+    <Fragment>
+      <Row>
+        {qaScore &&
+          qaScore.sections.length > 0 &&
+          qaScore.sections.map((sectionObj: QASectionScore, index: number) => (
+            <Fragment>
+              <Col className="mb-3 col-4">
+                <h1 className="section-name">
+                  Section {index + 1}: {sectionMap[sectionObj.sectionId].name}
+                </h1>
+                <hr className="mb-2 mt-2" />
+                <Fragment>
+                  <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
+                    <thead style={{ backgroundColor: '#9e9e9e', color: '#fff' }}>
+                      <tr className="trCls">
+                        <th className="col-4">Question Category</th>
+                        <th className="col-2">Rating</th>
+                      </tr>
+                    </thead>
+                    <tfoot>
+                      <tr className="trCls">
+                        <td className="col-4">Total</td>
+                        <td className="col-2">{sectionObj.rating * 100}%</td>
+                      </tr>
+                    </tfoot>
+                    {sectionObj?.categoryScores &&
+                      sectionObj?.categoryScores
+                        .sort((next: any, prev: any) => next.order - prev.order)
+                        .map((question: any, idx: number) => (
+                          <>
+                            <tbody>
+                              <Fragment>
+                                <tr className="trCls">
+                                  <td className="col-4">{question.categoryName}</td>
+                                  <td className="col-1">{question.rating * 100}%</td>
+                                </tr>
+                              </Fragment>
+                            </tbody>
+                          </>
+                        ))}
+                  </table>
+                </Fragment>
+              </Col>
+            </Fragment>
+          ))}
+      </Row>
+      <Row>
+        <div className="mb-3 col-12">
+          <hr className="mb-2 mt-2" />
+          <h1 className="section-name" style={{ fontWeight: 'bold' }}>
+            Totals
+          </h1>
+          <Fragment>
+            <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
+              <thead style={{ backgroundColor: '#9e9e9e', color: '#fff' }}>
+                <tr className="trCls">
+                  <th className="col-2"></th>
+                  <th className="col-1">Available</th>
+                  <th className="col-1">Not Applicable</th>
+                  <th className="col-1">Required</th>
+                  <th className="col-1">Score</th>
+                  <th className="col-1">Rating</th>
+                  <th className="col-1"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <Fragment>
+                  {qaScore && (
+                    <tr className="trCls">
+                      <td className="col-2">Overall</td>
+                      <td className="col-1">{qaScore.overallAvailable}</td>
+                      <td className="col-1">{qaScore.overallNA}</td>
+                      <td className="col-1">{qaScore.overallRequired}</td>
+                      <td className="col-1">{qaScore.overallScore}</td>
+                      <td className="col-1">{qaScore.overallRating * 100}%</td>
+                      {qaScore.overallRating > 0.8 ? (
+                        <td className="col-1" style={{ color: 'green', fontWeight: 'bold' }}>{`PASS`}</td>
+                      ) : (
+                        <td className="col-1" style={{ color: 'red', fontWeight: 'bold' }}>{`FAIL`}</td>
+                      )}
+                    </tr>
+                  )}
+                </Fragment>
+                <Fragment>
+                  {qaScore &&
+                    qaScore.scoresByTag.length > 0 &&
+                    qaScore.scoresByTag.map((tagObj: QAAScoresByTag, index: number) => (
+                      <tr className="trCls">
+                        <td className="col-2">{tagObj.tag}</td>
+                        <td className="col-1">{tagObj.available}</td>
+                        <td className="col-1">{tagObj.na}</td>
+                        <td className="col-1">{tagObj.required}</td>
+                        <td className="col-1">{tagObj.score}</td>
+                        <td className="col-1">{tagObj.rating * 100}%</td>
+                        {tagObj.rating > 0.8 ? (
+                          <td className="col-1" style={{ color: 'green', fontWeight: 'bold' }}>{`Ok`}</td>
+                        ) : (
+                          <td className="col-1" style={{ color: 'red', fontWeight: 'bold' }}>{`Improve`}</td>
+                        )}
+                      </tr>
+                    ))}
+                </Fragment>
+              </tbody>
+            </table>
+          </Fragment>
+        </div>
+      </Row>
+    </Fragment>
+  );
+};
+
 interface Props {
   children?: ReactNode;
   email: any;
@@ -64,7 +187,8 @@ const QAAScorePage = () => {
   const qaSections = useQASections();
   const qaScore = useQAASubmissionScore(submissionId);
 
-  const showLoading = !qaSections || !qaSubmission || !qaScore || !params;
+  const [sectionMap, setSectionMap] = useState<QASectionMap | undefined>(undefined);
+  const showLoading = !qaSections || !qaSubmission || !qaScore || !params || !sectionMap;
 
   const [activeTab, setActiveTab] = useState('score');
   const toggle = (tab: string) => {
@@ -73,10 +197,16 @@ const QAAScorePage = () => {
     }
   };
 
-  const getSectionName = (sectionId: string) => {
-    const searchSection: QASection | undefined = qaSections?.find((temp: any) => temp.itemId === sectionId);
-    return searchSection?.name || 'Unknown Section';
-  };
+  useMemo(() => {
+    if (!sectionMap && qaSections) {
+      const mapped: QASectionMap = {};
+      qaSections.map(s => {
+        mapped[s.itemId || 'missing'] = s;
+      });
+      setSectionMap(mapped);
+    }
+  }, [qaSections, sectionMap, setSectionMap]);
+
   const getQuestionText = (questionId: string) => {
     const searchQuestion: QAQuestion | undefined = qaSections
       ?.flatMap(s => s.questions)
@@ -87,7 +217,7 @@ const QAAScorePage = () => {
   return (
     <div>
       <div>{showLoading && <LoadingIcon className="m-auto" />}</div>
-      {!showLoading ? (
+      {!showLoading && qaScore && sectionMap ? (
         <Fragment>
           <Nav tabs>
             <TabEntry tabId="score" tabText="Score" activeTab={activeTab} toggle={toggle} />
@@ -104,115 +234,9 @@ const QAAScorePage = () => {
             )}
           >
             <TabPane tabId="score">
-              <Fragment>
-                <Row>
-                  {qaScore &&
-                    qaScore.sections.length > 0 &&
-                    qaScore.sections.map((sectionObj: QASectionScore, index: number) => (
-                      <>
-                        <Col className="mb-3 col-4">
-                          <h1 className="section-name">
-                            Section {index + 1}: {getSectionName(sectionObj.sectionId)}
-                          </h1>
-                          <hr className="mb-2 mt-2" />
-                          <Fragment>
-                            <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
-                              <thead style={{ backgroundColor: '#9e9e9e', color: '#fff' }}>
-                                <tr className="trCls">
-                                  <th className="col-4">Question Category</th>
-                                  <th className="col-2">Rating</th>
-                                </tr>
-                              </thead>
-                              <tfoot>
-                                <tr className="trCls">
-                                  <td className="col-4">Total</td>
-                                  <td className="col-2">{sectionObj.rating * 100}%</td>
-                                </tr>
-                              </tfoot>
-                              {sectionObj?.categoryScores &&
-                                sectionObj?.categoryScores
-                                  .sort((next: any, prev: any) => next.order - prev.order)
-                                  .map((question: any, idx: number) => (
-                                    <>
-                                      <tbody>
-                                        <Fragment>
-                                          <tr className="trCls">
-                                            <td className="col-4">{question.categoryName}</td>
-                                            <td className="col-1">{question.rating * 100}%</td>
-                                          </tr>
-                                        </Fragment>
-                                      </tbody>
-                                    </>
-                                  ))}
-                            </table>
-                          </Fragment>
-                        </Col>
-                      </>
-                    ))}
-                  <div>{showLoading && <LoadingIcon className="m-auto" />}</div>
-                </Row>
-                <Row>
-                  <div className="mb-3 col-12">
-                    <hr className="mb-2 mt-2" />
-                    <h1 className="section-name" style={{ fontWeight: 'bold' }}>
-                      Totals
-                    </h1>
-                    <Fragment>
-                      <table style={{ marginTop: '5px', border: '1px solid #D0D7DE;' }} className="table-count">
-                        <thead style={{ backgroundColor: '#9e9e9e', color: '#fff' }}>
-                          <tr className="trCls">
-                            <th className="col-2"></th>
-                            <th className="col-1">Available</th>
-                            <th className="col-1">Not Applicable</th>
-                            <th className="col-1">Required</th>
-                            <th className="col-1">Score</th>
-                            <th className="col-1">Rating</th>
-                            <th className="col-1"></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <Fragment>
-                            {qaScore && (
-                              <tr className="trCls">
-                                <td className="col-2">Overall</td>
-                                <td className="col-1">{qaScore.overallAvailable}</td>
-                                <td className="col-1">{qaScore.overallNA}</td>
-                                <td className="col-1">{qaScore.overallRequired}</td>
-                                <td className="col-1">{qaScore.overallScore}</td>
-                                <td className="col-1">{qaScore.overallRating * 100}%</td>
-                                {qaScore.overallRating > 0.8 ? (
-                                  <td className="col-1" style={{ color: 'green', fontWeight: 'bold' }}>{`PASS`}</td>
-                                ) : (
-                                  <td className="col-1" style={{ color: 'red', fontWeight: 'bold' }}>{`FAIL`}</td>
-                                )}
-                              </tr>
-                            )}
-                          </Fragment>
-                          <Fragment>
-                            {qaScore &&
-                              qaScore.scoresByTag.length > 0 &&
-                              qaScore.scoresByTag.map((tagObj: QAAScoresByTag, index: number) => (
-                                <tr className="trCls">
-                                  <td className="col-2">{tagObj.tag}</td>
-                                  <td className="col-1">{tagObj.available}</td>
-                                  <td className="col-1">{tagObj.na}</td>
-                                  <td className="col-1">{tagObj.required}</td>
-                                  <td className="col-1">{tagObj.score}</td>
-                                  <td className="col-1">{tagObj.rating * 100}%</td>
-                                  {tagObj.rating > 0.8 ? (
-                                    <td className="col-1" style={{ color: 'green', fontWeight: 'bold' }}>{`Ok`}</td>
-                                  ) : (
-                                    <td className="col-1" style={{ color: 'red', fontWeight: 'bold' }}>{`Improve`}</td>
-                                  )}
-                                </tr>
-                              ))}
-                          </Fragment>
-                        </tbody>
-                      </table>
-                    </Fragment>
-                  </div>
-                </Row>
-              </Fragment>
+              <ErrorBoundary>
+                <QAScoreTables qaScore={qaScore} sectionMap={sectionMap} />
+              </ErrorBoundary>
             </TabPane>
             <TabPane tabId="actionPlan">
               <Fragment>
