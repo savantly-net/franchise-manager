@@ -59,6 +59,7 @@ management:
 
 logging:
   level:
+    net.savantly.sprout.franchise: INFO
     org.springframework.web: INFO
 
 springdoc:
