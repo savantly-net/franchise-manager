@@ -14,7 +14,7 @@ import { useFMConfig } from 'plugin/config/useFmConfig';
 import { FileItem } from 'plugin/types';
 import React, { Fragment, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Alert, Button } from 'reactstrap';
 import { QAQuestionCategory } from '../../categories/entity';
 import { useQAQuestionCategories } from '../../categories/hooks';
@@ -40,14 +40,13 @@ export interface QASubmissionEditorProps {
   draftSubmission: QASubmission;
   onChange: (values: QASubmission) => void;
   beforeSubmit?: (values: QASubmission) => boolean;
-  afterSubmit?: () => void;
+  afterSubmit?: (submissionId?: string) => void;
   formDataReset: (value: any) => void;
 }
 const QASubmissionEditor = (props: QASubmissionEditorProps) => {
   const { draftSubmission, formDataReset } = props;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const submissionId = useParams().itemId;
   const allQASections = useQASections();
   const allQAQuestionCategories = useQAQuestionCategories();
   const [error, setError] = useState('');
@@ -256,13 +255,12 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                   .then(response => {
                     dispatch(qaSectionStateProvider.loadState());
                     dispatch(qaSubmissionStateProvider.loadState());
-                    navigate(`../${response.data.id}/score`);
                     resetForm();
                   })
                   .catch((err: { message: any }) => {
                     setError(err.message || 'There was a problem saving the content. Check the logs.');
                   })
-                  .finally(props.afterSubmit);
+                  .finally(() => props.afterSubmit && props.afterSubmit(values.id));
               }
             }}
             onCancel={() => {
@@ -610,21 +608,19 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                   ))}
                 <div>{showLoading && <LoadingIcon className="m-auto" />}</div>
                 <>
-                  {!submissionId && (
-                    <div className="d-flex">
-                      <div className="col-12 p-0 mb-3">
-                        <Button
-                          onClick={() => {
-                            setImagePreviewUrl({});
-                            formDataReset(props);
-                          }}
-                          color={`info`}
-                        >
-                          Reset
-                        </Button>
-                      </div>
+                  <div className="d-flex">
+                    <div className="col-12 p-0 mb-3">
+                      <Button
+                        onClick={() => {
+                          setImagePreviewUrl({});
+                          formDataReset(props);
+                        }}
+                        color={`info`}
+                      >
+                        Reset
+                      </Button>
                     </div>
-                  )}
+                  </div>
                 </>
               </>
             )}

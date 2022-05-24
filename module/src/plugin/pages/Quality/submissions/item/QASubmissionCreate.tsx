@@ -1,7 +1,9 @@
+import { publishErrorNotification } from '@savantly/sprout-api';
 import { getUserContextService } from '@savantly/sprout-runtime';
 import { LoadingIcon } from '@sprout-platform/ui';
 import { useLocalStorage } from 'plugin/state/LocalStorage';
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Col, Row } from 'reactstrap';
 import { useQAQuestionCategories } from '../../categories/hooks';
 import { useQASections } from '../../sections/hooks';
@@ -28,6 +30,7 @@ const QASubmissionCreate = () => {
   const allQASections = useQASections();
   const allQAQuestionCategories = useQAQuestionCategories();
   const userContext = getUserContextService().getUserContext();
+  const navigate = useNavigate();
 
   const storageKey = 'QASubmissionHistoryItem';
   const [localHistoryState, setLocalHistoryState] = useLocalStorage<QASubmissionHistoryItem | undefined>(
@@ -132,8 +135,14 @@ const QASubmissionCreate = () => {
         <QASubmissionEditor
           draftSubmission={draftSubmission}
           onChange={values => setLocalHistoryState(newQASubmissionHistoryItem(values))}
-          afterSubmit={() => {
+          afterSubmit={(id?: string) => {
             setLocalHistoryState(undefined);
+            if (id) {
+              navigate(`../${id}/score`);
+            } else {
+              publishErrorNotification('Submission ID not returned');
+              console.error('submissionId not returned. check server logs.');
+            }
           }}
           formDataReset={value => resetFormData(value)}
         />
