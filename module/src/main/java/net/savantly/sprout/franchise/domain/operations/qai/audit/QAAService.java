@@ -12,11 +12,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreDto;
 import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreService;
 import net.savantly.sprout.franchise.domain.operations.qai.section.submission.QAISectionSubmissionDto;
 import net.savantly.sprout.franchise.domain.operations.qai.section.submission.QAISubmissionService;
 
+@Slf4j
 @RequiredArgsConstructor
 public class QAAService {
 
@@ -29,6 +31,7 @@ public class QAAService {
 	}
 
 	public QAADto getOneById(String id) {
+		log.info("finding QAAScore by id: {}", id);
 		return convert(this.repository.findById(id).orElseThrow());
 	}
 	

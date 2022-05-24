@@ -5,12 +5,9 @@ import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -69,15 +66,28 @@ public class QAAScore {
 		this.overallScore += points;
 	}
 
-
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "submission_id")
 	@Setter
+	@Transient
 	private Set<QAASectionScore> sections = new HashSet<>();
 
+	@Transient
+	protected Set<QAASectionScore> getSections() {
+		return sections;
+	}
+	protected void removeAllSections() {
+		this.sections.clear();
+	}
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "submission_id")
+
 	@Setter
+	@Transient
 	private Set<QAAScoreByTag> scoresByTag = new HashSet<>(); 
+	
+	@Transient
+	protected Set<QAAScoreByTag> getScoresByTag() {
+		return scoresByTag;
+	}
+	protected void removeAllScoresByTag() {
+		this.scoresByTag.clear();
+	}
 }

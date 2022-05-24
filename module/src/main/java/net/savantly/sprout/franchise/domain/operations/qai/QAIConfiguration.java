@@ -20,9 +20,11 @@ import net.savantly.sprout.franchise.domain.operations.qai.question.answer.QAIQu
 import net.savantly.sprout.franchise.domain.operations.qai.question.answer.QAIQuestionAnswerService;
 import net.savantly.sprout.franchise.domain.operations.qai.question.category.QAIQuestionCategoryApi;
 import net.savantly.sprout.franchise.domain.operations.qai.question.category.QAIQuestionCategoryRepository;
+import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreByTagRepository;
 import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreCalculator;
 import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreRepository;
 import net.savantly.sprout.franchise.domain.operations.qai.score.QAAScoreService;
+import net.savantly.sprout.franchise.domain.operations.qai.score.QAASectionScoreRepository;
 import net.savantly.sprout.franchise.domain.operations.qai.section.QAISectionApi;
 import net.savantly.sprout.franchise.domain.operations.qai.section.QAISectionRepository;
 import net.savantly.sprout.franchise.domain.operations.qai.section.QAISectionService;
@@ -49,8 +51,8 @@ public class QAIConfiguration {
 	}
 	
 	@Bean
-	public QAAScoreService qaaScoreService(QAAScoreRepository repo, QAAScoreCalculator qaaScoreCalculator) {
-		return new QAAScoreService(repo, qaaScoreCalculator);
+	public QAAScoreService qaaScoreService(QAAScoreRepository repo, QAAScoreCalculator qaaScoreCalculator, QAASectionScoreRepository sectionScoreRepo, QAAScoreByTagRepository tagScoreRepo) {
+		return new QAAScoreService(repo, qaaScoreCalculator, sectionScoreRepo, tagScoreRepo);
 	}
 	
 	@Bean

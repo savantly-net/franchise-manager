@@ -40,20 +40,22 @@ public class QAAScoreCalculator {
 	private final QAIQuestionCategoryRepository categoryRepo;
 
 	public QAAScore createScoreFromSubmission(QAASubmission submission, List<QAISectionSubmissionDto> sectionSubmission) {
-		QAAScore rubric = generateRubric(sectionSubmission);
+		QAAScore rubric = generateRubric(submission, sectionSubmission);
 		rubric.setSubmissionId(submission.getId());
 		return rubric;
 	}
 
-	private QAAScore generateRubric(List<QAISectionSubmissionDto> sectionSubmission) {
+	private QAAScore generateRubric(QAASubmission submission, List<QAISectionSubmissionDto> sectionSubmission) {
 		long available = 0;
 		long na = 0;
 		long score = 0;
 		Map<String, Map<String, QAASectionScore>> rubricBySection = new HashMap<>();
 		Map<String, QAAScoreByTag> rubricByTag = new HashMap<>();
+
+		QAAScore qaaScore = new QAAScore();
 		
 		for (QAISectionSubmissionDto qaiSectionSubmission : sectionSubmission) {
-			String submissionId = qaiSectionSubmission.getItemId();
+			String submissionId = submission.getId();
 			String sectionId = qaiSectionSubmission.getSectionId();
 			QAISection section = getSection(sectionId);
 			
@@ -112,9 +114,10 @@ public class QAAScoreCalculator {
 								rubricByTag.put(tag, tagRubric);
 							}
 							
-							tagRubric.setTag(tag)
-								.setSubmissionId(submissionId);
-							tagRubric.addAvailablePoints(points);
+							tagRubric
+								.setTag(tag)
+								.setSubmissionId(submissionId)
+								.addAvailablePoints(points);
 							if (QAIQuestionAnswerType.NA.equals(answer.getValue())) {
 								tagRubric.addNaPoints(points);
 							}
@@ -139,7 +142,8 @@ public class QAAScoreCalculator {
 						sectionRubric.put(GUEST_CATEGORY, categoryRubric);
 					}
 
-					categoryRubric.setCategoryId(GUEST_CATEGORY)
+					categoryRubric
+						.setCategoryId(GUEST_CATEGORY)
 						.setSectionId(sectionId)
 						.setSubmissionId(submissionId)
 						.setCategoryName("Guest")
@@ -164,7 +168,6 @@ public class QAAScoreCalculator {
 		Set<QAAScoreByTag> scoresByTag = rubricByTag.values().stream().collect(Collectors.toSet());
 		Set<QAASectionScore> scoresBySection = rubricBySection.values().stream().flatMap(s -> s.values().stream()).collect(Collectors.toSet());
 		
-		QAAScore qaaScore = new QAAScore();
 		qaaScore.setOverallAvailable(available);
 		qaaScore.setOverallNA(na);
 		qaaScore.setOverallScore(score);

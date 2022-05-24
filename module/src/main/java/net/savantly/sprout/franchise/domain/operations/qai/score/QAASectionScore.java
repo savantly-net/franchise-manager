@@ -25,7 +25,6 @@ public class QAASectionScore {
 	@Transient
 	private final double requiredPercentage = 0.8;
 
-
 	@Id
 	@Column(name = "submission_id")
 	private String submissionId;
@@ -37,13 +36,13 @@ public class QAASectionScore {
 	@Id
 	@Column(name = "category_id")
 	private String categoryId;
-	
+
 	@Column(name = "section_order")
 	private long order;
-	
-	@Column(name= "section_name")
+
+	@Column(name = "section_name")
 	private String sectionName;
-	
+
 	@Column(name = "category_name")
 	private String categoryName;
 
@@ -60,23 +59,27 @@ public class QAASectionScore {
 
 	@Column(name = "scored_points")
 	private long score;
-	
+
 	@Transient
 	public BigDecimal getRating() {
 		if (available == 0 || score == 0) {
 			return BigDecimal.ZERO;
 		} else {
-			return new BigDecimal(score).setScale(2).divide(new BigDecimal(available), RoundingMode.HALF_UP).setScale(2);
+			return new BigDecimal(score).setScale(2).divide(new BigDecimal(available), RoundingMode.HALF_UP)
+					.setScale(2);
 		}
 	};
-	
+
 	public void addAvailablePoints(long points) {
 		this.available += points;
 	}
+
 	public void addNaPoints(long points) {
 		this.na += points;
 	}
+
 	public void addScorePoints(long points) {
 		this.score += points;
 	}
+
 }
