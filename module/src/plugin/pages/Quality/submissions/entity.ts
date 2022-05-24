@@ -12,7 +12,7 @@ import { uuidv4 } from '../../../config/id';
 import { QAQuestionCategory } from '../categories/entity';
 import { QAGuestQuestion, QASection } from '../sections/entity';
 
-export type QAGuestQuestionAnswerType = 'YES' | 'NO' | 'NA';
+export type QAGuestQuestionAnswerType = 'YES' | 'NO' | 'NA' | '';
 export type QAQuestionAnswerType = 'YES' | 'NO' | 'NA' | '';
 export type QASubmissionStatus = 'DRAFT' | 'FINAL';
 
@@ -59,7 +59,7 @@ export interface QAGuestQuestionAnswerGroup {
 export interface QAGuestQuestionAnswer {
   itemId?: string;
   guestQuestionId?: string;
-  value?: QAQuestionAnswerType;
+  value?: QAGuestQuestionAnswerType;
 }
 
 /**
