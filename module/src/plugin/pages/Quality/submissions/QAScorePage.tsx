@@ -120,7 +120,7 @@ const QAScoreTables = ({ qaScore, sectionMap }: QAScoreTablesProps) => {
                       <td className="col-1">{qaScore.overallRequired}</td>
                       <td className="col-1">{qaScore.overallScore}</td>
                       <td className="col-1">{qaScore.overallRating * 100}%</td>
-                      {qaScore.overallRating > 0.8 ? (
+                      {qaScore.overallRating > 0.795 ? (
                         <td className="col-1" style={{ color: 'green', fontWeight: 'bold' }}>{`PASS`}</td>
                       ) : (
                         <td className="col-1" style={{ color: 'red', fontWeight: 'bold' }}>{`FAIL`}</td>
