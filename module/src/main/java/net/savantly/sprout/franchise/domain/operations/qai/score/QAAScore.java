@@ -48,7 +48,7 @@ public class QAAScore {
 	private long overallScore;
 
 	@Transient
-	public BigDecimal getRating() {
+	public BigDecimal getOverallRating() {
 		if (this.getOverallRequired() < 1 || overallScore == 0) {
 			return BigDecimal.ZERO;
 		} else {
