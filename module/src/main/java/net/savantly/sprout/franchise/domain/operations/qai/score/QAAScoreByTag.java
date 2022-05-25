@@ -48,10 +48,10 @@ public class QAAScoreByTag {
 
 	@Transient
 	public BigDecimal getRating() {
-		if (this.getRequired() < 1 || score == 0) {
+		if (available == 0 || score == 0) {
 			return BigDecimal.ZERO;
 		} else {
-			return new BigDecimal(score).setScale(2).divide(new BigDecimal(this.getRequired()), RoundingMode.HALF_UP)
+			return new BigDecimal(score).setScale(2).divide(new BigDecimal(available - na), RoundingMode.HALF_UP)
 					.setScale(2);
 		}
 	};
