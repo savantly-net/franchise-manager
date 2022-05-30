@@ -1,20 +1,20 @@
 import { AddIcon } from '@chakra-ui/icons';
 import { Box, IconButton } from '@chakra-ui/react';
-import { DateField, Form, FormField, Icon } from '@sprout-platform/ui';
+import { Table, TableCaption, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table';
+import { DateField, ErrorBoundary, Form, FormField, Icon } from '@sprout-platform/ui';
 import { css, cx } from 'emotion';
 import { Field, FieldArray, FormikHelpers } from 'formik';
 import { useAppUsers } from 'plugin/services/userService';
 import { AppModuleRootState } from 'plugin/types';
 import React, { Fragment, ReactElement, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Col, Nav, NavItem, NavLink, Row, TabContent, Navbar, TabPane } from 'reactstrap';
+import { Button, Col, Nav, Navbar, NavItem, NavLink, Row, TabContent, TabPane } from 'reactstrap';
 import { franchiseGroupsStateProvider } from '../Groups/entity';
 import { franchiseMarketStateProvider } from '../Market/entity';
 import { FranchiseLocation } from '../types';
 import { FranchiseLocationFeeEditor } from './component/FranchiseLocationFeeEditor';
 import { FranchiseLocationMemberEditor } from './component/LocationMembersEditor';
 import { useFMLocationFees, useFMLocationMembers } from './hooks';
-import { Table, TableCaption, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table';
 
 const RemoveItemButton = ({ remove, index }: { remove: (index: number) => void; index: number }) => {
   return (
@@ -650,25 +650,27 @@ export const LocationEditor = ({
                       </FormField>
                     </Row>
                     <hr />
-                    <BuildingEditControl />
+                    <ErrorBoundary>{() => <BuildingEditControl />}</ErrorBoundary>
                     <hr />
-                    <BarsEditControl location={values} />
+                    <ErrorBoundary>{() => <BarsEditControl location={values} />}</ErrorBoundary>
                     <hr />
-                    <PatiosEditControl location={values} />
+                    <ErrorBoundary>{() => <PatiosEditControl location={values} />}</ErrorBoundary>
                     <hr className="mb-3" />
                   </Fragment>
                 </TabPane>
                 <TabPane tabId="dates">
-                  <FranchiseDatesEditor location={values} />
+                  <ErrorBoundary>{() => <FranchiseDatesEditor location={values} />}</ErrorBoundary>
                 </TabPane>
                 <TabPane tabId="hours">
-                  <HoursControl location={values} />
+                  <ErrorBoundary>{() => <HoursControl location={values} />}</ErrorBoundary>
                 </TabPane>
                 <TabPane tabId="members">
-                  <FranchiseLocationMemberEditor location={values} />
+                  <ErrorBoundary>{() => <FranchiseLocationMemberEditor location={values} />}</ErrorBoundary>
                 </TabPane>
                 <TabPane tabId="fees">
-                  <FranchiseLocationFeeEditor location={values} locationId={location.id} name="fees" />
+                  <ErrorBoundary>
+                    {() => <FranchiseLocationFeeEditor location={values} locationId={location.id} name="fees" />}
+                  </ErrorBoundary>
                 </TabPane>
               </TabContent>
             </div>
