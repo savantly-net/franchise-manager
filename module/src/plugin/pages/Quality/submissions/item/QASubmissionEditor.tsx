@@ -238,6 +238,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
             enableReinitialize
             validate={values => {
               props.onChange(values);
+              return validateSubmission(values);
             }}
             onSubmit={async (values: QASubmission, { resetForm }) => {
               if (props.beforeSubmit && !props.beforeSubmit(values)) {
@@ -648,5 +649,15 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     </div>
   );
 };
+
+function validateSubmission(values: QASubmission) {
+  const errors: any = {}
+  errors.locationId = requireIt(values.locationId);
+  return errors;
+}
+
+function requireIt(value: Object | undefined) {
+  return value === undefined ? 'required' : undefined;
+}
 
 export default QASubmissionEditor;
