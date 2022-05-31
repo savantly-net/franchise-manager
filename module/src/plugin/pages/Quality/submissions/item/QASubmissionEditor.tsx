@@ -651,7 +651,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
 };
 
 function validateSubmission(values: QASubmission) {
-  const errors: any = {}
+  const errors: any = {};
   errors.locationId = requireIt(values.locationId);
   return errors;
 }
