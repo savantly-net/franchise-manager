@@ -136,9 +136,9 @@ const QASubmissionCreate = () => {
           draftSubmission={draftSubmission}
           onChange={values => setLocalHistoryState(newQASubmissionHistoryItem(values))}
           afterSubmit={(id?: string) => {
-            setLocalHistoryState(undefined);
             if (id) {
               navigate(`../${id}/score`);
+              setLocalHistoryState(undefined);
             } else {
               publishErrorNotification('Submission ID not returned');
               console.error('submissionId not returned. check server logs.');
