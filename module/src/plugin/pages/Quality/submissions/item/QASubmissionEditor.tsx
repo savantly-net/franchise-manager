@@ -652,13 +652,10 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
 };
 
 function validateSubmission(values: QASubmission) {
+  const required = 'required';
   const errors: any = {};
-  errors.locationId = requireIt(values.locationId);
+  values.locationId ? () => {} : (errors.locationId = required);
   return errors;
-}
-
-function requireIt(value: Object | undefined) {
-  return value === undefined ? 'required' : undefined;
 }
 
 export default QASubmissionEditor;
