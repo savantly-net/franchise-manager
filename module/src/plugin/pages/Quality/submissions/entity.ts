@@ -6,6 +6,7 @@ import {
   TenantedEntity,
 } from '@savantly/sprout-api';
 import { getApiService } from '@savantly/sprout-runtime';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { API_URL } from 'plugin/config/appModuleConfiguration';
 import { FileItem } from 'plugin/types';
 import { uuidv4 } from '../../../config/id';
@@ -16,7 +17,7 @@ export type QAGuestQuestionAnswerType = 'YES' | 'NO' | 'NA' | '';
 export type QAQuestionAnswerType = 'YES' | 'NO' | 'NA' | '';
 export type QASubmissionStatus = 'DRAFT' | 'FINAL';
 
-export interface QASubmission {
+export interface QASubmissionSummary {
   id: string;
   locationId?: string;
   dateScored?: string;
@@ -26,6 +27,9 @@ export interface QASubmission {
   responsibleAlcoholCert?: string;
   startTime?: string;
   endTime?: string;
+  sections: QASectionSubmission[];
+}
+export interface QASubmission extends QASubmissionSummary {
   sections: QASectionSubmission[];
 }
 
@@ -107,13 +111,17 @@ export interface QASubmissionScore extends TenantedEntity {
 /**
  * QAA Service/state
  */
-export type QASubmissionState = PagedEntityState<QASubmission>;
+export type QASubmissionState = PagedEntityState<QASubmissionSummary>;
 
-class QASubmissionService extends BaseEntityService<QASubmission> {
+class QASubmissionService extends BaseEntityService<QASubmissionSummary> {
   constructor() {
     super({
       baseUrl: `${API_URL}/qaa/submission`,
     });
+  }
+
+  getById(id: string, config?: AxiosRequestConfig): Promise<AxiosResponse<QASubmission>> {
+    return super.getById(id, config);
   }
 
   findByLocation = (locationId: string) => {

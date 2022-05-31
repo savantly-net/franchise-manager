@@ -26,8 +26,21 @@ public class QAAService {
 	final QAASubmissionRepository repository;
 	final QAAScoreService scoreService;
 	
-	public Page<QAADto> getPage(Pageable pageable) {
-		return this.repository.findAll(pageable).map(q -> convert(q));
+	public Page<QAASummaryDto> getPage(Pageable pageable) {
+		return this.repository.findAll(pageable).map(q -> convertToSummary(q));
+	}
+
+	private QAASummaryDto convertToSummary(QAASubmission q) {
+		return new QAASummaryDto()
+		.setDateScored(q.getDateScored())
+		.setEndTime(q.getTimeEnd())
+		.setFsc(q.getFsc())
+		.setFsm(q.getFsm())
+		.setId(q.getId())
+		.setLocationId(q.getLocationId())
+		.setManagerOnDuty(q.getManagerOnDuty())
+		.setResponsibleAlcoholCert(q.getResponsibleAlcoholCert())
+		.setStartTime(q.getTimeStart());
 	}
 
 	public QAADto getOneById(String id) {

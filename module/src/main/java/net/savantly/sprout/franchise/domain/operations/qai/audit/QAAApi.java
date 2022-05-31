@@ -39,7 +39,7 @@ public class QAAApi {
 
 	@GetMapping
 	@Operation(summary = "Gets a page of the QAA Submissions")
-	public Page<QAADto> getAll(Pageable pageable) {
+	public Page<QAASummaryDto> getAll(Pageable pageable) {
 		return this.service.getPage(pageable);
 	}
 
