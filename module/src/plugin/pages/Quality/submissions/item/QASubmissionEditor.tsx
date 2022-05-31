@@ -654,7 +654,10 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
 function validateSubmission(values: QASubmission) {
   const required = 'required';
   const errors: any = {};
-  values.locationId ? () => {} : (errors.locationId = required);
+  if (values.locationId) {
+  } else {
+    errors.locationId = required;
+  }
   return errors;
 }
 
