@@ -3,6 +3,7 @@ import {
   FileMetaData,
   publishErrorNotification,
   publishSuccessNotification,
+  publishWarningNotification,
 } from '@savantly/sprout-api';
 import { getFileService, getUserContextService } from '@savantly/sprout-runtime';
 import { FileUploadButton, Form, FormField, Icon, LoadingIcon } from '@sprout-platform/ui';
@@ -249,18 +250,28 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                   submitData.locationId = values.locationId;
                   submitData.managerOnDuty = values.managerOnDuty;
                 });
-
+                console.info('logging payload in case of failure');
+                console.debug(values);
                 qaService
                   .create(values)
                   .then(response => {
-                    dispatch(qaSectionStateProvider.loadState());
-                    dispatch(qaSubmissionStateProvider.loadState());
-                    resetForm();
+                    if (response.status <= 201) {
+                      dispatch(qaSectionStateProvider.loadState());
+                      dispatch(qaSubmissionStateProvider.loadState());
+                      resetForm();
+                      props.afterSubmit && props.afterSubmit(values.id);
+                    } else if (response.status >= 300 && response.status <= 399) {
+                      publishWarningNotification(
+                        'Not Saved',
+                        'Your authentication session may have timed out. Please refresh the page.'
+                      );
+                    } else if (response.status >= 400 && response.status < 500) {
+                      setError(`Error while submitting: ${response.statusText}`);
+                    }
                   })
                   .catch((err: { message: any }) => {
                     setError(err.message || 'There was a problem saving the content. Check the logs.');
-                  })
-                  .finally(() => props.afterSubmit && props.afterSubmit(values.id));
+                  });
               }
             }}
             onCancel={() => {
