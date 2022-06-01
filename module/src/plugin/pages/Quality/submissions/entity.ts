@@ -139,7 +139,7 @@ class QASubmissionService extends BaseEntityService<QASubmissionSummary> {
     });
   }
 
-  createWithoutFollow(item: QASubmissionSummary, config?: AxiosRequestConfig): Promise<QASubmissionSummary> {
+  createWithoutFollow(item: QASubmissionSummary): Promise<QASubmissionSummary> {
     return postData(`${API_URL}/qai/submission`, item);
   }
 

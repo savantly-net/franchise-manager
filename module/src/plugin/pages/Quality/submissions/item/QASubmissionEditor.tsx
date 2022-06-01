@@ -254,12 +254,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                 console.info('logging payload in case of failure');
                 console.debug(values);
                 qaService
-                  .createWithoutFollow(values, {
-                    maxRedirects: 0,
-                    validateStatus: status => {
-                      return status >= 200 && status < 300;
-                    },
-                  })
+                  .createWithoutFollow(values)
                   .then(response => {
                     if (response && response.id) {
                       dispatch(qaSectionStateProvider.loadState());
