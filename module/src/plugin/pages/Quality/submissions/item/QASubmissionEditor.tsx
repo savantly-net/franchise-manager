@@ -255,7 +255,12 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                 console.info('logging payload in case of failure');
                 console.debug(values);
                 qaService
-                  .create(values)
+                  .create(values, {
+                    maxRedirects: 0,
+                    validateStatus: (status) => {
+                      return status >= 200 && status < 300;
+                    }
+                  })
                   .then(response => {
                     if (response.status <= 201) {
                       dispatch(qaSectionStateProvider.loadState());
