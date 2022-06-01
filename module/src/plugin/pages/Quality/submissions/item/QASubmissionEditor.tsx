@@ -257,9 +257,9 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                 qaService
                   .create(values, {
                     maxRedirects: 0,
-                    validateStatus: (status) => {
+                    validateStatus: status => {
                       return status >= 200 && status < 300;
-                    }
+                    },
                   })
                   .then(response => {
                     if (response.status <= 201) {
