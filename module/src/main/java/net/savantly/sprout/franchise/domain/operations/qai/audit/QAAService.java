@@ -49,9 +49,9 @@ public class QAAService {
 	}
 	
 	public QAADto save(QAADto dto) {
-		Set<String> sectionIds = saveSectionSubmissions(dto);
+		Set<String> sectionSubmissionIds = saveSectionSubmissions(dto);
 		QAASubmission entity = convert(dto);
-		entity.setSectionIds(sectionIds);
+		entity.setSectionSubmissionIds(sectionSubmissionIds);
 		QAASubmission saved = this.repository.save(entity);
 		QAADto result = convert(saved);
 		QAAScoreDto scoreDto = this.scoreService.createScoreFromSubmission(saved, result.getSections().stream().collect(Collectors.toList()));
@@ -84,7 +84,7 @@ public class QAAService {
 			.setTimeEnd(dto.getEndTime());
 		dto.getSections().forEach(s -> {
 			if (Objects.nonNull(s.getItemId())) {
-				entity.sectionIds.add(s.getItemId());
+				entity.sectionSubmissionIds.add(s.getItemId());
 			}
 		});
 		return entity;
@@ -103,7 +103,7 @@ public class QAAService {
 			.setStartTime(entity.getTimeStart());
 		
 		ArrayList<QAISectionSubmissionDto> sections = new ArrayList<QAISectionSubmissionDto>();
-		entity.getSectionIds().forEach(s -> {
+		entity.getSectionSubmissionIds().forEach(s -> {
 			if (Objects.nonNull(s)) {
 				sections.add(qaiSubmissionService.findByItemId(s).orElseThrow());
 			}

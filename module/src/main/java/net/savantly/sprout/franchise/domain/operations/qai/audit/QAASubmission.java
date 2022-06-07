@@ -47,5 +47,5 @@ public class QAASubmission {
 	@ElementCollection
 	@CollectionTable(name = "fm_qaa_submission_sections", joinColumns = { @JoinColumn(name = "qaa_submission_id")})
 	@Column(name="section_id")
-	Set<String> sectionIds = new HashSet<>();
+	Set<String> sectionSubmissionIds = new HashSet<>();
 }
