@@ -163,23 +163,33 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
         }
         Promise.all(fileUploads)
           .then(responses => {
-            const newFiles = responses.map(f => {
-              return f.data as FileItem;
-            });
-            const attachments = [
-              ...draftSubmission.sections[sectionidx]['answers'][answerIndex]['attachments'],
-              ...newFiles,
-            ];
-
-            setImagePreviewUrl({
-              ...imagePreviewUrl,
-              [answerItemId]: {
-                image: readerResult,
-                type: fileType,
-              },
-            });
-            publishSuccessNotification('Saved', 'Image saved successfully');
-            props.setFieldValue(`sections.${sectionidx}.answers.${answerIndex}.attachments`, attachments);
+            const successFiles = responses.filter(r => r.status >= 200 && r.status < 300);
+            if (successFiles.length === 0) {
+              publishErrorNotification('Error while uploading files');
+            } else {
+              const newFiles: FileItem[] = successFiles.map(f => {
+                return {
+                  id: f.data.id,
+                  name: f.data.name,
+                  contentType: `image/${f.data.ext}`,
+                  downloadUrl: `${f.data.downloadUrl}`
+                };
+              });
+              const attachments = [
+                ...draftSubmission.sections[sectionidx]['answers'][answerIndex]['attachments'],
+                ...newFiles,
+              ];
+  
+              setImagePreviewState({
+                ...imagePreviewState,
+                [answerItemId]: {
+                  image: readerResult,
+                  type: fileType,
+                },
+              });
+              publishSuccessNotification('Saved', 'Image saved successfully');
+              props.setFieldValue(`sections.${sectionidx}.answers.${answerIndex}.attachments`, attachments);
+            }
           })
           .catch(e => {
             publishErrorNotification('Failed', 'Image upload failed');
@@ -188,13 +198,13 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     }
   };
 
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<ImagePreviewUrls>({});
+  const [imagePreviewState, setImagePreviewState] = useState<ImagePreviewUrls>({});
 
   const removeImage = (props: any, sectionidx: number, idx: number, sectionId: any) => {
-    let images = imagePreviewUrl;
+    let images = imagePreviewState;
     if (images[sectionId]) {
       delete images[sectionId];
-      setImagePreviewUrl({
+      setImagePreviewState({
         ...images,
       });
     }
@@ -429,10 +439,10 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                 />
                                               </td>
                                               <td className="col-2" rowSpan={2}>
-                                                {imagePreviewUrl[answer.itemId] &&
-                                                imagePreviewUrl[answer.itemId].type === 'image' ? (
+                                                {imagePreviewState[answer.itemId] &&
+                                                imagePreviewState[answer.itemId].type === 'image' ? (
                                                   <img
-                                                    src={imagePreviewUrl[answer.itemId].image as string}
+                                                    src={imagePreviewState[answer.itemId].image as string}
                                                     height="40px"
                                                     width="100%"
                                                   />
@@ -448,8 +458,8 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                 )}
                                               </td>
                                               <td className="col-1">
-                                                {imagePreviewUrl[answer.itemId] &&
-                                                imagePreviewUrl[answer.itemId].type === 'image' ? (
+                                                {imagePreviewState[answer.itemId] &&
+                                                imagePreviewState[answer.itemId].type === 'image' ? (
                                                   <Icon
                                                     name="trash-alt"
                                                     className={cx('text-danger', 'mr-4')}
@@ -617,7 +627,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                     <div className="col-12 p-0 mb-3">
                       <Button
                         onClick={() => {
-                          setImagePreviewUrl({});
+                          setImagePreviewState({});
                           formDataReset(props);
                         }}
                         color={`info`}
