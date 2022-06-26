@@ -139,7 +139,7 @@ const QAScoreTables = ({ qaScore, sectionMap }: QAScoreTablesProps) => {
                         <td className="col-1">{tagObj.required}</td>
                         <td className="col-1">{tagObj.score}</td>
                         <td className="col-1">{tagObj.rating * 100}%</td>
-                        {tagObj.rating > 0.8 ? (
+                        {tagObj.rating > 0.795 ? (
                           <td className="col-1" style={{ color: 'green', fontWeight: 'bold' }}>{`Ok`}</td>
                         ) : (
                           <td className="col-1" style={{ color: 'red', fontWeight: 'bold' }}>{`Improve`}</td>
