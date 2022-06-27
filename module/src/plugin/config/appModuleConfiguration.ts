@@ -1,2 +1,3 @@
-export const API_URL = `${location.protocol}//${location.host}/api/fm`;
-export const FORMS_API_URL = `${location.protocol}//${location.host}/api/savantly-forms`;
+export const API_HOST = `${location.protocol}//${location.host}`;
+export const API_URL = `${API_HOST}/api/fm`;
+export const FORMS_API_URL = `${API_HOST}/api/savantly-forms`;

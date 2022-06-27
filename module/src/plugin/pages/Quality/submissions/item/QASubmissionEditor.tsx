@@ -5,13 +5,14 @@ import {
   publishErrorNotification,
   publishSuccessNotification,
 } from '@savantly/sprout-api';
-import { getFileService, getUserContextService } from '@savantly/sprout-runtime';
+import { getUserContextService } from '@savantly/sprout-runtime';
 import { FileUploadButton, Form, FormField, Icon, LoadingIcon } from '@sprout-platform/ui';
 import { AxiosResponse } from 'axios';
 import { cx } from 'emotion';
 import { FormikProps } from 'formik';
 import { LocationSelectorField } from 'plugin/component/LocationSelector/LocationSelectorField';
 import { useFMConfig } from 'plugin/config/useFmConfig';
+import { fmFileService } from 'plugin/services/fmFileService';
 import { FileItem } from 'plugin/types';
 import React, { Fragment, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -51,7 +52,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
   const allQASections = useQASections();
   const allQAQuestionCategories = useQAQuestionCategories();
   const [error, setError] = useState('');
-  const fileService = getFileService();
+  const fileService = fmFileService;
   const userContext = getUserContextService().getUserContext();
   const [attachmentFolder, setAttachmentFolder] = useState<FileMetaData | undefined>();
   const fmConfig = useFMConfig();
@@ -172,14 +173,14 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                   id: f.data.id,
                   name: f.data.name,
                   contentType: `image/${f.data.ext}`,
-                  downloadUrl: `${f.data.downloadUrl}`
+                  downloadUrl: `${f.data.downloadUrl}`,
                 };
               });
               const attachments = [
                 ...draftSubmission.sections[sectionidx]['answers'][answerIndex]['attachments'],
                 ...newFiles,
               ];
-  
+
               setImagePreviewState({
                 ...imagePreviewState,
                 [answerItemId]: {
