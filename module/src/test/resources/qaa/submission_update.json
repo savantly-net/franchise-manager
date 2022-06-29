@@ -1,7 +1,9 @@
 {
   "id": "string",
   "locationId": "string",
-  "dateScored": "2022-03-11T05:45:20.256Z",
+  "dateScored": "2022-03-11",
+  "startTime": "05:45:20",
+  "endTime": "05:46:20",
   "managerOnDuty": "string",
   "fsc": "string",
   "responsibleAlcoholCert": "string",
@@ -11,7 +13,7 @@
       "sectionId": "string",
       "locationId": "string",
       "managerOnDuty": "string",
-      "dateScored": "2022-03-11T05:45:20.256Z",
+      "dateScored": "2022-03-11",
       "status": "DRAFT",
       "answers": [
         {
