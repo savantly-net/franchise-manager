@@ -222,6 +222,7 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 	private QAADto exampleDto() {
 		return new QAADto()
 				.setDateScored(LocalDate.now())
+				.setStartTime(LocalTime.now())
 				.setFsc("test")
 				.setId("123")
 				.setLocationId("234")
