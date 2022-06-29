@@ -2,7 +2,7 @@ import { FileDataRequest, FileService } from '@savantly/sprout-api';
 import { getFileService } from '@savantly/sprout-runtime';
 import { API_HOST } from 'plugin/config/appModuleConfiguration';
 
-class FMFileService implements FileService {
+class FMFileService {
   getFilesByPath = (path?: string) => {
     return getFileService().getFilesByPath(path);
   };
@@ -30,7 +30,12 @@ class FMFileService implements FileService {
 export const fmFileService = new FMFileService();
 
 type PostDataType = 'JSON' | 'FORM';
-async function postData(url = '', data: any, dataType: PostDataType) {
+export interface PostDataResponse {
+  status: number;
+  json?: any;
+  error?: string;
+}
+async function postData(url = '', data: any, dataType: PostDataType): Promise<PostDataResponse> {
   let body = data;
   if (dataType === 'JSON') {
     body = JSON.stringify(data);
@@ -45,5 +50,13 @@ async function postData(url = '', data: any, dataType: PostDataType) {
     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     body: body, // body data type must match "Content-Type" header
   });
-  return response.json(); // parses JSON response into native JavaScript objects
+  const res: PostDataResponse = {
+    status: response.status
+  }
+  if (res.status >= 200 && res.status < 300) {
+    res.json = await response.json()
+  } else {
+    res.error = await response.text()
+  }
+  return res;
 }

@@ -2,12 +2,11 @@
 import { FileMetaData, publishErrorNotification, publishSuccessNotification } from '@savantly/sprout-api';
 import { getUserContextService } from '@savantly/sprout-runtime';
 import { FileUploadButton, Form, FormField, Icon, LoadingIcon } from '@sprout-platform/ui';
-import { AxiosResponse } from 'axios';
 import { cx } from 'emotion';
 import { FormikProps } from 'formik';
 import { LocationSelectorField } from 'plugin/component/LocationSelector/LocationSelectorField';
 import { useFMConfig } from 'plugin/config/useFmConfig';
-import { fmFileService } from 'plugin/services/fmFileService';
+import { fmFileService, PostDataResponse } from 'plugin/services/fmFileService';
 import { FileItem } from 'plugin/types';
 import React, { Fragment, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -76,7 +75,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                 parent: parentFolderId,
               })
               .then(response => {
-                setAttachmentFolder(response.data);
+                setAttachmentFolder(response.json);
               })
               .catch(err => {
                 setError(err.message || 'Could not create attachment folder');
@@ -140,7 +139,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
   ) => {
     console.info('checking for files to upload', value);
     if (value.files) {
-      const fileUploads: Array<Promise<AxiosResponse<FileMetaData>>> = [];
+      const fileUploads: Array<Promise<PostDataResponse>> = [];
       for (let index = 0; index < value.files.length; index++) {
         const file = value.files[index];
         try {
@@ -165,10 +164,10 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
             } else {
               const newFiles: FileItem[] = successFiles.map(f => {
                 return {
-                  id: f.data.id,
-                  name: f.data.name,
-                  contentType: `image/${f.data.ext}`,
-                  downloadUrl: `${f.data.downloadUrl}`,
+                  id: f.json.id,
+                  name: f.json.name,
+                  contentType: `image/${f.json.ext}`,
+                  downloadUrl: `${f.json.downloadUrl}`,
                 };
               });
               const attachments = [

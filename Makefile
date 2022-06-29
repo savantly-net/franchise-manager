@@ -13,11 +13,16 @@ dev:
 build:
 	./gradlew build
 
-# requires gpg installed 
-# brew install gpg
 .PHONY: publish-local
 publish-local:
+	./gradlew publishToMavenLocal -x sign \
+    -PversionPostfix=-SNAPSHOT
+
+# requires gpg installed 
+# brew install gpg
+.PHONY: publish-local-signed
+publish-local-signed:
 	export KEYNAME=`gpg --list-secret-keys --keyid-format LONG | grep "sec" | awk -F'[/ ]' '{print $5}' | head -n 1`
 	./gradlew :fm-module:publishMavenJavaPublicationToMavenLocal \
-    -PversionPostfix=SNAPSHOT \
+    -PversionPostfix=-SNAPSHOT \
     -Psigning.gnupg.keyName=$$KEYNAME

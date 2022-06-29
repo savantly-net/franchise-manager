@@ -6,9 +6,23 @@ buildscript {
         classpath "io.freefair.gradle:lombok-plugin:5.1.0"
     }
 }
+def versionPropsFile = file('version.properties') 
+def versionProp
+
+/*Setting default value for versionBuild which is the last incremented value stored in the file */
+if (versionPropsFile.canRead()) {
+    def Properties versionProps = new Properties()
+    versionProps.load(new FileInputStream(versionPropsFile))
+    versionProp = versionProps['VERSION']
+} else {
+    throw new GradleException("Could not read version.properties!")
+}
 
 allprojects {
     group = 'net.savantly.franchise'
+    ext {
+        versionBuild = versionProp
+    }
     
     repositories {
     	mavenLocal()
