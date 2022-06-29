@@ -31,10 +31,8 @@ export const fmFileService = new FMFileService();
 
 type PostDataType = 'JSON' | 'FORM';
 async function postData(url = '', data: any, dataType: PostDataType) {
-  let contentType = 'application/x-www-form-urlencoded';
   let body = data;
   if (dataType === 'JSON') {
-    contentType = 'application/json';
     body = JSON.stringify(data);
   }
   // Default options are marked with *
@@ -43,10 +41,6 @@ async function postData(url = '', data: any, dataType: PostDataType) {
     mode: 'cors', // no-cors, *cors, same-origin
     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
     credentials: 'same-origin', // include, *same-origin, omit
-    headers: {
-      'Content-Type': contentType,
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-    },
     redirect: 'error', // manual, *follow, error
     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     body: body, // body data type must match "Content-Type" header
