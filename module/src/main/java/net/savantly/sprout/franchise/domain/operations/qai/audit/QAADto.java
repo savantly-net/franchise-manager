@@ -1,6 +1,6 @@
 package net.savantly.sprout.franchise.domain.operations.qai.audit;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +16,7 @@ import net.savantly.sprout.franchise.domain.operations.qai.section.submission.QA
 public class QAADto {
 	private String id;
 	private String locationId;
-	private LocalDateTime dateScored;
+	private LocalDate dateScored;
 	private String managerOnDuty;
 	private String fsc;
 	private String fsm;

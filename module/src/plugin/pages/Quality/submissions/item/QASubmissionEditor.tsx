@@ -236,9 +236,6 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     return identifiers.join(',');
   };
 
-  if (draftSubmission.dateScored) {
-    draftSubmission.dateScored = new Date(`${draftSubmission.dateScored}`).toLocaleDateString('fr-CA');
-  }
   let categoryManage = '';
   return (
     <div>
@@ -256,7 +253,6 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                 console.info('cancelled submit');
               } else {
                 setError('');
-                values.dateScored = dateTimeForTimeZone(values.dateScored).toISOString();
                 values.sections?.map((submitData: QASectionSubmission) => {
                   submitData.dateScored = values.dateScored;
                   submitData.locationId = values.locationId;

@@ -74,7 +74,7 @@ public class QAAService {
 
 	private QAASubmission convert(QAADto dto) {
 		QAASubmission entity = getOrCreateEntity(dto);
-		entity.setDateScored(dto.getDateScored())
+		entity.setDateScored(dto.getDateScored().atTime(dto.getStartTime()))
 			.setFsc(dto.getFsc())
 			.setFsm(dto.getFsm())
 			.setLocationId(dto.getLocationId())
@@ -93,7 +93,7 @@ public class QAAService {
 	private QAADto convert(QAASubmission entity) {
 		QAADto dto = new QAADto()
 			.setId(entity.getId())
-			.setDateScored(entity.getDateScored())
+			.setDateScored(entity.getDateScored().toLocalDate())
 			.setFsc(entity.getFsc())
 			.setFsm(entity.getFsm())
 			.setLocationId(entity.getLocationId())
