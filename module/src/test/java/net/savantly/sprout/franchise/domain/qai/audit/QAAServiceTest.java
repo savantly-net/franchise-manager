@@ -3,7 +3,7 @@ package net.savantly.sprout.franchise.domain.qai.audit;
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Files;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.HashSet;
 
 import javax.transaction.Transactional;
@@ -221,7 +221,7 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 
 	private QAADto exampleDto() {
 		return new QAADto()
-				.setDateScored(LocalDateTime.now())
+				.setDateScored(LocalDate.now())
 				.setFsc("test")
 				.setId("123")
 				.setLocationId("234")
