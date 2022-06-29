@@ -1,4 +1,4 @@
-import { FileDataRequest, FileService } from '@savantly/sprout-api';
+import { FileDataRequest } from '@savantly/sprout-api';
 import { getFileService } from '@savantly/sprout-runtime';
 import { API_HOST } from 'plugin/config/appModuleConfiguration';
 
@@ -51,12 +51,12 @@ async function postData(url = '', data: any, dataType: PostDataType): Promise<Po
     body: body, // body data type must match "Content-Type" header
   });
   const res: PostDataResponse = {
-    status: response.status
-  }
+    status: response.status,
+  };
   if (res.status >= 200 && res.status < 300) {
-    res.json = await response.json()
+    res.json = await response.json();
   } else {
-    res.error = await response.text()
+    res.error = await response.text();
   }
   return res;
 }
