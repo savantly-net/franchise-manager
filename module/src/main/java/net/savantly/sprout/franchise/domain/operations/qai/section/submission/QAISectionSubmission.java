@@ -1,6 +1,6 @@
 package net.savantly.sprout.franchise.domain.operations.qai.section.submission;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +35,7 @@ public class QAISectionSubmission extends TenantKeyedEntity {
 	private String sectionId;
 	private String locationId;
 	private String managerOnDuty;
-	private ZonedDateTime dateScored;
+	private LocalDateTime dateScored;
 
 	@Enumerated(EnumType.STRING)
 	private QAISubmissionState status;

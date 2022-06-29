@@ -1,6 +1,6 @@
 package net.savantly.sprout.franchise.domain.operations.qai.section.submission;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +21,7 @@ public class QAISectionSubmissionDto {
 	private String sectionId;
 	private String locationId;
 	private String managerOnDuty;
-	private ZonedDateTime dateScored;
+	private LocalDate dateScored;
 	private QAISubmissionState status;
 	private List<QAIQuestionAnswerDto> answers = new ArrayList<>();
 	private List<QAIGuestQuestionAnswerGroupDto> guestAnswers = new ArrayList<>();

@@ -1,6 +1,6 @@
 package net.savantly.sprout.franchise.domain.operations.qai.section.submission;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -45,7 +45,7 @@ public class QAISubmissionService {
 			.setLocationId(object.getLocationId())
 			.setSectionId(object.getSectionId())
 			.setAnswers(qaService.upsert(object.getAnswers()))
-			.setDateScored(ZonedDateTime.now())
+			.setDateScored(LocalDate.now().atStartOfDay())
 			.setGuestAnswers(gqaService.upsert(object.getGuestAnswers()))
 			.setManagerOnDuty(object.getManagerOnDuty())
 			.setStaffAttendance(object.getStaffAttendance())
@@ -60,7 +60,7 @@ public class QAISubmissionService {
 		return dto.setAnswers(qaService.convert(entity.getAnswers()))
 				.setLocationId(entity.getLocationId())
 				.setSectionId(entity.getSectionId())
-				.setDateScored(entity.getDateScored())
+				.setDateScored(entity.getDateScored().toLocalDate())
 				.setGuestAnswers(gqaService.convert(entity.getGuestAnswers()))
 				.setItemId(entity.getItemId())
 				.setManagerOnDuty(entity.getManagerOnDuty())
