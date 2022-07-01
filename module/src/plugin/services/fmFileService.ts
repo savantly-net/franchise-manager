@@ -12,7 +12,7 @@ class FMFileService {
   };
 
   createFile = (request: FileDataRequest) => {
-    return postData(`${API_HOST}/api/files/create`, request, 'JSON');
+    return getFileService().createFile(request);
   };
 
   uploadFile = (request: FileDataRequest, file: any) => {
@@ -23,23 +23,18 @@ class FMFileService {
     fd.append('file', file);
     fd.append('metaData', metaData);
     console.log(fd);
-    return postData(`${API_HOST}/api/files/upload`, fd, 'FORM');
+    return postFormFetch(`${API_HOST}/api/files/upload`, fd);
   };
 }
 
 export const fmFileService = new FMFileService();
 
-type PostDataType = 'JSON' | 'FORM';
 export interface PostDataResponse {
   status: number;
   json?: any;
   error?: string;
 }
-async function postData(url = '', data: any, dataType: PostDataType): Promise<PostDataResponse> {
-  let body = data;
-  if (dataType === 'JSON') {
-    body = JSON.stringify(data);
-  }
+async function postFormFetch(url = '', data: FormData): Promise<PostDataResponse> {
   // Default options are marked with *
   const response = await fetch(url, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -48,7 +43,7 @@ async function postData(url = '', data: any, dataType: PostDataType): Promise<Po
     credentials: 'same-origin', // include, *same-origin, omit
     redirect: 'error', // manual, *follow, error
     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-    body: body, // body data type must match "Content-Type" header
+    body: data, // body data type must match "Content-Type" header
   });
   const res: PostDataResponse = {
     status: response.status,

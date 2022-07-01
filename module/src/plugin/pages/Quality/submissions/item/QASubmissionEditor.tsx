@@ -3,7 +3,7 @@ import { FileMetaData, publishErrorNotification, publishSuccessNotification } fr
 import { getUserContextService } from '@savantly/sprout-runtime';
 import { FileUploadButton, Form, FormField, Icon, LoadingIcon } from '@sprout-platform/ui';
 import { cx } from 'emotion';
-import { FormikProps } from 'formik';
+import { FieldArray, FormikProps } from 'formik';
 import { LocationSelectorField } from 'plugin/component/LocationSelector/LocationSelectorField';
 import { useFMConfig } from 'plugin/config/useFmConfig';
 import { fmFileService, PostDataResponse } from 'plugin/services/fmFileService';
@@ -31,6 +31,42 @@ interface ImagePreviewUrlItem {
   type: string;
 }
 type ImagePreviewUrls = Record<string, ImagePreviewUrlItem>;
+
+const attachmentIsAnImage = (attachment: FileItem): boolean => {
+  if (attachment.contentType && attachment.contentType.split('/')[0] === 'image') {
+    return true;
+  }
+  return false;
+};
+
+const AttachmentImageList = ({ name, attachments }: { name: string; attachments: FileItem[] }) => {
+  return (
+    <FieldArray
+      name={name}
+      render={arrayHelpers => (
+        <div>
+          {attachments.map(
+            (a, index) =>
+              attachmentIsAnImage(a) && (
+                <Fragment>
+                  <img src={`${window.location.origin}${a.downloadUrl}`} height="40px" width="100%" />
+                  <Icon
+                    name="trash-alt"
+                    className={cx('text-danger', 'mr-4')}
+                    color="danger"
+                    onClick={() => {
+                      arrayHelpers.remove(index);
+                    }}
+                    style={{ fontSize: '20px' }}
+                  ></Icon>
+                </Fragment>
+              )
+          )}
+        </div>
+      )}
+    />
+  );
+};
 
 export interface QASubmissionEditorProps {
   draftSubmission: QASubmission;
@@ -75,7 +111,7 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                 parent: parentFolderId,
               })
               .then(response => {
-                setAttachmentFolder(response.json);
+                setAttachmentFolder(response.data);
               })
               .catch(err => {
                 setError(err.message || 'Could not create attachment folder');
@@ -205,13 +241,6 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
     }
     props.setFieldValue(`sections.${sectionidx}.answers.${idx}.attachments`, []);
     draftSubmission.sections[sectionidx].answers[idx].attachments = [];
-  };
-
-  const attachmentIsAnImage = (attachment: FileItem): boolean => {
-    if (attachment.contentType && attachment.contentType.split('/')[0] === 'image') {
-      return true;
-    }
-    return false;
   };
 
   const formatTags = (tags: string): string => {
@@ -429,51 +458,11 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
                                                   accept={['image/*']}
                                                 />
                                               </td>
-                                              <td className="col-2" rowSpan={2}>
-                                                {imagePreviewState[answer.itemId] &&
-                                                imagePreviewState[answer.itemId].type === 'image' ? (
-                                                  <img
-                                                    src={imagePreviewState[answer.itemId].image as string}
-                                                    height="40px"
-                                                    width="100%"
-                                                  />
-                                                ) : answer.attachments.length > 0 &&
-                                                  attachmentIsAnImage(answer.attachments[0]) ? (
-                                                  <img
-                                                    src={`${window.location.origin}${answer.attachments[0].downloadUrl}`}
-                                                    height="40px"
-                                                    width="100%"
-                                                  />
-                                                ) : (
-                                                  <Icon name="image" style={{ fontSize: '2.875em', color: '#eee' }} />
-                                                )}
-                                              </td>
-                                              <td className="col-1">
-                                                {imagePreviewState[answer.itemId] &&
-                                                imagePreviewState[answer.itemId].type === 'image' ? (
-                                                  <Icon
-                                                    name="trash-alt"
-                                                    className={cx('text-danger', 'mr-4')}
-                                                    color="danger"
-                                                    onClick={() => {
-                                                      removeImage(props, index, idx, answer.itemId);
-                                                    }}
-                                                    style={{ fontSize: '20px' }}
-                                                  ></Icon>
-                                                ) : (
-                                                  answer.attachments.length > 0 &&
-                                                  attachmentIsAnImage(answer.attachments[0]) && (
-                                                    <Icon
-                                                      name="trash-alt"
-                                                      className={cx('text-danger', 'mr-4')}
-                                                      color="danger"
-                                                      onClick={() => {
-                                                        removeImage(props, index, idx, answer.itemId);
-                                                      }}
-                                                      style={{ fontSize: '20px' }}
-                                                    ></Icon>
-                                                  )
-                                                )}
+                                              <td className="col-2" rowSpan={2} colSpan={2}>
+                                                <AttachmentImageList
+                                                  name={`sections.${index}.answers.${idx}.attachments`}
+                                                  attachments={answer.attachments}
+                                                />
                                               </td>
                                             </tr>
                                             {(props.values.sections[index].answers[idx]?.value === 'NO' ||
