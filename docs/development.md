@@ -18,6 +18,20 @@ Spring Boot dev tools allows us to develop while the app is running, and see the
 
 Postgres Adminer is also included, should you want to inspect the DB.  
 
+It make several minutes to build and run the project the first time.  
+
+Sprout UI should be running at [localhost:3000](http://localhost:3000)  
+Sprout API should be running at [localhost:8080](http://localhost:8080)  
+Adminer should be running at [localhost:8081](http://localhost:8081)  
+
+### With Make
+
+```
+make dev
+```
+
+### Without Make
+
 ```
 ./scripts/dev.sh
 ```
@@ -26,12 +40,6 @@ In another terminal, start the backend server -
 ```
 ./gradlew bootRun
 ```
-
-It make several minutes to build and run the project the first time.  
-
-Sprout UI should be running at [localhost:3000](http://localhost:3000)  
-Sprout API should be running at [localhost:8080](http://localhost:8080)  
-Adminer should be running at [localhost:8081](http://localhost:8081)  
 
 ### Config
 If you need to expose the services on different ports on your host system, you may export some variables before running `./scripts/dev.sh`  

@@ -6,8 +6,8 @@ yarn:
 
 .PHONY: dev
 dev:
-	gradle bootRun -x nodeSetup -x yarnSetup -x yarn -x yarn_build
-#docker compose up --remove-orphans
+#	gradle bootRun -x nodeSetup -x yarnSetup -x yarn -x yarn_build
+	docker compose up --remove-orphans
 
 .PHONY: build
 build:
@@ -24,5 +24,14 @@ publish-local:
 publish-local-signed:
 	export KEYNAME=`gpg --list-secret-keys --keyid-format LONG | grep "sec" | awk -F'[/ ]' '{print $5}' | head -n 1`
 	./gradlew :fm-module:publishMavenJavaPublicationToMavenLocal \
+    -PversionPostfix=-SNAPSHOT \
+    -Psigning.gnupg.keyName=$$KEYNAME
+
+# requires gpg installed 
+# brew install gpg
+.PHONY: publish-remote
+publish-remote:
+	export KEYNAME=`gpg --list-secret-keys --keyid-format LONG | grep "sec" | awk -F'[/ ]' '{print $5}' | head -n 1`
+	./gradlew :fm-module:publish \
     -PversionPostfix=-SNAPSHOT \
     -Psigning.gnupg.keyName=$$KEYNAME

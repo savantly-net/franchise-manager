@@ -6,13 +6,14 @@ services:
     image: gradle:jdk11
     container_name: fmgr-dev-server
     command: gradle bootRun -x nodeSetup -x yarnSetup -x yarn -x yarn_build
+    restart: on-failure
     working_dir: /app
     volumes:
       - "webapp:/app"
     ports:
       - 8080:8080
     environment:
-      LOGGING_LEVEL_NET_SAVANTLY: WARN
+      LOGGING_LEVEL_NET_SAVANTLY: INFO
       LOGGING_LEVEL_NET_SAVANTLY_SPROUT_FRANCHISE: DEBUG
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
       SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
@@ -20,12 +21,11 @@ services:
       SPRING_DATASOURCE_DRIVER_CLASS: org.postgresql.Driver
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-  
-  # This will rebuild the front-end assets when changes occur
-  # It mounts the project directory
-  plugin-builder:
+
+  ui-watcher:
     image: node:14
-    command: ["yarn", "watch"]
+    command: yarn watch
+    restart: unless-stopped
     working_dir: /app/module
     volumes:
       - "webapp:/app"
@@ -49,6 +49,14 @@ services:
     init: true
     environment:
       POSTGRES_PASSWORD: postgres
+  
+  adminer:
+    image: adminer
+    container_name: fmgr-sprout-adminer
+    restart: on-failure
+    init: true
+    ports:
+      - ${ADMINER_PORT:-8081}:8080
 
 volumes:
   webapp:
