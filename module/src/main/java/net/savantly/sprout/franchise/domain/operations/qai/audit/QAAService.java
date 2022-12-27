@@ -15,7 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import lombok.RequiredArgsConstructor;
-import lombok.var;
 import lombok.extern.slf4j.Slf4j;
 import net.savantly.sprout.core.security.permissions.Permission;
 import net.savantly.sprout.franchise.domain.operations.qai.QAIPermissionEvaluator;
