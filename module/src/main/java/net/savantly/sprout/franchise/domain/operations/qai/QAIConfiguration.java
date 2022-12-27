@@ -1,5 +1,6 @@
 package net.savantly.sprout.franchise.domain.operations.qai;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -37,8 +38,8 @@ import net.savantly.sprout.franchise.domain.operations.qai.section.submission.QA
 public class QAIConfiguration {
 
 	@Bean
-	public QAAService qaaSubmissionService(QAISubmissionService submissionService, QAASubmissionRepository submissionRepository, QAAScoreService qaaScoreService) {
-		return new QAAService(submissionService, submissionRepository, qaaScoreService);
+	public QAAService qaaSubmissionService(QAISubmissionService submissionService, QAASubmissionRepository submissionRepository, QAAScoreService qaaScoreService, QAIPermissionEvaluator permissionEvaluator) {
+		return new QAAService(submissionService, submissionRepository, qaaScoreService, permissionEvaluator);
 	}
 	
 	@Bean
@@ -113,5 +114,11 @@ public class QAIConfiguration {
 	@Bean
 	public QAIGuestQuestionService qaiGuestQuestionConverter(QAIGuestQuestionRepository repository) {
 		return new QAIGuestQuestionService(repository);
+	}
+	
+	@Bean
+	@ConditionalOnMissingBean(QAIPermissionEvaluator.class)
+	public QAIPermissionEvaluator defaultQAIPermissionEvaluator() {
+		return new QAIPermissionEvaluator() {};
 	}
 }

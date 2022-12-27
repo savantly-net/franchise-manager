@@ -9,8 +9,13 @@ plugins {
 
 archivesBaseName = name
 description = "franchise-manager-server"
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+
+
+java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(11))
+  }
+}
 
 //apply from: "${rootProject.projectDir}/gradle/sonar.gradle"
 
