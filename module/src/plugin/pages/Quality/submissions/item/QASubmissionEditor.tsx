@@ -231,18 +231,6 @@ const QASubmissionEditor = (props: QASubmissionEditorProps) => {
 
   const [imagePreviewState, setImagePreviewState] = useState<ImagePreviewUrls>({});
 
-  const removeImage = (props: any, sectionidx: number, idx: number, sectionId: any) => {
-    let images = imagePreviewState;
-    if (images[sectionId]) {
-      delete images[sectionId];
-      setImagePreviewState({
-        ...images,
-      });
-    }
-    props.setFieldValue(`sections.${sectionidx}.answers.${idx}.attachments`, []);
-    draftSubmission.sections[sectionidx].answers[idx].attachments = [];
-  };
-
   const formatTags = (tags: string): string => {
     if (!tags || tags === '') {
       return tags;
