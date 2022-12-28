@@ -16,13 +16,14 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import net.savantly.sprout.core.domain.AbstractAuditableDomainObject;
 
 @Entity
 @Accessors(chain = true)
 @Getter
 @Setter
 @Table(name = "fm_qaa_submission")
-public class QAASubmission {
+public class QAASubmission extends AbstractAuditableDomainObject<String> {
 	@Id
 	private String id;
 	@Column(name = "location_id")

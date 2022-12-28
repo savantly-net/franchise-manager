@@ -14,13 +14,14 @@ import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import net.savantly.sprout.core.domain.AbstractAuditableDomainObject;
 
 
 @Entity
 @Accessors(chain = true)
 @Getter
 @Table(name = "fm_qaa_score")
-public class QAAScore {
+public class QAAScore extends AbstractAuditableDomainObject<String> {
 	
 	@Transient
 	private final double requiredPercentage = 0.8;
@@ -29,6 +30,11 @@ public class QAAScore {
 	@Column(name = "submission_id")
 	@Setter
 	private String submissionId;
+
+	@Override
+	public String getId() {
+		return submissionId;
+	}
 
 	@Column(name = "available_points")
 	@Setter
@@ -90,4 +96,5 @@ public class QAAScore {
 	protected void removeAllScoresByTag() {
 		this.scoresByTag.clear();
 	}
+
 }
