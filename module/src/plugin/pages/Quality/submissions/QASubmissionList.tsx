@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Button, ButtonGroup } from 'reactstrap';
 import { useQASections } from '../sections/hooks';
-import { qaService, QASubmission as EntityClass, qaSubmissionStateProvider } from './entity';
+import { qaService, QASubmission as EntityClass, qaSubmissionStateProvider, QASubmissionSummary } from './entity';
 
 const IndexPage = () => {
   const submissionState = useSelector((state: AppModuleRootState) => state.franchiseManagerState.qaSubmissions);
@@ -19,12 +19,19 @@ const IndexPage = () => {
   const qaSections = useQASections();
   const fmLocations = useFMLocations();
   const userContext = getUserContextService().getUserContext();
+  const [data, setData] = useState<QASubmissionSummary[] | undefined>();
 
   useMemo(() => {
     if (!submissionState.isFetched && !submissionState.isFetching) {
       dispatch(qaSubmissionStateProvider.loadState());
+    } else if (submissionState.isFetched && data === undefined) {
+      let sortedData = submissionState.response?.content || [];
+      sortedData = sortedData.sort((a, b) => {
+        return (b.dateScored || 0) > (a.dateScored || 0) ? -1 : 1;
+      });
+      setData(sortedData);
     }
-  }, [submissionState, dispatch]);
+  }, [submissionState, data, setData, dispatch]);
 
   const userIsQAIAdmin = userContext && userContext.user && userContext.user.authorities.includes('FM_QAI_ADMIN');
 
@@ -128,7 +135,7 @@ const IndexPage = () => {
         <>
           <BootstrapTable
             columns={columns}
-            data={qaSections && qaSections.length && fmLocations.length ? submissionState.response?.content || [] : []}
+            data={qaSections && qaSections.length && fmLocations.length ? data || [] : []}
             keyField="id"
             striped={true}
           />
