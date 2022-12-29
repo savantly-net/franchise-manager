@@ -27,7 +27,7 @@ const IndexPage = () => {
     } else if (submissionState.isFetched && data === undefined) {
       let sortedData = submissionState.response?.content || [];
       sortedData = sortedData.sort((a, b) => {
-        return (b.dateScored || 0) > (a.dateScored || 0) ? -1 : 1;
+        return (a.dateScored || 0) > (b.dateScored || 0) ? -1 : 1;
       });
       setData(sortedData);
     }
