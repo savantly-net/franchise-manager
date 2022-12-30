@@ -25,11 +25,7 @@ const IndexPage = () => {
     if (!submissionState.isFetched && !submissionState.isFetching) {
       dispatch(qaSubmissionStateProvider.loadState());
     } else if (submissionState.isFetched && data === undefined) {
-      let sortedData = submissionState.response?.content || [];
-      sortedData = sortedData.sort((a, b) => {
-        return (a.dateScored || 0) > (b.dateScored || 0) ? -1 : 1;
-      });
-      setData(sortedData);
+      setData(submissionState.response?.content || []);
     }
   }, [submissionState, data, setData, dispatch]);
 
@@ -134,6 +130,7 @@ const IndexPage = () => {
       {!showLoading ? (
         <>
           <BootstrapTable
+            defaultSorted={[{dataField: 'dateScored', order: 'desc'}]}
             columns={columns}
             data={qaSections && qaSections.length && fmLocations.length ? data || [] : []}
             keyField="id"
