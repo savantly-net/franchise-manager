@@ -130,7 +130,7 @@ const IndexPage = () => {
       {!showLoading ? (
         <>
           <BootstrapTable
-            defaultSorted={[{dataField: 'dateScored', order: 'desc'}]}
+            defaultSorted={[{ dataField: 'dateScored', order: 'desc' }]}
             columns={columns}
             data={qaSections && qaSections.length && fmLocations.length ? data || [] : []}
             keyField="id"
