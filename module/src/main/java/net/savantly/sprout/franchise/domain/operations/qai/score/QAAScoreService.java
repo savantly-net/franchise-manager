@@ -47,6 +47,8 @@ public class QAAScoreService {
 			log.info("removing scores by tag from previous score: {}", previous.getSubmissionId());
 			previous.removeAllScoresByTag();
 			tagScoreRepo.deleteBySubmissionId(previous.getSubmissionId());
+			log.info("deleting previous score record: {}", previous.getSubmissionId());
+			repo.delete(previous);
 		}
 		log.info("calculating score for submission: {}", submission.getId());
 		QAAScore entity = calc.createScoreFromSubmission(submission, sectionSubmission);

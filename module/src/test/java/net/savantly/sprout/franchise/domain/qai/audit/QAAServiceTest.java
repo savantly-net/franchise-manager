@@ -209,6 +209,10 @@ public class QAAServiceTest extends AbstractContainerBaseTest {
 		Assertions.assertEquals(HttpStatus.OK, response2.getStatusCode(), "Should be a valid status code");
 		Assertions.assertEquals(1, response2.getBody().getOverallScore(), "Should get oeverall score");
 		Assertions.assertEquals(2, response2.getBody().getSections().size(), "Should have the correct number of sections submitted");
+
+		// Save it again to make sure it doesn't fail
+		ResponseEntity<QAADto> response3 = rest.withBasicAuth(user, password).exchange(request,
+				QAADto.class);
 	}
 	
 	@Test
