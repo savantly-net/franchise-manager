@@ -1,3 +1,8 @@
+## Deprecated
+Check out the new Multi-Brand & Multi-Site management app - "Nexus Command"  
+https://github.com/savantly-net/nexus-command  
+
+
 # Franchise Manager 
 The franchise manager module provides basic line-of-business data management for managing franchises.  
 It's developed as a Sprout Module to take advantage of the pluggable nature of Sprout.  
